@@ -25,7 +25,7 @@ import java.nio.file.Path;
  * Handles interpretation and regularisation requests.
  */
 @RestController
-@RequestMapping("/api/image")
+@RequestMapping("/api")
 public class AIServiceController {
 
     /** Cloud-based AI service interface. */
@@ -38,7 +38,7 @@ public class AIServiceController {
      * @param file uploaded image file (from client)
      * @return textual description of the image
      */
-    @PostMapping("/interpret")
+    @PostMapping("/image/interpret")
     public ResponseEntity<String> describe(
             @RequestParam("file") final MultipartFile file) {
         Path tempFile = null;
@@ -74,7 +74,7 @@ public class AIServiceController {
      * @param points JSON string containing the points data
      * @return regularised point data as a response
      */
-    @PostMapping("/regularise")
+    @PostMapping("/image/regularise")
     public ResponseEntity<String> regularise(final @RequestBody String points) {
         try {
             IAIRequest request = new AIRegularisationRequest(points);
@@ -84,6 +84,24 @@ public class AIServiceController {
             return ResponseEntity.status(
                     HttpStatus.INTERNAL_SERVER_ERROR).body(
                             "Error: " + e.getMessage());
+        }
+    }
+    /**
+     * Recieves chats as a json file, does sentiment analysis
+     * and generates insights graph
+     * @param points JSON string containing the chat data
+     * @return a list float values to plot in the sentiment graph.
+     */
+    @PostMapping("/chat/sentiment")
+    public ResponseEntity<String> sentiment(final @RequestBody String chatData) {
+        try {
+            IAIRequest request = new AIRegularisationRequest(chatData);
+            IAIResponse response = cloudService.runProcess(request);
+            return ResponseEntity.ok(response.getResponse());
+        } catch (IOException e) {
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "Error: " + e.getMessage());
         }
     }
 }

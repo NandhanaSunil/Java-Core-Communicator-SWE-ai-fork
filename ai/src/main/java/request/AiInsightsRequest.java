@@ -1,0 +1,84 @@
+/**
+ * Class that handles insights generation requests to AI.
+ * <p>
+ *     This class is used to navigate the requests for insights generation to
+ *     an LLM service. It gets the chat data as a json file, sends it to
+ *     LLM for sentiment analysis and gets the values as a list of floats.
+ *     The results are then plotted in the insights tab.
+ * </p>
+ *
+ * <p>
+ *     References
+ *     1. https://stackoverflow.com/questions/32875874/get-key-name-key-value-from-json
+ *     2. https://www.geeksforgeeks.org/java/java-util-hashmap-in-java-with-examples/
+ *     3. https://www.javaspring.net/blog/convert-object-to-jsonobject-java/
+ * </p>
+ * @author Nandhana Sunil
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+package request;
+
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * AiInsightsRequest class inherits the IAIRequest.
+ * Stores the metadata of the request to be made to the AI.
+ */
+public class AiInsightsRequest implements IAIRequest<JsonObject> {
+    /**
+     * metaDataInsight stores the prompt.
+     * Also, other details of the request like the content.
+     */
+    private final Map<String, Object> metaDataInsight;
+    /**
+     * type stores the type of request .
+     * type = "INS"
+     */
+    private final String type;
+    /**
+     * Constructs an AiInsightsRequest,
+     * Initialises the metaDataInsight with a default prompt,
+     * to generate sentiment value.
+     * @param chatData will be a json object with the chat messages
+     */
+    public AiInsightsRequest(JsonObject chatData) throws IOException {
+        // Initialises the metaDataInsight with prompt and data.
+        metaDataInsight = new HashMap<>();
+        metaDataInsight.put("InputChatData", chatData);
+        metaDataInsight.put("RequestPrompt",
+                "Generate float values for sentiments for the objects in this json object");
+        type = "INS";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getContext() {
+        // Returns the request prompt.
+        return metaDataInsight.get("RequestPrompt").toString();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getReqType() {
+        // returns "INS".
+        return type;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public JsonObject getInput() {
+        // this function returns the input.
+        return (JsonObject)metaDataInsight.get("InputChatData");
+    }
+}
