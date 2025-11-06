@@ -26,7 +26,8 @@ public class ImageInterpreter implements IRequestProcessor {
      */
     @Override
     public String processRequest(
-            final ObjectMapper objectMapper, final IAIRequest aiRequest)
+            final ObjectMapper objectMapper,
+            final IAIRequest aiRequest)
             throws IOException {
         // building the json request body(as expected by gemini api)
         final ObjectNode rootNode =

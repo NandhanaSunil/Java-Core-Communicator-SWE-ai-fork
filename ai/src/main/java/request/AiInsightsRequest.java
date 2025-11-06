@@ -9,9 +9,12 @@
  *
  * <p>
  *     References
- *     1. https://stackoverflow.com/questions/32875874/get-key-name-key-value-from-json
- *     2. https://www.geeksforgeeks.org/java/java-util-hashmap-in-java-with-examples/
- *     3. https://www.javaspring.net/blog/convert-object-to-jsonobject-java/
+ *     1. https://stackoverflow.com/questions/32875874
+ *     /get-key-name-key-value-from-json
+ *     2. https://www.geeksforgeeks.org/java/
+ *     java-util-hashmap-in-java-with-examples/
+ *     3. https://www.javaspring.net/blog/
+ *     convert-object-to-jsonobject-java/
  * </p>
  * @author Nandhana Sunil
  * @version 1.0.0
@@ -19,7 +22,7 @@
  */
 package request;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,7 +32,7 @@ import java.util.Map;
  * AiInsightsRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AiInsightsRequest implements IAIRequest<JsonObject> {
+public class AiInsightsRequest implements IAIRequest<JsonNode> {
     /**
      * metaDataInsight stores the prompt.
      * Also, other details of the request like the content.
@@ -46,12 +49,35 @@ public class AiInsightsRequest implements IAIRequest<JsonObject> {
      * to generate sentiment value.
      * @param chatData will be a json object with the chat messages
      */
-    public AiInsightsRequest(JsonObject chatData) throws IOException {
+    public AiInsightsRequest(final JsonNode chatData) throws IOException {
         // Initialises the metaDataInsight with prompt and data.
         metaDataInsight = new HashMap<>();
         metaDataInsight.put("InputChatData", chatData);
         metaDataInsight.put("RequestPrompt",
-                "Generate float values for sentiments for the objects in this json object");
+                "You are performing sentiment analysis "
+                        + "on a chronological chat conversation.  \n"
+                        + "\n"
+                        + "For each message in the chat:\n"
+                        + "- Determine the sentiment on"
+                        + " a scale from -10.0 to +10.0 \n"
+                        + "  where -1.0 = very negative, 0 = neutral,"
+                        + " and +1.0 = very positive.\n"
+                        + "- Use only the \"message\" field"
+                        + " to determine sentiment.\n"
+                        + "- Preserve the precise timestamp"
+                        + " associated with each message.\n"
+                        + "\n"
+                        + "Return the output as a JSON array"
+                        + " of objects in the exact format below, \n"
+                        + "without any additional"
+                        + " commentary or explanation:\n"
+                        + "\n"
+                        + "[\n"
+                        + "  {\n"
+                        + "    \"time\": \"<timestamp>\",\n"
+                        + "    \"sentiment\": <float>\n"
+                        + "  },\n"
+                        + "  ...");
         type = "INS";
     }
 
@@ -77,8 +103,8 @@ public class AiInsightsRequest implements IAIRequest<JsonObject> {
      * {@inheritDoc}
      */
     @Override
-    public JsonObject getInput() {
+    public JsonNode getInput() {
         // this function returns the input.
-        return (JsonObject)metaDataInsight.get("InputChatData");
+        return (JsonNode) metaDataInsight.get("InputChatData");
     }
 }

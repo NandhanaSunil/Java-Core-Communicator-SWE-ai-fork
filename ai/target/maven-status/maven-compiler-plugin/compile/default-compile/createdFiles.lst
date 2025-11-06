@@ -12,12 +12,15 @@ response\RegulariserResponse.class
 request\AIRegularisationRequest.class
 aiservice\package-info.class
 request\AIDescriptionRequest.class
+insightsGenerator\InsightsGenerator.class
 imageinterpreter\package-info.class
 imageinterpreter\ImageInterpreter.class
 data\package-info.class
 request\IAIRequest.class
+response\InsightsResponse.class
 data\WhiteBoardData.class
 requestprocessor\package-info.class
 regulariser\package-info.class
 aiservice\ILLMService.class
+request\AiInsightsRequest.class
 main\package-info.class

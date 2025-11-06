@@ -1,6 +1,7 @@
 package apiendpoints;
 
 import aiservice.ILLMService;
+import com.fasterxml.jackson.databind.JsonNode;
 import data.WhiteBoardData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import request.AIDescriptionRequest;
 import request.AIRegularisationRequest;
+import request.AiInsightsRequest;
 import request.IAIRequest;
 import response.IAIResponse;
 
@@ -87,15 +89,17 @@ public class AIServiceController {
         }
     }
     /**
-     * Recieves chats as a json file, does sentiment analysis
+     * API for sentiment analysis.
+     * Recieves chats as a json file, does sentiment analysis,
      * and generates insights graph
-     * @param points JSON string containing the chat data
+     * @param chatData JSON object containing the chat data
      * @return a list float values to plot in the sentiment graph.
      */
     @PostMapping("/chat/sentiment")
-    public ResponseEntity<String> sentiment(final @RequestBody String chatData) {
+    public ResponseEntity<String> sentiment(
+            final @RequestBody JsonNode chatData) {
         try {
-            IAIRequest request = new AIRegularisationRequest(chatData);
+            IAIRequest request = new AiInsightsRequest(chatData);
             IAIResponse response = cloudService.runProcess(request);
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {

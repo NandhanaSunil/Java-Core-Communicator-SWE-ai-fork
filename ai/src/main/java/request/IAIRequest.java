@@ -2,6 +2,8 @@ package request;
 
 /**
  * Defines an interface for making types of requests to AI.
+ *
+ * @param <T> the type of the output of getInput()
  */
 public interface IAIRequest<T> {
 
