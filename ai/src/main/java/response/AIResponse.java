@@ -1,9 +1,12 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package response;
 
 /**
  * Interface for implementing various types of responses.
  */
-public interface IAIResponse {
+public interface AIResponse {
 
     /**
      * Returns the type of the AI response.

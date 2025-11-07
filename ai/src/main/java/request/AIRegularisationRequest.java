@@ -1,3 +1,6 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package request;
 
 import java.util.HashMap;
@@ -7,7 +10,7 @@ import java.util.Map;
  * AIRegularisationRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AIRegularisationRequest implements IAIRequest {
+public class AIRegularisationRequest implements AIRequestable {
     /**
      * metadata would store prompt, and other
      * details of the request like the content.

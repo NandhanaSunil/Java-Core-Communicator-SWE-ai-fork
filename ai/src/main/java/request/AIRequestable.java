@@ -1,9 +1,12 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package request;
 
 /**
  * Defines an interface for making types of requests to AI.
  */
-public interface IAIRequest {
+public interface AIRequestable {
 
     /**
      * Returns the prompt for the particular AI request.

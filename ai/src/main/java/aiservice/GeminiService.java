@@ -1,3 +1,6 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package aiservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,9 +14,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
 import regulariser.ImageRegularize;
-import request.IAIRequest;
-import requestprocessor.IRequestProcessor;
-import response.IAIResponse;
+import request.AIRequestable;
+import requestprocessor.RequestProcessor;
+import response.AIResponse;
 import response.InterpreterResponse;
 import response.RegulariserResponse;
 import java.io.IOException;
@@ -26,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * Receives the AI response.
  */
 @Service
-public  class GeminiService implements ILLMService {
+public  class GeminiService implements LlmService {
     /**
      * Loads environment variables from the .env file.
      */
@@ -56,7 +59,7 @@ public  class GeminiService implements ILLMService {
     /**
      * registry to hold the request processor against request types.
      */
-    private final HashMap<String, IRequestProcessor> registry =
+    private final HashMap<String, RequestProcessor> registry =
             new HashMap<>();
 
     /**
@@ -86,10 +89,10 @@ public  class GeminiService implements ILLMService {
      * {@inheritDoc}
      */
     @Override
-    public IAIResponse runProcess(final IAIRequest aiRequest)
+    public AIResponse runProcess(final AIRequestable aiRequest)
             throws IOException {
         this.objectMapper = new ObjectMapper();
-        IAIResponse returnResponse = null;
+        AIResponse returnResponse = null;
 
         if (Objects.equals(aiRequest.getReqType(), "DESC")) {
             // if the request is of image interpretation,
@@ -103,7 +106,7 @@ public  class GeminiService implements ILLMService {
 
         // from the registry we will get the requestProcessor
         // according to the request type.
-        IRequestProcessor processor =
+        RequestProcessor processor =
                 registry.get(aiRequest.getReqType());
 
         // We get the json request string to send to

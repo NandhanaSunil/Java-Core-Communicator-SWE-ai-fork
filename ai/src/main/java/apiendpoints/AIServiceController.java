@@ -1,6 +1,9 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package apiendpoints;
 
-import aiservice.ILLMService;
+import aiservice.LlmService;
 import data.WhiteBoardData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import request.AIDescriptionRequest;
 import request.AIRegularisationRequest;
-import request.IAIRequest;
-import response.IAIResponse;
+import request.AIRequestable;
+import response.AIResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,12 +28,12 @@ import java.nio.file.Path;
  * Handles interpretation and regularisation requests.
  */
 @RestController
-@RequestMapping("/api/image")
+@RequestMapping("/api")
 public class AIServiceController {
 
     /** Cloud-based AI service interface. */
     @Autowired
-    private ILLMService cloudService;
+    private LlmService cloudService;
 
     /**
      * Interprets an uploaded image and generates a textual description.
@@ -38,7 +41,7 @@ public class AIServiceController {
      * @param file uploaded image file (from client)
      * @return textual description of the image
      */
-    @PostMapping("/interpret")
+    @PostMapping("/image/interpret")
     public ResponseEntity<String> describe(
             @RequestParam("file") final MultipartFile file) {
         Path tempFile = null;
@@ -50,8 +53,8 @@ public class AIServiceController {
 
             // Pass file path to your existing data class
             WhiteBoardData data = new WhiteBoardData(tempFile.toString());
-            IAIRequest request = new AIDescriptionRequest(data);
-            IAIResponse response = cloudService.runProcess(request);
+            AIRequestable request = new AIDescriptionRequest(data);
+            AIResponse response = cloudService.runProcess(request);
 
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
@@ -74,11 +77,11 @@ public class AIServiceController {
      * @param points JSON string containing the points data
      * @return regularised point data as a response
      */
-    @PostMapping("/regularise")
+    @PostMapping("/image/regularise")
     public ResponseEntity<String> regularise(final @RequestBody String points) {
         try {
-            IAIRequest request = new AIRegularisationRequest(points);
-            IAIResponse response = cloudService.runProcess(request);
+            AIRequestable request = new AIRegularisationRequest(points);
+            AIResponse response = cloudService.runProcess(request);
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
             return ResponseEntity.status(
