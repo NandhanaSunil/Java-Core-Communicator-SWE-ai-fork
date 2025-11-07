@@ -46,7 +46,7 @@ public class ImageInterpreter implements IRequestProcessor {
 
         // add the image into the request body
         inlineDataNode.put("mimeType", "image/png");
-        inlineDataNode.put("data", aiRequest.getInput());
+        inlineDataNode.put("data", String.valueOf(aiRequest.getInput()));
 
         // Convert it to a json string
         final String jsonRequestBody =

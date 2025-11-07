@@ -1,9 +1,11 @@
 package request;
 
 /**
- * Defines an interface for making types of requests to AI.
+ * Represents a generic AI request.
+ *
+ * @param <T> the type of input data
  */
-public interface IAIRequest {
+public interface IAIRequest<T> {
 
     /**
      * Returns the prompt for the particular AI request.
@@ -17,7 +19,7 @@ public interface IAIRequest {
      *
      * @return the input as a String
      */
-    String getInput();
+    T getInput();
 
     /**
      * Returns the type of request.

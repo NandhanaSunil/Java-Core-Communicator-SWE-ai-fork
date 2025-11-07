@@ -20,13 +20,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import requestprocessor.SummarisationProcessor;
+import response.SummariserResponse;
+import org.springframework.scheduling.annotation.Async;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Gemini Service builds the request and calls the AI api.
  * Receives the AI response.
  */
 @Service
-public  class GeminiService implements ILLMService {
+public  final class GeminiService implements ILLMService {
     /**
      * Loads environment variables from the .env file.
      */
@@ -80,7 +84,9 @@ public  class GeminiService implements ILLMService {
         // initialises the request builders to redirect to specific requests
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
+        registry.put("SUMMARISE", new SummarisationProcessor());
     }
+
 
     /**
      * {@inheritDoc}
@@ -99,12 +105,23 @@ public  class GeminiService implements ILLMService {
             // the request is of image regularization,
             // the request builder for regularization is called
             returnResponse = new RegulariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
+            returnResponse = new SummariserResponse();
         }
 
         // from the registry we will get the requestProcessor
         // according to the request type.
-        IRequestProcessor processor =
-                registry.get(aiRequest.getReqType());
+        System.out.println("DEBUG >>> ReqType: " + aiRequest.getReqType());
+        System.out.println("DEBUG >>> Registered keys: " + registry.keySet());
+
+
+        IRequestProcessor processor = registry.get(aiRequest.getReqType());
+        if (processor == null) {
+            throw new IllegalArgumentException("No processor found for request type: " + aiRequest.getReqType());
+        }
+
+
+
 
         // We get the json request string to send to
         // the api from the request processor.
@@ -155,5 +172,23 @@ public  class GeminiService implements ILLMService {
             }
         }
 
+    }
+    /**
+     * Executes an AI request asynchronously in a background thread.
+     *
+     * @param aiRequest the AI request to process
+     * @return a CompletableFuture containing the AI response
+     */
+    @Async("aiExecutor")
+    public CompletableFuture<IAIResponse> runProcessAsync(final IAIRequest aiRequest) {
+        try {
+            IAIResponse response = runProcess(aiRequest);
+            return CompletableFuture.completedFuture(response);
+        } catch (IOException e) {
+            CompletableFuture<IAIResponse> failedFuture =
+                    new CompletableFuture<>();
+            failedFuture.completeExceptionally(e);
+            return failedFuture;
+        }
     }
 }

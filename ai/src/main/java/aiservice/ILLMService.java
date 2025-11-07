@@ -2,6 +2,7 @@ package aiservice;
 
 import request.IAIRequest;
 import response.IAIResponse;
+import java.util.concurrent.CompletableFuture;
 
 import java.io.IOException;
 
@@ -16,5 +17,12 @@ public interface ILLMService {
      * @throws IOException
      */
     IAIResponse runProcess(IAIRequest request) throws IOException;
+    /**
+     * Executes an AI request asynchronously.
+     *
+     * @param aiRequest the request to process
+     * @return a future containing the AI response
+     */
+    CompletableFuture<IAIResponse> runProcessAsync(IAIRequest aiRequest);
 
 }
