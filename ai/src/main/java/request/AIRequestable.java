@@ -2,6 +2,7 @@ package request;
 
 /**
  * Defines an interface for making types of requests to AI.
+ * @param  <T> to specify the type of the input got from getInput()
  */
 public interface AIRequestable<T> {
 
