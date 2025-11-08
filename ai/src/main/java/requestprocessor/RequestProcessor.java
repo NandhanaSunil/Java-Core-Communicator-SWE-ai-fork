@@ -4,7 +4,7 @@
 package requestprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import request.AIRequestable;
+import request.AiRequestable;
 import java.io.IOException;
 
 /**
@@ -22,5 +22,5 @@ public interface RequestProcessor {
      * @throws IOException in case of any exceptions.
      */
     String processRequest(ObjectMapper objectMapper,
-                           AIRequestable request) throws IOException;
+                           AiRequestable request) throws IOException;
 }

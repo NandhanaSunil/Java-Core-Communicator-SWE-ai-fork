@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import request.AIDescriptionRequest;
-import request.AIRegularisationRequest;
-import request.AIRequestable;
-import response.AIResponse;
+import request.AiDescriptionRequest;
+import request.AiRegularisationRequest;
+import request.AiRequestable;
+import response.AiResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +29,7 @@ import java.nio.file.Path;
  */
 @RestController
 @RequestMapping("/api")
-public class AIServiceController {
+public class AiServiceController {
 
     /** Cloud-based AI service interface. */
     @Autowired
@@ -53,8 +53,8 @@ public class AIServiceController {
 
             // Pass file path to your existing data class
             WhiteBoardData data = new WhiteBoardData(tempFile.toString());
-            AIRequestable request = new AIDescriptionRequest(data);
-            AIResponse response = cloudService.runProcess(request);
+            AiRequestable request = new AiDescriptionRequest(data);
+            AiResponse response = cloudService.runProcess(request);
 
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
@@ -80,8 +80,8 @@ public class AIServiceController {
     @PostMapping("/image/regularise")
     public ResponseEntity<String> regularise(final @RequestBody String points) {
         try {
-            AIRequestable request = new AIRegularisationRequest(points);
-            AIResponse response = cloudService.runProcess(request);
+            AiRequestable request = new AiRegularisationRequest(points);
+            AiResponse response = cloudService.runProcess(request);
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
             return ResponseEntity.status(

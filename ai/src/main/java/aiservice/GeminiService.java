@@ -14,9 +14,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
 import regulariser.ImageRegularize;
-import request.AIRequestable;
+import request.AiRequestable;
 import requestprocessor.RequestProcessor;
-import response.AIResponse;
+import response.AiResponse;
 import response.InterpreterResponse;
 import response.RegulariserResponse;
 import java.io.IOException;
@@ -89,10 +89,10 @@ public  class GeminiService implements LlmService {
      * {@inheritDoc}
      */
     @Override
-    public AIResponse runProcess(final AIRequestable aiRequest)
+    public AiResponse runProcess(final AiRequestable aiRequest)
             throws IOException {
         this.objectMapper = new ObjectMapper();
-        AIResponse returnResponse = null;
+        AiResponse returnResponse = null;
 
         if (Objects.equals(aiRequest.getReqType(), "DESC")) {
             // if the request is of image interpretation,

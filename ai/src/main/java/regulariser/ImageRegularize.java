@@ -3,7 +3,7 @@
  */
 package regulariser;
 
-import request.AIRequestable;
+import request.AiRequestable;
 import requestprocessor.RequestProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -29,7 +29,7 @@ public class ImageRegularize implements RequestProcessor {
      */
     @Override
     public String processRequest(
-            final ObjectMapper objectMapper, final AIRequestable aiRequest)
+            final ObjectMapper objectMapper, final AiRequestable aiRequest)
             throws IOException {
 
         // building the json request body(as expected by gemini api)

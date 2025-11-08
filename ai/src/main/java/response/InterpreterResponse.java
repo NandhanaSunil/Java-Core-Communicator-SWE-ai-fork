@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * InterpreterResponse, represents the image interpretation.
  */
-public class InterpreterResponse implements AIResponse {
+public class InterpreterResponse implements AiResponse {
     /**
      * Type stores the type of the particular response.
      */

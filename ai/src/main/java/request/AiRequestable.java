@@ -6,7 +6,7 @@ package request;
 /**
  * Defines an interface for making types of requests to AI.
  */
-public interface AIRequestable {
+public interface AiRequestable {
 
     /**
      * Returns the prompt for the particular AI request.

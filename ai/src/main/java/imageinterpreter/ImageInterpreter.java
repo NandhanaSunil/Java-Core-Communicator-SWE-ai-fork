@@ -4,7 +4,7 @@
 package imageinterpreter;
 
 import java.io.IOException;
-import request.AIRequestable;
+import request.AiRequestable;
 import requestprocessor.RequestProcessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +29,7 @@ public class ImageInterpreter implements RequestProcessor {
      */
     @Override
     public String processRequest(
-            final ObjectMapper objectMapper, final AIRequestable aiRequest)
+            final ObjectMapper objectMapper, final AiRequestable aiRequest)
             throws IOException {
         // building the json request body(as expected by gemini api)
         final ObjectNode rootNode =

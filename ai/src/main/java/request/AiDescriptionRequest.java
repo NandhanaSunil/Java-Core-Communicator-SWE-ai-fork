@@ -13,7 +13,7 @@ import java.util.Map;
  * AIDescriptionRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AIDescriptionRequest implements AIRequestable {
+public class AiDescriptionRequest implements AiRequestable {
     /**
      * metadata would store prompt.
      * Also, other details of the request like the content.
@@ -31,7 +31,7 @@ public class AIDescriptionRequest implements AIRequestable {
      * the default prompt corresponds to asking for a description.
      * @param inputData gets the image/whiteboard data
      */
-    public AIDescriptionRequest(
+    public AiDescriptionRequest(
             final WhiteBoardData inputData) throws IOException {
         // constructor, initialised the metadata,
         // adding the prompt(default prompt for interpretation)
@@ -48,7 +48,7 @@ public class AIDescriptionRequest implements AIRequestable {
      * @param prompt gets the prompt given by the user
      * @throws IOException in case of any exception
      */
-    public AIDescriptionRequest(final WhiteBoardData inputData,
+    public AiDescriptionRequest(final WhiteBoardData inputData,
                                 final String prompt) throws IOException {
         // constructor, initialised the metadata,
         // adding the prompt (if given by the user).
