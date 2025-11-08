@@ -1,6 +1,6 @@
 package apiendpoints;
 
-import aiservice.ILLMService;
+import aiservice.LlmService;
 import com.fasterxml.jackson.databind.JsonNode;
 import data.WhiteBoardData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import request.AIDescriptionRequest;
 import request.AIRegularisationRequest;
 import request.AiInsightsRequest;
-import request.IAIRequest;
-import response.IAIResponse;
+import request.AIRequestable;
+import response.AIResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,7 +32,7 @@ public class AIServiceController {
 
     /** Cloud-based AI service interface. */
     @Autowired
-    private ILLMService cloudService;
+    private LlmService cloudService;
 
     /**
      * Interprets an uploaded image and generates a textual description.
@@ -52,8 +52,8 @@ public class AIServiceController {
 
             // Pass file path to your existing data class
             WhiteBoardData data = new WhiteBoardData(tempFile.toString());
-            IAIRequest request = new AIDescriptionRequest(data);
-            IAIResponse response = cloudService.runProcess(request);
+            AIRequestable request = new AIDescriptionRequest(data);
+            AIResponse response = cloudService.runProcess(request);
 
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
@@ -79,8 +79,8 @@ public class AIServiceController {
     @PostMapping("/image/regularise")
     public ResponseEntity<String> regularise(final @RequestBody String points) {
         try {
-            IAIRequest request = new AIRegularisationRequest(points);
-            IAIResponse response = cloudService.runProcess(request);
+            AIRequestable request = new AIRegularisationRequest(points);
+            AIResponse response = cloudService.runProcess(request);
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
             return ResponseEntity.status(
@@ -99,8 +99,8 @@ public class AIServiceController {
     public ResponseEntity<String> sentiment(
             final @RequestBody JsonNode chatData) {
         try {
-            IAIRequest request = new AiInsightsRequest(chatData);
-            IAIResponse response = cloudService.runProcess(request);
+            AIRequestable request = new AiInsightsRequest(chatData);
+            AIResponse response = cloudService.runProcess(request);
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
             return ResponseEntity.status(

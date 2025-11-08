@@ -5,7 +5,7 @@ package request;
  *
  * @param <T> the type of the output of getInput()
  */
-public interface IAIRequest<T> {
+public interface AIRequestable<T> {
 
     /**
      * Returns the prompt for the particular AI request.

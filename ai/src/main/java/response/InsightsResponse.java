@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Insights response, represents the tuple (time, value of sentiment (float)).
  */
-public class InsightsResponse implements IAIResponse {
+public class InsightsResponse implements AIResponse {
     /**
      * Type stores the type of the particular response.
      */

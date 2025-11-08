@@ -1,14 +1,14 @@
 package requestprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import request.IAIRequest;
+import request.AIRequestable;
 import java.io.IOException;
 
 /**
  * IRequestProcessor class is used to build the json request body.
  *
  */
-public interface IRequestProcessor {
+public interface RequestProcessor {
     /**
      * Builds the json string for making the AI request.
      * @param objectMapper holds the structure for serializing
@@ -19,5 +19,5 @@ public interface IRequestProcessor {
      * @throws IOException in case of any exceptions.
      */
     String processRequest(ObjectMapper objectMapper,
-                           IAIRequest request) throws IOException;
+                           AIRequestable request) throws IOException;
 }

@@ -32,7 +32,7 @@ import java.util.Map;
  * AiInsightsRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AiInsightsRequest implements IAIRequest<JsonNode> {
+public class AiInsightsRequest implements AIRequestable<JsonNode> {
     /**
      * metaDataInsight stores the prompt.
      * Also, other details of the request like the content.

@@ -16,7 +16,7 @@ import java.util.Map;
  * AIDescriptionRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AIDescriptionRequest implements IAIRequest {
+public class AIDescriptionRequest implements AIRequestable {
     /**
      * metadata would store prompt.
      * Also, other details of the request like the content.
