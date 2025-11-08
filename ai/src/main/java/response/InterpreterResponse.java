@@ -1,3 +1,6 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package response;
 
 import java.util.HashMap;
@@ -23,15 +26,6 @@ public class InterpreterResponse implements AIResponse {
     public InterpreterResponse() {
         type = "Description Response";
         metaData = new HashMap<>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getType() {
-        // to return the type of the response.
-        return type;
     }
 
     /**

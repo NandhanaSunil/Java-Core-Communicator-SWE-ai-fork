@@ -1,3 +1,6 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package imageinterpreter;
 
 import java.io.IOException;
@@ -26,8 +29,7 @@ public class ImageInterpreter implements RequestProcessor {
      */
     @Override
     public String processRequest(
-            final ObjectMapper objectMapper,
-            final AIRequestable aiRequest)
+            final ObjectMapper objectMapper, final AIRequestable aiRequest)
             throws IOException {
         // building the json request body(as expected by gemini api)
         final ObjectNode rootNode =
@@ -47,8 +49,7 @@ public class ImageInterpreter implements RequestProcessor {
 
         // add the image into the request body
         inlineDataNode.put("mimeType", "image/png");
-        String aiResponseText = aiRequest.getInput().toString();
-        inlineDataNode.put("data", aiResponseText);
+        inlineDataNode.put("data", aiRequest.getInput().toString());
 
         // Convert it to a json string
         final String jsonRequestBody =

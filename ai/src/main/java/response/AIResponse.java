@@ -1,16 +1,12 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package response;
 
 /**
  * Interface for implementing various types of responses.
  */
 public interface AIResponse {
-
-    /**
-     * Returns the type of the AI response.
-     *
-     * @return the response type as a String
-     */
-    String getType();
 
     /**
      * Returns the content int the metadata of the AI response.

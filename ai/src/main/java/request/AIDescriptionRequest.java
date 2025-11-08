@@ -1,9 +1,6 @@
 /**
- * This package contains classes for interpreting images.
- * On interpreting the images,
- * AI-based descriptions are generated and shown as the output.
+ * Author : Abhirami R Iyer
  */
-
 package request;
 
 import data.WhiteBoardData;
