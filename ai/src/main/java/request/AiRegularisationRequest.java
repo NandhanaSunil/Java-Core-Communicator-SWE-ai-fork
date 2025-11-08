@@ -10,7 +10,7 @@ import java.util.Map;
  * AIRegularisationRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AIRegularisationRequest implements AIRequestable {
+public class AiRegularisationRequest implements AiRequestable {
     /**
      * metadata would store prompt, and other
      * details of the request like the content.
@@ -29,7 +29,7 @@ public class AIRegularisationRequest implements AIRequestable {
      * @param points to store the string
      *               containing points of the curve for regularisation
      */
-    public AIRegularisationRequest(final String points) {
+    public AiRegularisationRequest(final String points) {
         // constructor, initialised the metadata,
         // adding the prompt.
         metaData = new HashMap<>();
@@ -66,7 +66,7 @@ public class AIRegularisationRequest implements AIRequestable {
      *               containing points of the curve for regularisation
      * @param prompt to get the prompt if any
      */
-    public AIRegularisationRequest(final String points, final String prompt) {
+    public AiRegularisationRequest(final String points, final String prompt) {
         // constructor, initialised the metadata,
         // adding the prompt.
         metaData = new HashMap<>();

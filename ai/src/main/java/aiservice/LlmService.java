@@ -3,8 +3,8 @@
  */
 package aiservice;
 
-import request.AIRequestable;
-import response.AIResponse;
+import request.AiRequestable;
+import response.AiResponse;
 
 import java.io.IOException;
 
@@ -18,6 +18,6 @@ public interface LlmService {
      * @return AIResponse, returns the response from AI
      * @throws IOException
      */
-    AIResponse runProcess(AIRequestable request) throws IOException;
+    AiResponse runProcess(AiRequestable request) throws IOException;
 
 }

@@ -1,3 +1,9 @@
+/**
+ * Class that handles insights response creation.
+ * @author Nandhana Sunil
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 package response;
 
 import java.util.HashMap;
@@ -6,7 +12,7 @@ import java.util.Map;
 /**
  * Insights response, represents the tuple (time, value of sentiment (float)).
  */
-public class InsightsResponse implements AIResponse {
+public class InsightsResponse implements AiResponse {
     /**
      * Type stores the type of the particular response.
      */

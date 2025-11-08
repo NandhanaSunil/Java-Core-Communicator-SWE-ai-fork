@@ -6,7 +6,7 @@ package response;
 /**
  * Interface for implementing various types of responses.
  */
-public interface AIResponse {
+public interface AiResponse {
 
     /**
      * Returns the content int the metadata of the AI response.

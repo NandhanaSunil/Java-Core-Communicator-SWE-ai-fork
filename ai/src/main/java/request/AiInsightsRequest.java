@@ -32,7 +32,7 @@ import java.util.Map;
  * AiInsightsRequest class inherits the IAIRequest.
  * Stores the metadata of the request to be made to the AI.
  */
-public class AiInsightsRequest implements AIRequestable<JsonNode> {
+public class AiInsightsRequest implements AiRequestable<JsonNode> {
     /**
      * metaDataInsight stores the prompt.
      * Also, other details of the request like the content.
@@ -53,31 +53,26 @@ public class AiInsightsRequest implements AIRequestable<JsonNode> {
         // Initialises the metaDataInsight with prompt and data.
         metaDataInsight = new HashMap<>();
         metaDataInsight.put("InputChatData", chatData);
-        metaDataInsight.put("RequestPrompt",
-                "You are performing sentiment analysis "
-                        + "on a chronological chat conversation.  \n"
-                        + "\n"
-                        + "For each message in the chat:\n"
-                        + "- Determine the sentiment on"
-                        + " a scale from -10.0 to +10.0 \n"
-                        + "  where -1.0 = very negative, 0 = neutral,"
-                        + " and +1.0 = very positive.\n"
-                        + "- Use only the \"message\" field"
-                        + " to determine sentiment.\n"
-                        + "- Preserve the precise timestamp"
-                        + " associated with each message.\n"
-                        + "\n"
-                        + "Return the output as a JSON array"
-                        + " of objects in the exact format below, \n"
-                        + "without any additional"
-                        + " commentary or explanation:\n"
-                        + "\n"
-                        + "[\n"
-                        + "  {\n"
-                        + "    \"time\": \"<timestamp>\",\n"
-                        + "    \"sentiment\": <float>\n"
-                        + "  },\n"
-                        + "  ...");
+        metaDataInsight.put("RequestPrompt", """
+        You are performing sentiment analysis on a chronological chat conversation.
+
+        For each message in the chat:
+        - Determine the sentiment on a scale from -10.0 to +10.0
+          where -1.0 = very negative, 0 = neutral, and +1.0 = very positive.
+        - Use only the "message" field to determine sentiment.
+        - Preserve the precise timestamp associated with each message.
+
+        Return the output as a JSON array of objects in the exact format below,
+        without any additional commentary or explanation:
+
+        [
+          {
+            "time": "<timestamp>",
+            "sentiment": <float>
+          },
+          ...
+        ]
+        """);
         type = "INS";
     }
 

@@ -22,7 +22,7 @@ package insightsgenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import request.AIRequestable;
+import request.AiRequestable;
 import requestprocessor.RequestProcessor;
 
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class InsightsGenerator implements RequestProcessor {
     @Override
     public String processRequest(
             final ObjectMapper objectMapper,
-            final AIRequestable request
+            final AiRequestable request
     )throws IOException {
         // Creates a tree-like json structure to send to LLM
         final ObjectNode rootNode = objectMapper.createObjectNode();

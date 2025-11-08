@@ -1,7 +1,7 @@
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\GeminiService.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\LlmService.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\package-info.java
-C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\apiendpoints\AIServiceController.java
+C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\apiendpoints\AiServiceController.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\apiendpoints\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\data\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\data\WhiteBoardData.java
@@ -13,14 +13,14 @@ C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\main\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\regulariser\ImageRegularize.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\regulariser\package-info.java
-C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIDescriptionRequest.java
+C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiDescriptionRequest.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiInsightsRequest.java
-C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRegularisationRequest.java
-C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRequestable.java
+C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiRegularisationRequest.java
+C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiRequestable.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\RequestProcessor.java
-C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\AIResponse.java
+C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\AiResponse.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\InsightsResponse.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\InterpreterResponse.java
 C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\package-info.java

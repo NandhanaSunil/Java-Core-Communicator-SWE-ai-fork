@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * RegulariserResponse holds the response of AI regularisation.
  */
-public class RegulariserResponse implements AIResponse {
+public class RegulariserResponse implements AiResponse {
     /**
      * Type stores the type of the particular response.
      */
