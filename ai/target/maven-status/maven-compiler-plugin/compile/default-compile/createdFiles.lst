@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 response\AiResponse.class
 response\InterpreterResponse.class
 request\package-info.class
@@ -8,6 +9,7 @@ request\AiRegularisationRequest.class
 response\package-info.class
 insightsGenerator\package-info.class
 aiservice\GeminiService.class
+configu\AsyncConfig.class
 response\RegulariserResponse.class
 aiservice\package-info.class
 request\AiRequestable.class
@@ -18,10 +20,42 @@ imageinterpreter\ImageInterpreter.class
 request\AiDescriptionRequest.class
 data\package-info.class
 aiservice\LlmService.class
+response\SummariserResponse.class
 response\InsightsResponse.class
+requestprocessor\SummarisationProcessor.class
 data\WhiteBoardData.class
 requestprocessor\package-info.class
 regulariser\package-info.class
+request\AISummarisationRequest.class
 apiendpoints\AiServiceController.class
 request\AiInsightsRequest.class
 main\package-info.class
+=======
+aiservice/package-info.class
+apiendpoints/package-info.class
+apiendpoints/AIServiceController.class
+request/package-info.class
+configu/AsyncConfig.class
+aiservice/ILLMService.class
+request/AIRegularisationRequest.class
+response/InterpreterResponse.class
+main/Main.class
+regulariser/package-info.class
+requestprocessor/package-info.class
+requestprocessor/SummarisationProcessor.class
+data/WhiteBoardData.class
+main/package-info.class
+data/package-info.class
+response/SummariserResponse.class
+regulariser/ImageRegularize.class
+imageinterpreter/package-info.class
+response/IAIResponse.class
+request/AIDescriptionRequest.class
+response/RegulariserResponse.class
+requestprocessor/IRequestProcessor.class
+aiservice/GeminiService.class
+imageinterpreter/ImageInterpreter.class
+request/IAIRequest.class
+response/package-info.class
+request/AISummarisationRequest.class
+>>>>>>> 8d99f13819937a591fad64e1be3a79e6bfae552b

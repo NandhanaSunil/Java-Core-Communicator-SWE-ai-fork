@@ -25,13 +25,17 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import requestprocessor.SummarisationProcessor;
+import response.SummariserResponse;
+import org.springframework.scheduling.annotation.Async;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Gemini Service builds the request and calls the AI api.
  * Receives the AI response.
  */
 @Service
-public  class GeminiService implements LlmService {
+public final class GeminiService implements LlmService {
     /**
      * Loads environment variables from the .env file.
      */
@@ -86,6 +90,7 @@ public  class GeminiService implements LlmService {
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
+        registry.put("SUMMARISE", new SummarisationProcessor());
     }
 
     /**
@@ -108,12 +113,25 @@ public  class GeminiService implements LlmService {
         } else if (Objects.equals(aiRequest.getReqType(), "INS")) {
             // the request is for insights generation
             returnResponse = new InsightsResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
+            returnResponse = new SummariserResponse();
         }
 
         // from the registry we will get the requestProcessor
         // according to the request type.
+        System.out.println("DEBUG >>> ReqType: " + aiRequest.getReqType());
+        System.out.println("DEBUG >>> Registered keys: " + registry.keySet());
+
         RequestProcessor processor =
                 registry.get(aiRequest.getReqType());
+        if (processor == null) {
+            throw new IllegalArgumentException("No processor found "
+                   +  "for request type: "
+                    + aiRequest.getReqType());
+        }
+
+
+
 
         // We get the json request string to send to
         // the api from the request processor.
@@ -163,5 +181,24 @@ public  class GeminiService implements LlmService {
             }
         }
 
+    }
+    /**
+     * Executes an AI request asynchronously in a background thread.
+     *
+     * @param aiRequest the AI request to process
+     * @return a CompletableFuture containing the AI response
+     */
+    @Async("aiExecutor")
+    public CompletableFuture<AiResponse> runProcessAsync(
+            final AiRequestable aiRequest) {
+        try {
+            AiResponse response = runProcess(aiRequest);
+            return CompletableFuture.completedFuture(response);
+        } catch (IOException e) {
+            CompletableFuture<AiResponse> failedFuture =
+                    new CompletableFuture<>();
+            failedFuture.completeExceptionally(e);
+            return failedFuture;
+        }
     }
 }

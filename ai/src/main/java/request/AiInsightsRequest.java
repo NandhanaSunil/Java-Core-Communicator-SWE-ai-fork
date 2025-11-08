@@ -54,7 +54,8 @@ public class AiInsightsRequest implements AiRequestable<JsonNode> {
         metaDataInsight = new HashMap<>();
         metaDataInsight.put("InputChatData", chatData);
         metaDataInsight.put("RequestPrompt", """
-        You are performing sentiment analysis on a chronological chat conversation.
+        You are performing sentiment analysis on a
+        chronological chat conversation.
 
         For each message in the chat:
         - Determine the sentiment on a scale from -10.0 to +10.0
