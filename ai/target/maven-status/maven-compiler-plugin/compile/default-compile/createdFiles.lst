@@ -1,6 +1,7 @@
 requestprocessor\IRequestProcessor.class
 response\InterpreterResponse.class
 request\package-info.class
+insightsgenerator\InsightsGenerator.class
 apiendpoints\package-info.class
 response\IAIResponse.class
 main\Main.class
@@ -12,7 +13,7 @@ response\RegulariserResponse.class
 request\AIRegularisationRequest.class
 aiservice\package-info.class
 request\AIDescriptionRequest.class
-insightsGenerator\InsightsGenerator.class
+insightsgenerator\package-info.class
 imageinterpreter\package-info.class
 imageinterpreter\ImageInterpreter.class
 data\package-info.class
