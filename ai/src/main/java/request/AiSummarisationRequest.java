@@ -2,10 +2,8 @@ package request;
 
 /**
  * Creates a new summarisation request.
- *
- * @param inputJson the JSON string containing chat data
  */
-public class AISummarisationRequest implements IAIRequest<String> {
+public class AiSummarisationRequest implements AiRequestable<String> {
 
     /**
      * Raw chat data in JSON format.
@@ -17,7 +15,7 @@ public class AISummarisationRequest implements IAIRequest<String> {
      *
      * @param inputJson the chat data JSON
      */
-    public AISummarisationRequest(final String inputJson) {
+    public AiSummarisationRequest(final String inputJson) {
         this.jsonInput = inputJson;
     }
 
@@ -28,7 +26,8 @@ public class AISummarisationRequest implements IAIRequest<String> {
      */
     @Override
     public String getContext() {
-        return "Summarize the following chat data into a concise, meaningful summary.";
+        return "Summarize the "
+               + "following chat data into a concise, meaningful summary.";
     }
 
     /**

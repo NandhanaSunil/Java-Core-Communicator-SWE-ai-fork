@@ -1,11 +1,13 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package request;
 
 /**
- * Represents a generic AI request.
- *
- * @param <T> the type of input data
+ * Defines an interface for making types of requests to AI.
+ * @param  <T> to specify the type of the input got from getInput()
  */
-public interface IAIRequest<T> {
+public interface AiRequestable<T> {
 
     /**
      * Returns the prompt for the particular AI request.
@@ -26,6 +28,7 @@ public interface IAIRequest<T> {
      *
      * @return "REG" if regularization,
      * "DESC" if interpretation
+     * "INS" if insights generation
      */
     String getReqType();
 }

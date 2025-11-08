@@ -1,6 +1,10 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package apiendpoints;
 
-import aiservice.ILLMService;
+import aiservice.LlmService;
+import com.fasterxml.jackson.databind.JsonNode;
 import data.WhiteBoardData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,18 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import request.AIDescriptionRequest;
-import request.AIRegularisationRequest;
-import request.IAIRequest;
-import response.IAIResponse;
-import request.AISummarisationRequest;
+import request.AiDescriptionRequest;
+import request.AiRegularisationRequest;
+import request.AiRequestable;
+import response.AiResponse;
+import request.AiInsightsRequest;
+import request.AiSummarisationRequest;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-
-
-
-
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,13 +34,13 @@ import java.nio.file.Path;
  */
 @RestController
 @RequestMapping("/api")
-public class AIServiceController {
+public class AiServiceController {
 
     /**
      * Cloud-based AI services interface.
      */
     @Autowired
-    private ILLMService cloudService;
+    private LlmService cloudService;
 
     /**
      * Interprets an uploaded image and generates a textual description.
@@ -60,8 +60,8 @@ public class AIServiceController {
 
             // Pass file path to your existing data class
             WhiteBoardData data = new WhiteBoardData(tempFile.toString());
-            IAIRequest request = new AIDescriptionRequest(data);
-            IAIResponse response = cloudService.runProcess(request);
+            AiRequestable request = new AiDescriptionRequest(data);
+            AiResponse response = cloudService.runProcess(request);
 
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
@@ -87,8 +87,28 @@ public class AIServiceController {
     @PostMapping("/image/regularise")
     public ResponseEntity<String> regularise(final @RequestBody String points) {
         try {
-            IAIRequest request = new AIRegularisationRequest(points);
-            IAIResponse response = cloudService.runProcess(request);
+            AiRequestable request = new AiRegularisationRequest(points);
+            AiResponse response = cloudService.runProcess(request);
+            return ResponseEntity.ok(response.getResponse());
+        } catch (IOException e) {
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR).body(
+                            "Error: " + e.getMessage());
+        }
+    }
+    /**
+     * API for sentiment analysis.
+     * Recieves chats as a json file, does sentiment analysis,
+     * and generates insights graph
+     * @param chatData JSON object containing the chat data
+     * @return a list float values to plot in the sentiment graph.
+     */
+    @PostMapping("/chat/sentiment")
+    public ResponseEntity<String> sentiment(
+            final @RequestBody JsonNode chatData) {
+        try {
+            AiRequestable request = new AiInsightsRequest(chatData);
+            AiResponse response = cloudService.runProcess(request);
             return ResponseEntity.ok(response.getResponse());
         } catch (IOException e) {
             return ResponseEntity.status(
@@ -106,12 +126,12 @@ public class AIServiceController {
     public ResponseEntity<String> summariseText(
             @RequestBody final String jsonContent) {
         try {
-            IAIRequest request = new AISummarisationRequest(jsonContent);
+            AiRequestable request = new AiSummarisationRequest(jsonContent);
 
             // Run asynchronously with timeout
-            CompletableFuture<IAIResponse> responseFuture =
+            CompletableFuture<AiResponse> responseFuture =
                     cloudService.runProcessAsync(request);
-            IAIResponse response =
+            AiResponse response =
                     responseFuture.get(60, TimeUnit.SECONDS);
 
             return ResponseEntity.ok(response.getResponse());

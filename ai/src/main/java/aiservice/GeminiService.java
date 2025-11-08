@@ -1,8 +1,12 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package aiservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import imageinterpreter.ImageInterpreter;
+import insightsgenerator.InsightsGenerator;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -11,9 +15,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import org.springframework.stereotype.Service;
 import regulariser.ImageRegularize;
-import request.IAIRequest;
-import requestprocessor.IRequestProcessor;
-import response.IAIResponse;
+import request.AiRequestable;
+import requestprocessor.RequestProcessor;
+import response.AiResponse;
+import response.InsightsResponse;
 import response.InterpreterResponse;
 import response.RegulariserResponse;
 import java.io.IOException;
@@ -30,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
  * Receives the AI response.
  */
 @Service
-public  final class GeminiService implements ILLMService {
+public final class GeminiService implements LlmService {
     /**
      * Loads environment variables from the .env file.
      */
@@ -60,7 +65,7 @@ public  final class GeminiService implements ILLMService {
     /**
      * registry to hold the request processor against request types.
      */
-    private final HashMap<String, IRequestProcessor> registry =
+    private final HashMap<String, RequestProcessor> registry =
             new HashMap<>();
 
     /**
@@ -84,18 +89,18 @@ public  final class GeminiService implements ILLMService {
         // initialises the request builders to redirect to specific requests
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
+        registry.put("INS", new InsightsGenerator());
         registry.put("SUMMARISE", new SummarisationProcessor());
     }
-
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public IAIResponse runProcess(final IAIRequest aiRequest)
+    public AiResponse runProcess(final AiRequestable aiRequest)
             throws IOException {
         this.objectMapper = new ObjectMapper();
-        IAIResponse returnResponse = null;
+        AiResponse returnResponse = null;
 
         if (Objects.equals(aiRequest.getReqType(), "DESC")) {
             // if the request is of image interpretation,
@@ -105,6 +110,9 @@ public  final class GeminiService implements ILLMService {
             // the request is of image regularization,
             // the request builder for regularization is called
             returnResponse = new RegulariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "INS")) {
+            // the request is for insights generation
+            returnResponse = new InsightsResponse();
         } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
             returnResponse = new SummariserResponse();
         }
@@ -114,10 +122,12 @@ public  final class GeminiService implements ILLMService {
         System.out.println("DEBUG >>> ReqType: " + aiRequest.getReqType());
         System.out.println("DEBUG >>> Registered keys: " + registry.keySet());
 
-
-        IRequestProcessor processor = registry.get(aiRequest.getReqType());
+        RequestProcessor processor =
+                registry.get(aiRequest.getReqType());
         if (processor == null) {
-            throw new IllegalArgumentException("No processor found for request type: " + aiRequest.getReqType());
+            throw new IllegalArgumentException("No processor found "
+                   +  "for request type: "
+                    + aiRequest.getReqType());
         }
 
 
@@ -127,7 +137,6 @@ public  final class GeminiService implements ILLMService {
         // the api from the request processor.
         String jsonRequestBody =
                 processor.processRequest(this.objectMapper, aiRequest);
-
         // the api url is created concatenating
         // the url template and the api key
         final String apiUrl =
@@ -180,12 +189,13 @@ public  final class GeminiService implements ILLMService {
      * @return a CompletableFuture containing the AI response
      */
     @Async("aiExecutor")
-    public CompletableFuture<IAIResponse> runProcessAsync(final IAIRequest aiRequest) {
+    public CompletableFuture<AiResponse> runProcessAsync(
+            final AiRequestable aiRequest) {
         try {
-            IAIResponse response = runProcess(aiRequest);
+            AiResponse response = runProcess(aiRequest);
             return CompletableFuture.completedFuture(response);
         } catch (IOException e) {
-            CompletableFuture<IAIResponse> failedFuture =
+            CompletableFuture<AiResponse> failedFuture =
                     new CompletableFuture<>();
             failedFuture.completeExceptionally(e);
             return failedFuture;

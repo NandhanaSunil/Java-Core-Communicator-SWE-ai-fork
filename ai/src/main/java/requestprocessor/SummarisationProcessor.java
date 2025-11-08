@@ -2,15 +2,16 @@ package requestprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import request.IAIRequest;
+import request.AiRequestable;
 
 /**
  * Handles the creation of the JSON body used for chat summarisation requests.
  * This processor takes chat data provided in the request and structures it
  * into the JSON format expected by the Gemini API. The goal is to include both
- * the summarisation instruction and the conversation content in a single payload.
+ * the summarisation instruction and the conversation content
+ * in a single payload.
  */
-public class SummarisationProcessor implements IRequestProcessor {
+public class SummarisationProcessor implements RequestProcessor {
 
     /**
      * Converts the summarisation request into a Gemini-compatible JSON string.
@@ -23,7 +24,7 @@ public class SummarisationProcessor implements IRequestProcessor {
      */
     @Override
     public String processRequest(final ObjectMapper objectMapper,
-                                 final IAIRequest aiRequest) {
+                                 final AiRequestable aiRequest) {
         try {
             // Build the text prompt for the model
             final String prompt =
@@ -45,7 +46,8 @@ public class SummarisationProcessor implements IRequestProcessor {
             return objectMapper.writeValueAsString(root);
 
         } catch (Exception e) {
-            throw new RuntimeException("Error building summarisation request JSON", e);
+            throw new RuntimeException("Error building"
+                    + " summarisation request JSON", e);
         }
     }
 }

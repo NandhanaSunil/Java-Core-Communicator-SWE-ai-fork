@@ -1,3 +1,6 @@
+/**
+ * Author : Abhirami R Iyer
+ */
 package response;
 
 import java.util.HashMap;
@@ -6,7 +9,7 @@ import java.util.Map;
 /**
  * RegulariserResponse holds the response of AI regularisation.
  */
-public class RegulariserResponse implements IAIResponse {
+public class RegulariserResponse implements AiResponse {
     /**
      * Type stores the type of the particular response.
      */
@@ -24,15 +27,6 @@ public class RegulariserResponse implements IAIResponse {
         type = "Regulariser Response";
         metaData = new HashMap<>();
 
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getType() {
-        // to return the type of the response.
-        return type;
     }
 
     /**

@@ -7,7 +7,7 @@ package response;
  * identifies the response type for downstream handling.
  * </p>
  */
-public class SummariserResponse implements IAIResponse {
+public class SummariserResponse implements AiResponse {
 
     /**
      * The summary text returned by the AI model.
@@ -44,15 +44,5 @@ public class SummariserResponse implements IAIResponse {
      */
     public String getResponseText() {
         return responseText;
-    }
-
-    /**
-     * Identifies this response type as a summarisation response.
-     *
-     * @return the response type string
-     */
-    @Override
-    public String getType() {
-        return "SUMMARISE";
     }
 }
