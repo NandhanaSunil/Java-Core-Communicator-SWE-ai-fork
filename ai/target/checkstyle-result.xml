@@ -1,32 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="9.3">
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\GeminiService.java">
+<file name="C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\main\Main.java">
+<error line="15" column="1" severity="error" message="Utility classes should not have a public or default constructor." source="com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck"/>
 </file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\LlmService.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\apiendpoints\AIServiceController.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\data\WhiteBoardData.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\imageinterpreter\ImageInterpreter.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\main\Main.java">
-<error line="14" column="1" severity="error" message="Utility classes should not have a public or default constructor." source="com.puppycrawl.tools.checkstyle.checks.design.HideUtilityClassConstructorCheck"/>
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\regulariser\ImageRegularize.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIDescriptionRequest.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRegularisationRequest.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRequestable.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\RequestProcessor.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\AIResponse.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\InterpreterResponse.java">
-</file>
-<file name="C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\RegulariserResponse.java">
+<file name="C:\Users\nandh\OneDrive\Desktop\Software_Engg\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRequestable.java">
 </file>
 </checkstyle>

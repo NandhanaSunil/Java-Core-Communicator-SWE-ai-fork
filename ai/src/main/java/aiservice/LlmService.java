@@ -15,7 +15,7 @@ public interface LlmService {
     /**
      * Function to send the request to AI api and get the response.
      * @param request holds the request of the user
-     * @return IAIResponse, returns the response from AI
+     * @return AIResponse, returns the response from AI
      * @throws IOException
      */
     AiResponse runProcess(AiRequestable request) throws IOException;

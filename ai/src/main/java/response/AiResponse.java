@@ -9,13 +9,6 @@ package response;
 public interface AiResponse {
 
     /**
-     * Returns the type of the AI response.
-     *
-     * @return the response type as a String
-     */
-    String getType();
-
-    /**
      * Returns the content int the metadata of the AI response.
      *
      * @return the response content as a String

@@ -10,6 +10,7 @@ import java.io.IOException;
  *
  * <p>This class loads the necessary classes,
  * prepares the request, and calls the Gemini API.
+ * </p>
  */
 @SpringBootApplication(scanBasePackages = {"main", "apiendpoints", "aiservice"})
 public class Main {

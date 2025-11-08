@@ -33,15 +33,6 @@ public class RegulariserResponse implements AiResponse {
      * {@inheritDoc}
      */
     @Override
-    public String getType() {
-        // to return the type of the response.
-        return type;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public String getResponse() {
         // to return the contents of the response
         return metaData.get("Content");

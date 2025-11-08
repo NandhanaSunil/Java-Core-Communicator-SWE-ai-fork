@@ -49,7 +49,7 @@ public class ImageInterpreter implements RequestProcessor {
 
         // add the image into the request body
         inlineDataNode.put("mimeType", "image/png");
-        inlineDataNode.put("data", aiRequest.getInput());
+        inlineDataNode.put("data", aiRequest.getInput().toString());
 
         // Convert it to a json string
         final String jsonRequestBody =

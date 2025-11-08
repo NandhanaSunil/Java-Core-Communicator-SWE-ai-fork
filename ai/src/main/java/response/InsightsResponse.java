@@ -1,5 +1,8 @@
 /**
- * Author : Abhirami R Iyer
+ * Class that handles insights response creation.
+ * @author Nandhana Sunil
+ * @version 1.0.0
+ * @since 1.0.0
  */
 package response;
 
@@ -7,24 +10,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * InterpreterResponse, represents the image interpretation.
+ * Insights response, represents the tuple (time, value of sentiment (float)).
  */
-public class InterpreterResponse implements AiResponse {
+public class InsightsResponse implements AiResponse {
     /**
      * Type stores the type of the particular response.
      */
-    private String type;
+    private final String type;
 
     /**
      *  metadata would contain the response details.
      */
-    private Map<String, String> metaData;
+    private final Map<String, String> metaData;
 
     /**
      * Constructs an InterpreterResponse and initializes it to a default type.
      */
-    public InterpreterResponse() {
-        type = "Description Response";
+    public InsightsResponse() {
+        type = "Insights graph points";
         metaData = new HashMap<>();
     }
 
@@ -44,8 +47,7 @@ public class InterpreterResponse implements AiResponse {
      */
     @Override
     public void setResponse(final String content) {
-        // to set the content incase of recieving resposne from the Ai model
+        // to set the content in case of receiving response from the Ai model
         metaData.put("Content", content);
     }
-
 }

@@ -4,6 +4,7 @@
 package apiendpoints;
 
 import aiservice.LlmService;
+import com.fasterxml.jackson.databind.JsonNode;
 import data.WhiteBoardData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import request.AiDescriptionRequest;
 import request.AiRegularisationRequest;
 import request.AiRequestable;
 import response.AiResponse;
+import request.AiInsightsRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -87,6 +89,26 @@ public class AiServiceController {
             return ResponseEntity.status(
                     HttpStatus.INTERNAL_SERVER_ERROR).body(
                             "Error: " + e.getMessage());
+        }
+    }
+    /**
+     * API for sentiment analysis.
+     * Recieves chats as a json file, does sentiment analysis,
+     * and generates insights graph
+     * @param chatData JSON object containing the chat data
+     * @return a list float values to plot in the sentiment graph.
+     */
+    @PostMapping("/chat/sentiment")
+    public ResponseEntity<String> sentiment(
+            final @RequestBody JsonNode chatData) {
+        try {
+            AiRequestable request = new AiInsightsRequest(chatData);
+            AiResponse response = cloudService.runProcess(request);
+            return ResponseEntity.ok(response.getResponse());
+        } catch (IOException e) {
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "Error: " + e.getMessage());
         }
     }
 }

@@ -6,6 +6,7 @@ package aiservice;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import imageinterpreter.ImageInterpreter;
+import insightsgenerator.InsightsGenerator;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -17,6 +18,7 @@ import regulariser.ImageRegularize;
 import request.AiRequestable;
 import requestprocessor.RequestProcessor;
 import response.AiResponse;
+import response.InsightsResponse;
 import response.InterpreterResponse;
 import response.RegulariserResponse;
 import java.io.IOException;
@@ -83,6 +85,7 @@ public  class GeminiService implements LlmService {
         // initialises the request builders to redirect to specific requests
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
+        registry.put("INS", new InsightsGenerator());
     }
 
     /**
@@ -102,6 +105,9 @@ public  class GeminiService implements LlmService {
             // the request is of image regularization,
             // the request builder for regularization is called
             returnResponse = new RegulariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "INS")) {
+            // the request is for insights generation
+            returnResponse = new InsightsResponse();
         }
 
         // from the registry we will get the requestProcessor
@@ -113,7 +119,6 @@ public  class GeminiService implements LlmService {
         // the api from the request processor.
         String jsonRequestBody =
                 processor.processRequest(this.objectMapper, aiRequest);
-
         // the api url is created concatenating
         // the url template and the api key
         final String apiUrl =
