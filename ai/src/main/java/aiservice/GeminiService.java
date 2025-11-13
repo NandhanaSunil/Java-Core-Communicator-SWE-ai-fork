@@ -76,7 +76,7 @@ public final class GeminiService implements LlmService {
         // env file (to be changed to fetch from cloud)
         this.geminiApiKey = dotenv.get("GEMINI_API_KEY");
 
-        final int timeout = 100;
+        final int timeout = 200;
         final int readMul = 6;
         // creating an http client
         this.httpClient = new OkHttpClient.Builder()
@@ -129,7 +129,6 @@ public final class GeminiService implements LlmService {
                    +  "for request type: "
                     + aiRequest.getReqType());
         }
-
 
 
 

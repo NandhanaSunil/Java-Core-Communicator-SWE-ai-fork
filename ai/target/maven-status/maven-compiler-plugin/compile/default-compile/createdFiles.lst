@@ -26,6 +26,7 @@ data\WhiteBoardData.class
 request\AiSummarisationRequest.class
 requestprocessor\package-info.class
 regulariser\package-info.class
+apiendpoints\AsyncAiExecutor.class
 configu\package-info.class
 apiendpoints\AiServiceController.class
 request\AiInsightsRequest.class

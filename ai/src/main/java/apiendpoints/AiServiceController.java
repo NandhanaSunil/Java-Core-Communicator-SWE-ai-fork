@@ -7,6 +7,7 @@ import aiservice.LlmService;
 import com.fasterxml.jackson.databind.JsonNode;
 import data.WhiteBoardData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,8 @@ import response.AiResponse;
 import request.AiInsightsRequest;
 import request.AiSummarisationRequest;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import java.io.IOException;
@@ -36,11 +39,8 @@ import java.nio.file.Path;
 @RequestMapping("/api")
 public class AiServiceController {
 
-    /**
-     * Cloud-based AI services interface.
-     */
     @Autowired
-    private LlmService cloudService;
+    private AsyncAiExecutor asyncExecutor;
 
     /**
      * Interprets an uploaded image and generates a textual description.
@@ -49,33 +49,25 @@ public class AiServiceController {
      * @return textual description of the image
      */
     @PostMapping("/image/interpret")
-    public ResponseEntity<String> describe(
+    public CompletableFuture<ResponseEntity<String>> describe(
             @RequestParam("file") final MultipartFile file) {
-        Path tempFile = null;
-        try {
-            // Save uploaded file temporarily
-            tempFile = Files.createTempFile(
-                    "upload-", "-" + file.getOriginalFilename());
-            file.transferTo(tempFile.toFile());
+            try {
+                Path tempFile = null;
+                // Save uploaded file temporarily
+                tempFile = Files.createTempFile(
+                        "upload-", "-" + file.getOriginalFilename());
+                file.transferTo(tempFile.toFile());
 
-            // Pass file path to your existing data class
-            WhiteBoardData data = new WhiteBoardData(tempFile.toString());
-            AiRequestable request = new AiDescriptionRequest(data);
-            AiResponse response = cloudService.runProcess(request);
-
-            return ResponseEntity.ok(response.getResponse());
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error: " + e.getMessage());
-        } finally {
-            // Cleanup temporary file after processing
-            if (tempFile != null) {
-                try {
-                    Files.deleteIfExists(tempFile);
-                } catch (IOException ignored) {
-                }
+                // Pass file path to your existing data class
+                WhiteBoardData data = new WhiteBoardData(tempFile.toString());
+                Path finalTempFile = tempFile;
+                return asyncExecutor.execute(new AiDescriptionRequest(data))
+                        .whenComplete((r, ex) -> {
+                            try { Files.deleteIfExists(finalTempFile); } catch (Exception ignored) {}
+                        });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        }
     }
 
     /**
@@ -85,15 +77,11 @@ public class AiServiceController {
      * @return regularised point data as a response
      */
     @PostMapping("/image/regularise")
-    public ResponseEntity<String> regularise(final @RequestBody String points) {
+    public  CompletableFuture<ResponseEntity<String>> regularise(final @RequestBody String points) {
         try {
-            AiRequestable request = new AiRegularisationRequest(points);
-            AiResponse response = cloudService.runProcess(request);
-            return ResponseEntity.ok(response.getResponse());
-        } catch (IOException e) {
-            return ResponseEntity.status(
-                    HttpStatus.INTERNAL_SERVER_ERROR).body(
-                            "Error: " + e.getMessage());
+            return asyncExecutor.execute(new AiRegularisationRequest(points));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -104,16 +92,12 @@ public class AiServiceController {
      * @return a list float values to plot in the sentiment graph.
      */
     @PostMapping("/chat/sentiment")
-    public ResponseEntity<String> sentiment(
-            final @RequestBody JsonNode chatData) {
+    public  CompletableFuture<ResponseEntity<String>> sentiment(
+            final @RequestBody JsonNode chatData){
         try {
-            AiRequestable request = new AiInsightsRequest(chatData);
-            AiResponse response = cloudService.runProcess(request);
-            return ResponseEntity.ok(response.getResponse());
+            return asyncExecutor.execute(new AiInsightsRequest(chatData));
         } catch (IOException e) {
-            return ResponseEntity.status(
-                    HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    "Error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
     /**
@@ -123,21 +107,12 @@ public class AiServiceController {
      * @return summary text generated by the AI
      */
     @PostMapping("/text/summarise")
-    public ResponseEntity<String> summariseText(
+    public CompletableFuture<ResponseEntity<String>> summariseText(
             @RequestBody final String jsonContent) {
         try {
-            AiRequestable request = new AiSummarisationRequest(jsonContent);
+            return asyncExecutor.execute(new AiSummarisationRequest(jsonContent));
+        } finally {
 
-            // Run asynchronously with timeout
-            CompletableFuture<AiResponse> responseFuture =
-                    cloudService.runProcessAsync(request);
-            AiResponse response =
-                    responseFuture.get(60, TimeUnit.SECONDS);
-
-            return ResponseEntity.ok(response.getResponse());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error: " + e.getMessage());
         }
     }
 }
