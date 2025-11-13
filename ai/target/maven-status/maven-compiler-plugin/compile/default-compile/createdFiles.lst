@@ -1,9 +1,12 @@
+actionitems\ActionItemsGenerator.class
 response\AiResponse.class
 response\InterpreterResponse.class
 request\package-info.class
+response\ActionItemsResponse.class
 apiendpoints\package-info.class
 main\Main.class
 regulariser\ImageRegularize.class
+request\AiActionItemsRequest.class
 request\AiRegularisationRequest.class
 response\package-info.class
 insightsGenerator\package-info.class
