@@ -1,10 +1,10 @@
 /**
- * Does the sentiment analysis and generates insights.
+ * Identifies action items and import events from the chat data
  * <p>
- * This module is for generating insights from the chats.
+ * This module is for identifying the important
+ * action items and important decisions from the chats.
  * Chats send the messages to the AI's api end point every 10 mins.
- * Based on the chats received, AI generates the value 
- * corresponding to sentiments in the chat on a scale of -10 to +10.
+ * Based on the chats received, AI generates .
  * </p>
  * <p>
  *     References :
@@ -18,7 +18,7 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-package insightsgenerator;
+package actionitems;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,7 +28,7 @@ import requestprocessor.RequestProcessor;
 
 import java.io.IOException;
 
-public class InsightsGenerator implements RequestProcessor {
+public class ActionItemsGenerator implements RequestProcessor {
     /**
      * Adds the request details to get the request string.
      *

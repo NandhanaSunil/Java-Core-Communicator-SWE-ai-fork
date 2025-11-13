@@ -1,5 +1,7 @@
 /**
  * Author : Abhirami R Iyer
+ * Edited by : Nandhana Sunil
+ *             Berelli Gouthami
  */
 package apiendpoints;
 
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import request.AiActionItemsRequest;
 import request.AiDescriptionRequest;
 import request.AiRegularisationRequest;
 import request.AiRequestable;
@@ -116,6 +119,28 @@ public class AiServiceController {
                     "Error: " + e.getMessage());
         }
     }
+
+    /**
+     * API for action items identifying.
+     * Recieves chats as a json file, identifies action items,
+     * and returns a json with a list of strings
+     * @param chatData JSON object containing the chat data
+     * @return a list float values to plot in the sentiment graph.
+     */
+    @PostMapping("/chat/action")
+    public ResponseEntity<String> action(
+            final @RequestBody JsonNode chatData) {
+        try {
+            AiRequestable request = new AiActionItemsRequest(chatData);
+            AiResponse response = cloudService.runProcess(request);
+            return ResponseEntity.ok(response.getResponse());
+        } catch (IOException e) {
+            return ResponseEntity.status(
+                    HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    "Error: " + e.getMessage());
+        }
+    }
+
     /**
      * Summarises chat-based text content asynchronously.
      *

@@ -1,3 +1,4 @@
+C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\actionitems\ActionItemsGenerator.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\GeminiService.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\LlmService.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\package-info.java
@@ -15,6 +16,7 @@ C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\j
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\main\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\regulariser\ImageRegularize.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\regulariser\package-info.java
+C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiActionItemsRequest.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiDescriptionRequest.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiInsightsRequest.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AiRegularisationRequest.java
@@ -24,6 +26,7 @@ C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\j
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\package-info.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\RequestProcessor.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\SummarisationProcessor.java
+C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\ActionItemsResponse.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\AiResponse.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\InsightsResponse.java
 C:\Users\nandh\OneDrive\Desktop\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\InterpreterResponse.java
