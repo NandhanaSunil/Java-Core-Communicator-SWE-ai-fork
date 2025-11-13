@@ -43,6 +43,11 @@ public class AiServiceController {
     private LlmService cloudService;
 
     /**
+     * Accumulates all summaries.
+     */
+    private String accumulatedSummary = "";
+
+    /**
      * Interprets an uploaded image and generates a textual description.
      *
      * @param file uploaded image file (from client)
@@ -131,13 +136,36 @@ public class AiServiceController {
             // Run asynchronously with timeout
             CompletableFuture<AiResponse> responseFuture =
                     cloudService.runProcessAsync(request);
+
             AiResponse response =
                     responseFuture.get(60, TimeUnit.SECONDS);
 
-            return ResponseEntity.ok(response.getResponse());
+            // Get new summary from AI
+            String newSummary = response.getResponse();
+
+            // Accumulate summaries
+            if (accumulatedSummary == null || accumulatedSummary.isEmpty()) {
+                accumulatedSummary = newSummary;
+            } else {
+                accumulatedSummary = accumulatedSummary + "\n" + newSummary;
+            }
+
+            // Return the accumulated summary
+            return ResponseEntity.ok(accumulatedSummary);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: " + e.getMessage());
         }
+    }
+
+    /**
+     * Clears the accumulated summary when meeting ends.
+     *
+     * @return confirmation message
+     */
+    @PostMapping("/text/clearSummary")
+    public ResponseEntity<String> clearSummary() {
+        accumulatedSummary = "";
+        return ResponseEntity.ok("Summary cleared successfully");
     }
 }

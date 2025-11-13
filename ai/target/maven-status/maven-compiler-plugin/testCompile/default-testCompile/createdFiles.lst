@@ -1,2 +1,2 @@
-apiendpoints\cloudInterpreterTest.class
-apiendpoints\cloudRegularizationTest.class
+apiendpoints/cloudRegularizationTest.class
+apiendpoints/cloudInterpreterTest.class
