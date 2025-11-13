@@ -1,8 +1,6 @@
-requestprocessor\IRequestProcessor.class
 response\InterpreterResponse.class
 request\package-info.class
 apiendpoints\package-info.class
-response\IAIResponse.class
 main\Main.class
 apiendpoints\AIServiceController.class
 regulariser\ImageRegularize.class
@@ -12,12 +10,14 @@ response\RegulariserResponse.class
 request\AIRegularisationRequest.class
 aiservice\package-info.class
 request\AIDescriptionRequest.class
+requestprocessor\RequestProcessor.class
 imageinterpreter\package-info.class
 imageinterpreter\ImageInterpreter.class
 data\package-info.class
-request\IAIRequest.class
+aiservice\LlmService.class
 data\WhiteBoardData.class
+response\AIResponse.class
 requestprocessor\package-info.class
 regulariser\package-info.class
-aiservice\ILLMService.class
+request\AIRequestable.class
 main\package-info.class

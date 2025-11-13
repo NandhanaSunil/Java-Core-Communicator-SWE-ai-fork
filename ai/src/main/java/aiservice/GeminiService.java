@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * Receives the AI response.
  */
 @Service
-public  class GeminiService implements LlmService {
+public  class  GeminiService implements LlmService {
     /**
      * Loads environment variables from the .env file.
      */

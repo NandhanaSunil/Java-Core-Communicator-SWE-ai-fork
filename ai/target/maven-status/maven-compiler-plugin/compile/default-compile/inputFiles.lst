@@ -1,5 +1,5 @@
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\GeminiService.java
-C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\ILLMService.java
+C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\LlmService.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\aiservice\package-info.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\apiendpoints\AIServiceController.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\apiendpoints\package-info.java
@@ -13,11 +13,11 @@ C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\reg
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\regulariser\package-info.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIDescriptionRequest.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRegularisationRequest.java
-C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\IAIRequest.java
+C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\AIRequestable.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\request\package-info.java
-C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\IRequestProcessor.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\package-info.java
-C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\IAIResponse.java
+C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\requestprocessor\RequestProcessor.java
+C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\AIResponse.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\InterpreterResponse.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\package-info.java
 C:\Users\abhir\Documents\Java-Core-Communicator-SWE-ai-fork\ai\src\main\java\response\RegulariserResponse.java
