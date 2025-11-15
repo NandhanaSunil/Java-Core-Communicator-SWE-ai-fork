@@ -19,6 +19,7 @@ imageinterpreter\ImageInterpreter.class
 request\AiDescriptionRequest.class
 data\package-info.class
 aiservice\LlmService.class
+apiendpoints\AiClientService.class
 response\SummariserResponse.class
 response\InsightsResponse.class
 requestprocessor\SummarisationProcessor.class
