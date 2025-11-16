@@ -800,8 +800,8 @@ public class Main {
                 "  \"IsDeleted\": false\n" +
                 "}";
         CompletableFuture<ResponseEntity<String>> reg = service.regularise(points);
-        reg.thenAccept(System.out::println);
-        resp.thenAccept(System.out::println);
+        reg.thenAccept(response -> System.out.println(response.getBody()));
+        resp.thenAccept(response -> System.out.println(response.getBody()));
         System.out.println("AI Process - Running in another thread");
 
 
