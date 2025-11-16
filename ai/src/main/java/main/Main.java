@@ -800,6 +800,24 @@ public class Main {
                 "  \"IsDeleted\": false\n" +
                 "}";
         CompletableFuture<ResponseEntity<String>> reg = service.regularise(points);
+
+        // **ADD THIS - Chat Summarisation**
+        String chatJson1 = "[\n" +
+                "  {\"sender\": \"Alice\", \"message\": \"Hey, how are you?\"},\n" +
+                "  {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the project.\"},\n" +
+                "  {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" +
+                "  {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" +
+                "]";
+        CompletableFuture<ResponseEntity<String>> summary = service.summariseText(chatJson1);
+        summary.thenAccept(System.out::println);
+        String chatJson = "[\n" +
+                "  {\"sender\": \"Alice\", \"message\": \"Hey, how are you?\"},\n" +
+                "  {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the project.\"},\n" +
+                "  {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" +
+                "  {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" +
+                "]";
+        CompletableFuture<ResponseEntity<String>> summary2 = service.summariseText(chatJson);
+        summary2.thenAccept(System.out::println);
         reg.thenAccept(System.out::println);
         resp.thenAccept(System.out::println);
         System.out.println("AI Process - Running in another thread");
