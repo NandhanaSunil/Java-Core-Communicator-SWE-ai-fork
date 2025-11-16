@@ -13,7 +13,6 @@ import okhttp3.Response;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import org.springframework.stereotype.Service;
 import regulariser.ImageRegularize;
 import request.AiRequestable;
 import requestprocessor.RequestProcessor;
@@ -34,7 +33,6 @@ import java.util.concurrent.CompletableFuture;
  * Gemini Service builds the request and calls the AI api.
  * Receives the AI response.
  */
-@Service
 public final class GeminiService implements LlmService {
     /**
      * Loads environment variables from the .env file.

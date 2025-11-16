@@ -1,6 +1,8 @@
 package apiendpoints;
 
+import aiservice.GeminiService;
 import aiservice.LlmService;
+import configu.AsyncConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,17 +14,19 @@ import response.AiResponse;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@Component
+
 public class AsyncAiExecutor {
 
-    @Autowired
-    private LlmService llmService;
 
-    @Autowired
+    private LlmService llmService = new GeminiService();
+
+
     @Qualifier("aiExecutor")
-    private Executor aiExecutor;
+    private Executor aiExecutor = new AsyncConfig().aiExecutor();
+
 
     public CompletableFuture<ResponseEntity<String>> execute(AiRequestable req) {
 

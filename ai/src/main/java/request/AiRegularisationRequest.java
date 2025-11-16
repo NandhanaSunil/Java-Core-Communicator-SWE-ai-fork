@@ -34,26 +34,37 @@ public class AiRegularisationRequest implements AiRequestable {
         // adding the prompt.
         metaData = new HashMap<>();
         metaData.put("inputData", points);
-        metaData.put("RequestPrompt", "Given a list of 2D "
-                + "points representing a freehand drawing:" + points
-                + ". Analyze these points to identify the most "
-                + "likely regular geometric shape "
-                + "they approximate (types allowed: Ellipse, "
-                + "Square, Triangle, Rectangle, Straight line)."
-                + " Then, determine the coordinates of the top-left and "
-                + "bottom-right corners of the smallest "
-                + "bounding rectangle that fully contains this shape. \n" + "\n"
-                + "Return the result strictly in JSON format and do not "
-                + "include any explanation or extra text."
-                + " The output JSON must have the following structure:\n"
-                + "{\n" + "  \"type\": \"ShapeName\",\n"
-                + "  \"top_left\": {\"x\": number, \"y\": number},\n"
-                + "  \"bottom_right\": {\"x\": number, \"y\": number}\n"
-                + "}\n" + "\n" + "Example output:\n"
-                + "{\n" + "  \"type\": \"Circle\",\n"
-                + "  \"top_left\": {\"x\": 10.0, \"y\": 20.0},\n"
-                + "  \"bottom_right\": {\"x\": 50.0, \"y\": 70.0}\n"
-                + "}\n");
+        metaData.put("RequestPrompt",
+                "You are given a list of 2D points "
+                        + "representing a freehand drawing. "
+                        + "Your task: identify the most likely "
+                        + "geometric shape approximated "
+                        + "by these points (Ellipse, Square, "
+                        + "Triangle, Rectangle, StraightLine). "
+                        + "Then compute the top-left and "
+                        + "bottom-right coordinates of the smallest "
+                        + "bounding rectangle containing that shape. "
+
+                        + "Return ONLY a JSON object with this exact structure: "
+                        + "{ "
+                        + "\"ShapeId\": \"<same value>\","
+                        + "\"type\": \"<ShapeName>\","
+                        + "\"Points\": ["
+                        + "{\"x\": <number>, \"y\": <number>},"
+                        + "{\"x\": <number>, \"y\": <number>} "
+                        + "],"
+                        + "\"Color\": \"<same value>\","
+                        + "\"Thickness\": \"<same value>\","
+                        + "\"CreatedBy\": \"<same value>\","
+                        + "\"LastModifiedBy\": \"<same value>\","
+                        + "\"IsDeleted\": <same value> "
+                        + "} "
+
+                        + "Do not include any extra text, explanation, or alternative formats. "
+                        + "Use only the points provided below: \n\n"
+                        + points
+        );
+
         type = "REG";
     }
 
