@@ -1,7 +1,7 @@
 /**
  * Author : Abhirami R Iyer
  */
-package response;
+package com.swe.aiinsights.response;
 
 import java.util.HashMap;
 import java.util.Map;

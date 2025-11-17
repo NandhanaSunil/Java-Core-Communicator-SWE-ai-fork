@@ -1,10 +1,10 @@
 /**
  * Author : Abhirami R Iyer
  */
-package requestprocessor;
+package com.swe.aiinsights.requestprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import request.AiRequestable;
+import com.swe.aiinsights.request.AiRequestable;
 import java.io.IOException;
 
 /**

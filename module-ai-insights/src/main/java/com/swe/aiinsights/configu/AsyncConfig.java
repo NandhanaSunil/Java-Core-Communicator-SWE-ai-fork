@@ -1,7 +1,7 @@
 /**
  * Author :
  */
-package configu;
+package com.swe.aiinsights.configu;
 
 import java.util.concurrent.*;
 

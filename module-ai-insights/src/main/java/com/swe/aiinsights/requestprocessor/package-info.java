@@ -1,4 +1,4 @@
 /**
  * Contains interfaces and classes responsible for creating AI requests.
  */
-package requestprocessor;
+package com.swe.aiinsights.requestprocessor;

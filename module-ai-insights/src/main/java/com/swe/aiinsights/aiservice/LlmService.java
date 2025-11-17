@@ -1,10 +1,10 @@
 /**
  * Author : Abhirami R Iyer
  */
-package aiservice;
+package com.swe.aiinsights.aiservice;
 
-import request.AiRequestable;
-import response.AiResponse;
+import com.swe.aiinsights.request.AiRequestable;
+import com.swe.aiinsights.response.AiResponse;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;

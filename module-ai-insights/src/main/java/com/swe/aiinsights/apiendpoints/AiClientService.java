@@ -1,15 +1,15 @@
 /**
  * Authors : Abhirami R Iyer
  */
-package apiendpoints;
+package com.swe.aiinsights.apiendpoints;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import data.WhiteBoardData;
-import request.AiDescriptionRequest;
-import request.AiRegularisationRequest;
-import request.AiInsightsRequest;
-import request.AiSummarisationRequest;
+import com.swe.aiinsights.data.WhiteBoardData;
+import com.swe.aiinsights.request.AiDescriptionRequest;
+import com.swe.aiinsights.request.AiRegularisationRequest;
+import com.swe.aiinsights.request.AiInsightsRequest;
+import com.swe.aiinsights.request.AiSummarisationRequest;
 import java.util.concurrent.CompletableFuture;
 
 

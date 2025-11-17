@@ -1,4 +1,4 @@
 /**
  *  Generates insights after sentiment analysis.
  */
-package insightsgenerator;
+package com.swe.aiinsights.insightsgenerator;

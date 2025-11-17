@@ -1,7 +1,7 @@
 /**
  * Author : Abhirami R Iyer
  */
-package request;
+package com.swe.aiinsights.request;
 
 /**
  * Defines an interface for making types of requests to AI.

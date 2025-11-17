@@ -10,7 +10,7 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-package request;
+package com.swe.aiinsights.request;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

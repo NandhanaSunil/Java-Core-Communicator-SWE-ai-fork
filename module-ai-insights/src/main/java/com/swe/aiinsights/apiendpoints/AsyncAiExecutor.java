@@ -1,14 +1,14 @@
 /**
  * Author : Abhirami R Iyer
  */
-package apiendpoints;
+package com.swe.aiinsights.apiendpoints;
 
-import aiservice.GeminiService;
-import aiservice.LlmService;
-import aiservice.OllamaService;
-import configu.AsyncConfig;
-import request.AiRequestable;
-import response.AiResponse;
+import com.swe.aiinsights.aiservice.GeminiService;
+import com.swe.aiinsights.aiservice.LlmService;
+import com.swe.aiinsights.aiservice.OllamaService;
+import com.swe.aiinsights.configu.AsyncConfig;
+import com.swe.aiinsights.request.AiRequestable;
+import com.swe.aiinsights.response.AiResponse;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
@@ -18,7 +18,7 @@ import java.util.concurrent.Executor;
 public class AsyncAiExecutor {
 
 
-    private LlmService llmService = new OllamaService();
+    private LlmService llmService = new GeminiService();
 
 
     private Executor aiExecutor = new AsyncConfig().aiExecutor();

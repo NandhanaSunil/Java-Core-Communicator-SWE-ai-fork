@@ -1,4 +1,4 @@
 /**
  * Contains configurations for asynchronous event handling.
  */
-package configu;
+package com.swe.aiinsights.configu;

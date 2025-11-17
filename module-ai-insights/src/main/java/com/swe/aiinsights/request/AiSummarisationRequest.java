@@ -2,7 +2,7 @@
 /**
  * Author Berelli Gouthami
  */
-package request;
+package com.swe.aiinsights.request;
 
 /**
  * Creates a new summarisation request.

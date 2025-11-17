@@ -1,7 +1,7 @@
 /**
  * Author : Abhirami R Iyer
  */
-package data;
+package com.swe.aiinsights.data;
 
 import java.io.IOException;
 import java.nio.file.Files;

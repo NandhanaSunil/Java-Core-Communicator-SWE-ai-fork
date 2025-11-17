@@ -1,9 +1,9 @@
 /**
  * Author : Abhirami R Iyer
  */
-package request;
+package com.swe.aiinsights.request;
 
-import data.WhiteBoardData;
+import com.swe.aiinsights.data.WhiteBoardData;
 
 import java.io.IOException;
 import java.util.HashMap;

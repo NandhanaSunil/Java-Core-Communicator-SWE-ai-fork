@@ -61,7 +61,7 @@
                     <artifactId>exec-maven-plugin</artifactId>
                     <version>3.6.2</version>
                     <configuration>
-                        <mainClass>main.Main</mainClass>
+                        <mainClass>com.swe.aiinsights.main.Main</mainClass>
                     </configuration>
                 </plugin>
         </plugins>

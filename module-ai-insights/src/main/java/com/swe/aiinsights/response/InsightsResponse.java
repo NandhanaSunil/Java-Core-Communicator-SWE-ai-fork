@@ -4,7 +4,7 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-package response;
+package com.swe.aiinsights.response;
 
 import java.util.HashMap;
 import java.util.Map;

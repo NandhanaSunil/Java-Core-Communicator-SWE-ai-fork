@@ -18,13 +18,13 @@
  * @version 1.0.0
  * @since 1.0.0
  */
-package insightsgenerator;
+package com.swe.aiinsights.insightsgenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import request.AiRequestable;
-import requestprocessor.RequestProcessor;
+import com.swe.aiinsights.request.AiRequestable;
+import com.swe.aiinsights.requestprocessor.RequestProcessor;
 
 import java.io.IOException;
 

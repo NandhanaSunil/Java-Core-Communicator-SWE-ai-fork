@@ -1,11 +1,11 @@
 /**
  * Author Berelli Gouthami
  */
-package requestprocessor;
+package com.swe.aiinsights.requestprocessor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import request.AiRequestable;
+import com.swe.aiinsights.request.AiRequestable;
 
 /**
  * Handles the creation of the JSON body used for chat summarisation requests.

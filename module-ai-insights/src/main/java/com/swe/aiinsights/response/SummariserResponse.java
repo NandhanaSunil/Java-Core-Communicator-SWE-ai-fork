@@ -3,7 +3,7 @@
  */
 
 
-package response;
+package com.swe.aiinsights.response;
 
 /**
  * Represents the AI's response to a chat summarisation request.

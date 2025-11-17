@@ -1,6 +1,6 @@
-package main;
+package com.swe.aiinsights.main;
 
-import apiendpoints.AiClientService;
+import com.swe.aiinsights.apiendpoints.AiClientService;
 
 import java.net.URISyntaxException;
 import java.net.URL;

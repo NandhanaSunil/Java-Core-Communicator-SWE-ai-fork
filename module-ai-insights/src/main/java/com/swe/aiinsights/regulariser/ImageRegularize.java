@@ -1,10 +1,10 @@
 /**
  * Author : Abhirami R Iyer
  */
-package regulariser;
+package com.swe.aiinsights.regulariser;
 
-import request.AiRequestable;
-import requestprocessor.RequestProcessor;
+import com.swe.aiinsights.request.AiRequestable;
+import com.swe.aiinsights.requestprocessor.RequestProcessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;

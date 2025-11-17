@@ -1,7 +1,7 @@
 /**
  * Author : Abhirami R Iyer
  */
-package response;
+package com.swe.aiinsights.response;
 
 /**
  * Interface for implementing various types of responses.
