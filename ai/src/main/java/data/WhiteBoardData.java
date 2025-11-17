@@ -31,7 +31,7 @@ public class WhiteBoardData {
      * @throws IOException if reading the file fails.
      */
     public WhiteBoardData(final String img) throws IOException {
-        // accesses the image and encodes it to string(pngbytes)
+        // accesses the image and encodes it to string(png bytes)
         System.out.println("Reading the image, converting it to Base64");
         this.imgFile = Paths.get(img);
         final byte[] pngBytes = Files.readAllBytes(imgFile);

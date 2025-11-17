@@ -5,6 +5,8 @@ package aiservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import imageinterpreter.ImageInterpreter;
 import insightsgenerator.InsightsGenerator;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -26,8 +28,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import requestprocessor.SummarisationProcessor;
 import response.SummariserResponse;
-import org.springframework.scheduling.annotation.Async;
-import java.util.concurrent.CompletableFuture;
+
 
 /**
  * Gemini Service builds the request and calls the AI api.
@@ -97,13 +98,25 @@ public final class GeminiService implements LlmService {
     @Override
     public AiResponse runProcess(final AiRequestable aiRequest)
             throws IOException {
-        this.objectMapper = new ObjectMapper();
         AiResponse returnResponse = null;
+        this.objectMapper = new ObjectMapper();
+
+        final ObjectNode rootNode = objectMapper.createObjectNode();
+        final ArrayNode contentsArray = rootNode.putArray("contents");
+        final ObjectNode contentNode = contentsArray.addObject();
+        final ArrayNode partsArray = contentNode.putArray("parts");
+        partsArray.addObject().put("text", aiRequest.getContext());
 
         if (Objects.equals(aiRequest.getReqType(), "DESC")) {
             // if the request is of image interpretation,
             // the request for it is built.
             returnResponse = new InterpreterResponse();
+            final ObjectNode inlineDataNode =
+                    partsArray.addObject().putObject("inlineData");
+
+            // add the image into the request body
+            inlineDataNode.put("mimeType", "image/png");
+            inlineDataNode.put("data", aiRequest.getInput().toString());
         } else if (Objects.equals(aiRequest.getReqType(), "REG")) {
             // the request is of image regularization,
             // the request builder for regularization is called
@@ -122,18 +135,19 @@ public final class GeminiService implements LlmService {
 
         RequestProcessor processor =
                 registry.get(aiRequest.getReqType());
+
         if (processor == null) {
             throw new IllegalArgumentException("No processor found "
                    +  "for request type: "
                     + aiRequest.getReqType());
         }
 
-
-
         // We get the json request string to send to
         // the api from the request processor.
         String jsonRequestBody =
-                processor.processRequest(this.objectMapper, aiRequest);
+                objectMapper.writerWithDefaultPrettyPrinter(
+                ).writeValueAsString(rootNode);
+
         // the api url is created concatenating
         // the url template and the api key
         final String apiUrl =
@@ -161,41 +175,16 @@ public final class GeminiService implements LlmService {
             // extracting the response and add to the response object
             final JsonNode responseJson =
                     objectMapper.readTree(response.body().charStream());
-            final JsonNode textNode =
-                    responseJson.at("/candidates/0/content/parts/0/text");
+            final String textResponse =
+                    responseJson.at("/candidates/0/content/parts/0/text").asText();
 
-            // if the response is a text
-            if (textNode.isTextual()) {
-                if (returnResponse != null) {
-                    // create the return response with the string given by AI
-                    returnResponse.setResponse(textNode.asText());
-                }
-                return returnResponse;
-            } else {
-                throw new
-                        IOException("No text in api response : "
-                        + responseJson.toPrettyString());
-            }
+            if (textResponse == null)
+                throw new IOException("No text found in Gemini response");
+
+            returnResponse.setResponse(textResponse);
+            return returnResponse;
+
         }
 
-    }
-    /**
-     * Executes an AI request asynchronously in a background thread.
-     *
-     * @param aiRequest the AI request to process
-     * @return a CompletableFuture containing the AI response
-     */
-    @Async("aiExecutor")
-    public CompletableFuture<AiResponse> runProcessAsync(
-            final AiRequestable aiRequest) {
-        try {
-            AiResponse response = runProcess(aiRequest);
-            return CompletableFuture.completedFuture(response);
-        } catch (IOException e) {
-            CompletableFuture<AiResponse> failedFuture =
-                    new CompletableFuture<>();
-            failedFuture.completeExceptionally(e);
-            return failedFuture;
-        }
     }
 }

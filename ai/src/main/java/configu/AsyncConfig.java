@@ -1,42 +1,35 @@
 /**
- * Provides asynchronous configuration for background task execution.
- */
-/**
- * Author Berelli Gouthami
+ * Author :
  */
 package configu;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import java.util.concurrent.Executor;
+import java.util.concurrent.*;
 
-/**
- * Configures asynchronous task execution for AI operations.
- * This enables background threads for long-running AI tasks
- * so that the main request thread remains responsive.
- */
 public class AsyncConfig {
 
     /**
      * Creates and configures a thread pool for AI-related tasks.
      *
-     * @return a configured thread pool executor
+     * @return a configured executor service
      */
     public Executor aiExecutor() {
-        // Define pool parameters (method-local variables, not constants)
         final int corePoolSize = 5;
         final int maxPoolSize = 10;
         final int queueCapacity = 50;
 
-        // Create and configure executor
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(corePoolSize);
-        executor.setMaxPoolSize(maxPoolSize);
-        executor.setQueueCapacity(queueCapacity);
-        executor.setThreadNamePrefix("AI-Worker-");
-        executor.initialize();
-        return executor;
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(
+                corePoolSize,
+                maxPoolSize,
+                30L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(queueCapacity),
+                r -> {
+                    Thread t = new Thread(r);
+                    t.setName("AI-Worker-" + t.getId());
+                    return t;
+                }
+        );
+
+        return executor;  // returning Executor is valid
     }
 }

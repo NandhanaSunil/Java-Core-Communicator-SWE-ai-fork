@@ -1,17 +1,12 @@
 package main;
 
 import apiendpoints.AiClientService;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 
 import java.io.IOException;
@@ -34,7 +29,7 @@ public class Main {
         AiClientService service = new AiClientService();
         URL url = Main.class.getClassLoader().getResource("images/test.png");
         Path file = Paths.get(url.toURI());
-        CompletableFuture<ResponseEntity<String>> resp = service.describe(file);
+        CompletableFuture<String> resp = service.describe(file);
 
         String points = "{\n" +
                 "  \"ShapeId\": \"c585b84a-d56c-45b8-a0e1-827ae20a014a\",\n" +
@@ -799,7 +794,7 @@ public class Main {
                 "  \"LastModifiedBy\": \"user_default\",\n" +
                 "  \"IsDeleted\": false\n" +
                 "}";
-        CompletableFuture<ResponseEntity<String>> reg = service.regularise(points);
+        CompletableFuture<String> reg = service.regularise(points);
         reg.thenAccept(System.out::println);
         resp.thenAccept(System.out::println);
         System.out.println("AI Process - Running in another thread");
