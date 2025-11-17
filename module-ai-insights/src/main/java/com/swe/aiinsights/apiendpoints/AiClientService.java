@@ -10,6 +10,7 @@ import com.swe.aiinsights.request.AiDescriptionRequest;
 import com.swe.aiinsights.request.AiRegularisationRequest;
 import com.swe.aiinsights.request.AiInsightsRequest;
 import com.swe.aiinsights.request.AiSummarisationRequest;
+import com.swe.aiinsights.request.AiActionItemsRequest;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -84,6 +85,15 @@ public class AiClientService {
             return asyncExecutor.execute(new AiSummarisationRequest(jsonContent));
         } finally {
 
+        }
+    }
+
+    public CompletableFuture<String> action(
+        final JsonNode chatData){
+        try {
+            return asyncExecutor.execute(new AiActionItemsRequest(chatData));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

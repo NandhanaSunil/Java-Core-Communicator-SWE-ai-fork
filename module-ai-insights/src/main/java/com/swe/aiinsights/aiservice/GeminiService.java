@@ -94,6 +94,7 @@ public final class GeminiService implements LlmService {
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
         registry.put("SUMMARISE", new SummarisationProcessor());
+        registry.put("ACTION", new ActionItemsGenerator());
     }
 
     /**
@@ -118,6 +119,8 @@ public final class GeminiService implements LlmService {
             returnResponse = new InsightsResponse();
         } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
             returnResponse = new SummariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "ACTION")) {
+                returnResponse = new ActionItemsResponse();
         }
 
         // from the registry we will get the requestProcessor
