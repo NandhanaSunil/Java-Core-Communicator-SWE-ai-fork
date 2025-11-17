@@ -1,8 +1,11 @@
 /**
  * Author : Abhirami R Iyer
+ * Edited by : Nandhana Sunil
+ *             Berelli Gouthami
  */
 package aiservice;
 
+import actionitems.ActionItemsGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -18,6 +21,7 @@ import okhttp3.RequestBody;
 import regulariser.ImageRegularize;
 import request.AiRequestable;
 import requestprocessor.RequestProcessor;
+import response.ActionItemsResponse;
 import response.AiResponse;
 import response.InsightsResponse;
 import response.InterpreterResponse;
@@ -90,6 +94,7 @@ public final class GeminiService implements LlmService {
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
         registry.put("SUMMARISE", new SummarisationProcessor());
+        registry.put("ACTION", new ActionItemsGenerator());
     }
 
     /**
@@ -126,6 +131,8 @@ public final class GeminiService implements LlmService {
             returnResponse = new InsightsResponse();
         } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
             returnResponse = new SummariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "ACTION")) {
+            returnResponse = new ActionItemsResponse();
         }
 
         // from the registry we will get the requestProcessor
