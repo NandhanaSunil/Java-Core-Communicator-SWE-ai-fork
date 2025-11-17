@@ -21,11 +21,4 @@ public interface LlmService {
      * @throws IOException
      */
     AiResponse runProcess(AiRequestable request) throws IOException;
-    /**
-     * Executes an AI request asynchronously.
-     *
-     * @param aiRequest the request to process
-     * @return a future containing the AI response
-     */
-    CompletableFuture<AiResponse> runProcessAsync(AiRequestable aiRequest);
 }
