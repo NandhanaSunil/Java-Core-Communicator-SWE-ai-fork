@@ -14,11 +14,14 @@ import okhttp3.*;
 import com.swe.aiinsights.regulariser.ImageRegularize;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.requestprocessor.RequestProcessor;
-import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
+import com.swe.aiinsights.summarisationgenerator.SummarisationGenerator;
+import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
+
+
 import com.swe.aiinsights.response.*;
-import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
+
 import com.swe.aiinsights.response.SummariserResponse;
-import com.swe.aiinsights.requestprocessor.QuestionAnswerProcessor;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,8 +53,8 @@ public class OllamaService implements LlmService {
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
-        registry.put("SUMMARISE", new SummarisationProcessor());
-        registry.put("QA", new QuestionAnswerProcessor());
+        registry.put("SUM", new SummarisationGenerator());
+        registry.put("QNA", new QuestionAnswerGenerator());
 
         this.objectMapper = new ObjectMapper();
     }
@@ -83,11 +86,11 @@ public class OllamaService implements LlmService {
                 returnResponse = new InsightsResponse();
                 break;
 
-            case "SUMMARISE":
+            case "SUM":
                 returnResponse = new SummariserResponse();
                 break;
 
-            case "QA":
+            case "QNA":
                 returnResponse = new QuestionAnswerResponse();
                 break;
 

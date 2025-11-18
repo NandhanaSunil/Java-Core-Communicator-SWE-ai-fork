@@ -26,13 +26,16 @@ import com.swe.aiinsights.response.AiResponse;
 import com.swe.aiinsights.response.InsightsResponse;
 import com.swe.aiinsights.response.InterpreterResponse;
 import com.swe.aiinsights.response.RegulariserResponse;
+import com.swe.aiinsights.summarisationgenerator.SummarisationGenerator;
+import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
+
 import com.swe.aiinsights.response.SummariserResponse;
-import com.swe.aiinsights.requestprocessor.QuestionAnswerProcessor;
+
 import com.swe.aiinsights.response.QuestionAnswerResponse;
 
 
@@ -95,8 +98,10 @@ public final class GeminiService implements LlmService {
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
-        registry.put("SUMMARISE", new SummarisationProcessor());
-        registry.put("QA", new QuestionAnswerProcessor());
+        registry.put("SUM", new SummarisationGenerator());
+        registry.put("QNA", new QuestionAnswerGenerator());
+
+
 
     }
 
@@ -120,9 +125,9 @@ public final class GeminiService implements LlmService {
         } else if (Objects.equals(aiRequest.getReqType(), "INS")) {
             // the request is for insights generation
             returnResponse = new InsightsResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
+        } else if (Objects.equals(aiRequest.getReqType(), "SUM")) {
             returnResponse = new SummariserResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "QA")) {
+        } else if (Objects.equals(aiRequest.getReqType(), "QNA")) {
             returnResponse = new QuestionAnswerResponse();
         }
 

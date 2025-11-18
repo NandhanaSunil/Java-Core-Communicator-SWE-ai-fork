@@ -798,25 +798,48 @@ public class Main {
                 "}";
         CompletableFuture<String> reg = service.regularise(points);
 
-        String chatJson1 = "[\n" + " {\"sender\": \"Alice\", \"message\": \"Hey, how are you?\"},\n"
-                + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n" + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" + "]";
+        String contextualQ = " What is Bob working on?";
+        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
+        answer1.thenAccept(System.out::println);
+
+        String chatJson1 = "[\n"
+                + " {\"sender\": \"Alice\", \"message\": "
+                +"\"Hey, how are you?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\":"
+                +" \"I'm good! Just working on the llm project.\"},\n"
+                + " {\"sender\": \"Alice\", \"message\": "
+                +"\"That's great! Need any help?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": "
+                +"\"I'm almost done, thanks!\"}\n"
+                + "]";
         CompletableFuture<String> summary = service.summariseText(chatJson1);
 //        summary.thenAccept(System.out::println);
-        String chatJson = "[\n" + " {\"sender\": \"Gouthami\", \"message\": \"Hey, how are you?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the project.\"},\n" + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" + "]";
+        String chatJson = "[\n"
+                + " {\"sender\": \"Gouthami\", \"message\": "
+                +"\"Hey, how are you?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": "
+                +"\"I'm good! Just working on the project.\"},\n"
+                + " {\"sender\": \"Alice\", \"message\": "
+                +"\"That's great! Need any help?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": "
+                +"\"I'm almost done, thanks!\"}\n"
+                + "]";
         CompletableFuture<String> summary2 = service.summariseText(chatJson);
 
 
-        String chatJson0 = "[\n" + " {\"sender\": \"jayati\", \"message\": \"Hey, how are you?\"},\n"
-                + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n" + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" + "]";
+
+        String chatJson0 = "[\n"
+                + " {\"sender\": \"jayati\", \"message\": \"Hey, how are you?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n"
+                + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n"
+                + "]";
         CompletableFuture<String> summary5 = service.summariseText(chatJson0);
         summary.thenAccept(System.out::println);
         summary2.thenAccept(System.out::println);
         summary5.thenAccept(System.out::println);
 
 
-        String contextualQ = " What is Bob working on?";
-        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
-        answer1.thenAccept(System.out::println);
 
         // 2. Generic Question (LLM should ignore the summary)
         String genericQ = " is jayati in meeting?";
