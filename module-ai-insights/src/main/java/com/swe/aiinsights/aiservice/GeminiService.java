@@ -176,7 +176,12 @@ public final class GeminiService implements LlmService {
             if (textNode.isTextual()) {
                 if (returnResponse != null) {
                     // create the return response with the string given by AI
-                    returnResponse.setResponse(textNode.asText());
+                    String responseToreturn = textNode.asText();
+                    responseToreturn = responseToreturn
+                                                .replaceAll("```json", "")
+                                                .replaceAll("```", "")
+                                                .trim();
+                    returnResponse.setResponse(responseToreturn);
                 }
                 return returnResponse;
             } else {
