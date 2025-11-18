@@ -10,7 +10,7 @@ import com.swe.aiinsights.aiservice.LlmOrchestratorService;
 import com.swe.aiinsights.configu.AsyncConfig;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
-
+import java.util.List;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -19,9 +19,11 @@ import java.util.concurrent.Executor;
 public class AsyncAiExecutor {
 
 
-    private LlmService llmService = new LlmOrchestratorService(
-        new GeminiService(), // Primary
-        new OllamaService()  // Fallback
+    private final LlmService llmService = new LlmOrchestratorService(
+        List.of(
+            new GeminiService(), // 1. Primary
+            new OllamaService() // 2. Fallback
+        )
     );
 
 

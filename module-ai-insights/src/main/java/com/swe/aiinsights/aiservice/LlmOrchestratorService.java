@@ -36,59 +36,70 @@ import com.swe.aiinsights.response.InsightsResponse;
 import com.swe.aiinsights.response.InterpreterResponse;
 import com.swe.aiinsights.response.RegulariserResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
-import com.swe.aiinsights.response.SummariserResponse;
 import com.swe.aiinsights.customexceptions.RateLimitException;
 
 // Acts as an orchestrator to provide an LLM Service
 public class LlmOrchestratorService implements LlmService {
 
-    private final LlmService primaryService;
-    private final LlmService fallbackService;
-    private volatile boolean isFallbackActive = false; // Flag to manage the switch
+    private final List<LlmService> llmServices; // List of all LLMs in order of preference
+    private volatile int activeServiceIndex = 0; // Index of the currently used service
 
-    public LlmOrchestratorService(LlmService primary, LlmService fallback) {
-        this.primaryService = primary;
-        this.fallbackService = fallback;
+    /**
+     * Constructor accepts a list of LlmService instances in the desired failover order.
+     */
+    public LlmOrchestratorService(List<LlmService> services) {
+        if (services == null || services.isEmpty()) {
+            throw new IllegalArgumentException("LLM service list cannot be empty.");
+        }
+        this.llmServices = services;
     }
 
     /**
-     * Tries the primary service (Clous models). If a RateLimitException is caught,
-     * it switches to the fallback service (Ollama) and re-runs the request.
+     * Tries the active service. If it fails due to a RateLimitException,
+     * it switches to the next service in the list and retries the request.
      */
     @Override
     public AiResponse runProcess(final AiRequestable request) throws IOException {
         
-        // 1. Check if we've already switched to fallback
-        if (isFallbackActive) {
-            System.out.println("INFO: Using Fallback Service (Ollama) for request: " + request.getReqType());
-            return fallbackService.runProcess(request);
-        }
+        // Start the attempt from the currently active service index
+        int startingIndex = activeServiceIndex;
+        
+        for (int i = startingIndex; i < llmServices.size(); i++) {
+            LlmService currentService = llmServices.get(i);
+            String serviceName = currentService.getClass().getSimpleName();
 
-        // 2. Try the Primary Service (Gemini)
-        try {
-            System.out.println("INFO: Attempting Primary Service (Gemini) for request: " + request.getReqType());
-            return primaryService.runProcess(request);
-        } catch (RateLimitException e) {
+            System.out.println("INFO: Attempting service: " + serviceName + " for request: " + request.getReqType());
             
-            // 3. Rate limit hit - Log the event and activate the fallback
-            System.err.println("WARNING: Primary Service (Gemini) failed due to rate limit. Switching to Fallback (Ollama).");
-            isFallbackActive = true;
-            
-            // 4. Re-run the request immediately with the Fallback Service (Ollama)
             try {
-                System.out.println("INFO: Retrying request with Fallback Service (Ollama).");
-                return fallbackService.runProcess(request);
-            } catch (IOException fallbackE) {
-                // If the fallback also fails, throw a composite exception
-                System.err.println("FATAL: Fallback Service (Ollama) also failed.");
-                throw new IOException("Both Primary (Gemini) and Fallback (Ollama) services failed. Primary error: " 
-                                      + e.getMessage() + ". Fallback error: " + fallbackE.getMessage(), fallbackE);
+                // Try to process the request with the current service
+                AiResponse response = currentService.runProcess(request);
+                
+                // If successful, update the active index if a switch occurred
+                if (i != startingIndex) {
+                    // Switch was successful, permanently use this new service
+                    activeServiceIndex = i; 
+                    System.out.println("SUCCESS: Permanently switched to service: " + serviceName);
+                }
+                return response;
+
+            } catch (RateLimitException e) {
+                // This service is rate-limited, move to the next service in the chain
+                System.err.println("WARNING: Service " + serviceName + " failed due to rate limit. Attempting next service.");
+                
+                if (i == llmServices.size() - 1) {
+                    // If this was the last service in the chain, throw the exception
+                    System.err.println("FATAL: All services in the chain failed.");
+                    throw e; 
+                }
+                
+                // Continue to the next iteration (the next LLM)
             }
         }
+        
+        // Should be unreachable if the last service throws a final exception,
+        // but included for safety against possible non-RateLimit IOExceptions in the last service.
+        throw new IOException("All configured LLM services failed to process the request.");
     }
 }
-
