@@ -6,6 +6,7 @@ package com.swe.aiinsights.apiendpoints;
 import com.swe.aiinsights.aiservice.GeminiService;
 import com.swe.aiinsights.aiservice.LlmService;
 import com.swe.aiinsights.aiservice.OllamaService;
+import com.swe.aiinsights.aiservice.LlmOrchestratorService;
 import com.swe.aiinsights.configu.AsyncConfig;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
@@ -18,7 +19,10 @@ import java.util.concurrent.Executor;
 public class AsyncAiExecutor {
 
 
-    private LlmService llmService = new GeminiService();
+    private LlmService llmService = new LlmOrchestratorService(
+        new GeminiService(), // Primary
+        new OllamaService()  // Fallback
+    );
 
 
     private Executor aiExecutor = new AsyncConfig().aiExecutor();
