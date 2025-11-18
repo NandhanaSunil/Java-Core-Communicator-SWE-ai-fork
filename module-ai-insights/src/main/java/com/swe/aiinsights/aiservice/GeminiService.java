@@ -32,6 +32,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
 import com.swe.aiinsights.response.SummariserResponse;
+import com.swe.aiinsights.requestprocessor.QuestionAnswerProcessor;
+import com.swe.aiinsights.response.QuestionAnswerResponse;
 
 
 /**
@@ -49,7 +51,7 @@ public final class GeminiService implements LlmService {
     private static final String GEMINI_API_URL_TEMPLATE =
             dotenv.get("GEMINI_URL");
     /**
-     *  Sets the Media type used for JSON requests.
+     * Sets the Media type used for JSON requests.
      */
     private static final MediaType JSON =
             MediaType.get("application/json; charset=utf-8");
@@ -94,6 +96,8 @@ public final class GeminiService implements LlmService {
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
         registry.put("SUMMARISE", new SummarisationProcessor());
+        registry.put("QA", new QuestionAnswerProcessor());
+
     }
 
     /**
@@ -118,6 +122,8 @@ public final class GeminiService implements LlmService {
             returnResponse = new InsightsResponse();
         } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
             returnResponse = new SummariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "QA")) {
+            returnResponse = new QuestionAnswerResponse();
         }
 
         // from the registry we will get the requestProcessor
@@ -129,10 +135,9 @@ public final class GeminiService implements LlmService {
                 registry.get(aiRequest.getReqType());
         if (processor == null) {
             throw new IllegalArgumentException("No processor found "
-                    +  "for request type: "
+                    + "for request type: "
                     + aiRequest.getReqType());
         }
-
 
 
         // We get the json request string to send to
@@ -182,6 +187,7 @@ public final class GeminiService implements LlmService {
                         + responseJson.toPrettyString());
             }
         }
+
 
     }
 }

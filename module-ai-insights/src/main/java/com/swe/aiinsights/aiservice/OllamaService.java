@@ -16,6 +16,9 @@ import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.requestprocessor.RequestProcessor;
 import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
 import com.swe.aiinsights.response.*;
+import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
+import com.swe.aiinsights.response.SummariserResponse;
+import com.swe.aiinsights.requestprocessor.QuestionAnswerProcessor;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -48,6 +51,7 @@ public class OllamaService implements LlmService {
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
         registry.put("SUMMARISE", new SummarisationProcessor());
+        registry.put("QA", new QuestionAnswerProcessor());
 
         this.objectMapper = new ObjectMapper();
     }
@@ -82,6 +86,11 @@ public class OllamaService implements LlmService {
             case "SUMMARISE":
                 returnResponse = new SummariserResponse();
                 break;
+
+            case "QA":
+                returnResponse = new QuestionAnswerResponse();
+                break;
+
 
             default:
                 throw new IllegalArgumentException("Unsupported type: " + aiRequest.getReqType());

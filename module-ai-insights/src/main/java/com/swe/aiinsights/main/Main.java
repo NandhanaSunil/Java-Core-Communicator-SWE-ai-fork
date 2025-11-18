@@ -7,6 +7,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
+import java.util.Arrays;
+import java.util.List;
 
 
 import java.io.IOException;
@@ -795,6 +797,31 @@ public class Main {
                 "  \"IsDeleted\": false\n" +
                 "}";
         CompletableFuture<String> reg = service.regularise(points);
+
+        String chatJson1 = "[\n" + " {\"sender\": \"Alice\", \"message\": \"Hey, how are you?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n" + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" + "]";
+        CompletableFuture<String> summary = service.summariseText(chatJson1);
+//        summary.thenAccept(System.out::println);
+        String chatJson = "[\n" + " {\"sender\": \"Gouthami\", \"message\": \"Hey, how are you?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the project.\"},\n" + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" + "]";
+        CompletableFuture<String> summary2 = service.summariseText(chatJson);
+
+
+        String chatJson0 = "[\n" + " {\"sender\": \"jayati\", \"message\": \"Hey, how are you?\"},\n"
+                + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n" + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n" + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n" + "]";
+        CompletableFuture<String> summary5 = service.summariseText(chatJson0);
+        summary.thenAccept(System.out::println);
+        summary2.thenAccept(System.out::println);
+        summary5.thenAccept(System.out::println);
+
+
+        String contextualQ = " What is Bob working on?";
+        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
+        answer1.thenAccept(System.out::println);
+
+        // 2. Generic Question (LLM should ignore the summary)
+        String genericQ = " is jayati in meeting?";
+        CompletableFuture<String> answer2 = service.answerQuestion(genericQ);
+        answer2.thenAccept(System.out::println);
         reg.thenAccept(System.out::println);
         resp.thenAccept(System.out::println);
         System.out.println("AI Process - Running in another thread");
