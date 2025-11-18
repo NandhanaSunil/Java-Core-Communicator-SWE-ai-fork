@@ -33,6 +33,10 @@ import java.util.concurrent.TimeUnit;
 import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
 import com.swe.aiinsights.response.SummariserResponse;
 
+import com.swe.cloud.datastructures.TimeRange;
+import com.swe.cloud.datastructures.Entity;
+import com.swe.cloud.functionlibrary.CloudFunctionLibrary;
+import com.swe.cloud.datastructures.CloudResponse;
 
 /**
  * Gemini Service builds the request and calls the AI api.
@@ -77,7 +81,16 @@ public final class GeminiService implements LlmService {
     public GeminiService() {
         //fetched the api key from the
         // env file (to be changed to fetch from cloud)
-        this.geminiApiKey = dotenv.get("GEMINI_API_KEY");
+        /** cloud functions to get key 
+        CloudFunctionLibrary cloud = new CloudFunctionLibrary();
+        Entity req = new Entity("AI_INSIGHT", "credentials", "gemini", "key", -1, new TimeRange(0, 0),null);
+        // Response response =testCloudFunctionLibrary.cloudPost(testEntity)
+        String key_from_cloud;
+        cloud.cloudGet(req).thenAccept(response -> {
+        // Object cleanedData = response.data;   // <- NO getData()
+        key_from_cloud = response.data();
+    });*/
+        this.geminiApiKey = dotenv.get("GEMINI_API_KEY"); //change this in production
 
         final int timeout = 200;
         final int readMul = 6;
