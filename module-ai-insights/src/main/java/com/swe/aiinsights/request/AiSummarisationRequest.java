@@ -1,56 +1,64 @@
-
-/**
- * Author Berelli Gouthami
- */
 package com.swe.aiinsights.request;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Creates a new summarisation request.
+ * Represents a request to generate a summary from chat JSON.
+ * Stores the chat input and the prompt used by the AI model.
  */
-public class AiSummarisationRequest implements AiRequestable<String> {
+public final class AiSummarisationRequest implements AiRequestable<String> {
 
     /**
-     * Raw chat data in JSON format.
+     * Stores metadata including chat input and prompt.
      */
-    private final String jsonInput;
+    private final Map<String, String> metaData;
 
     /**
-     * Creates a summarisation request.
+     * Stores the request type. For summarisation, this is "SUM".
+     */
+    private final String type;
+
+    /**
+     * Constructs a summarisation request.
      *
-     * @param inputJson the chat data JSON
+     * @param chatJson the raw chat JSON text to be summarised
      */
-    public AiSummarisationRequest(final String inputJson) {
-        this.jsonInput = inputJson;
+    public AiSummarisationRequest(final String chatJson) {
+        this.metaData = new HashMap<>();
+        this.metaData.put("InputChat", chatJson);
+        this.metaData.put("RequestPrompt", "give summary");
+
+        this.type = "SUM";
     }
 
     /**
-     * Provides a general instruction for the AI model.
+     * Returns the prompt used for summarisation.
      *
-     * @return summarisation context prompt
+     * @return the prompt text
      */
     @Override
     public String getContext() {
-        return "Summarize the "
-               + "following chat data into a concise, meaningful summary.";
+        return this.metaData.get("RequestPrompt");
     }
 
     /**
-     * Returns the chat input to be summarised.
+     * Returns the raw chat JSON that must be summarised.
      *
-     * @return JSON-formatted chat string
+     * @return chat input text
      */
     @Override
     public String getInput() {
-        return jsonInput;
+        return this.metaData.get("InputChat");
     }
 
     /**
-     * Specifies the type of AI request being made.
+     * Returns the request type ("SUM").
      *
-     * @return request type identifier
+     * @return request type string
      */
     @Override
     public String getReqType() {
-        return "SUMMARISE";
+        return this.type;
     }
 }

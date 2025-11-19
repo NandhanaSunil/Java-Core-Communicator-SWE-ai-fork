@@ -26,17 +26,22 @@ import com.swe.aiinsights.response.AiResponse;
 import com.swe.aiinsights.response.InsightsResponse;
 import com.swe.aiinsights.response.InterpreterResponse;
 import com.swe.aiinsights.response.RegulariserResponse;
+import com.swe.aiinsights.summarisationgenerator.SummarisationGenerator;
+import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import com.swe.aiinsights.requestprocessor.SummarisationProcessor;
+
 import com.swe.aiinsights.response.SummariserResponse;
 
-import com.swe.cloud.datastructures.TimeRange;
-import com.swe.cloud.datastructures.Entity;
-import com.swe.cloud.functionlibrary.CloudFunctionLibrary;
-import com.swe.cloud.datastructures.CloudResponse;
+import com.swe.aiinsights.response.QuestionAnswerResponse;
+
+// import com.swe.cloud.datastructures.TimeRange;
+// import com.swe.cloud.datastructures.Entity;
+// import com.swe.cloud.functionlibrary.CloudFunctionLibrary;
+// import com.swe.cloud.datastructures.CloudResponse;
 
 /**
  * Gemini Service builds the request and calls the AI api.
@@ -53,7 +58,7 @@ public final class GeminiService implements LlmService {
     private static final String GEMINI_API_URL_TEMPLATE =
             dotenv.get("GEMINI_URL");
     /**
-     *  Sets the Media type used for JSON requests.
+     * Sets the Media type used for JSON requests.
      */
     private static final MediaType JSON =
             MediaType.get("application/json; charset=utf-8");
@@ -106,7 +111,8 @@ public final class GeminiService implements LlmService {
         registry.put("REG", new ImageRegularize());
         registry.put("DESC", new ImageInterpreter());
         registry.put("INS", new InsightsGenerator());
-        registry.put("SUMMARISE", new SummarisationProcessor());
+        registry.put("SUM", new SummarisationGenerator());
+        registry.put("QNA", new QuestionAnswerGenerator());
         registry.put("ACTION", new ActionItemsGenerator());
     }
 
@@ -130,8 +136,10 @@ public final class GeminiService implements LlmService {
         } else if (Objects.equals(aiRequest.getReqType(), "INS")) {
             // the request is for insights generation
             returnResponse = new InsightsResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "SUMMARISE")) {
+        } else if (Objects.equals(aiRequest.getReqType(), "SUM")) {
             returnResponse = new SummariserResponse();
+        } else if (Objects.equals(aiRequest.getReqType(), "QNA")) {
+            returnResponse = new QuestionAnswerResponse();
         } else if (Objects.equals(aiRequest.getReqType(), "ACTION")) {
                 returnResponse = new ActionItemsResponse();
         }
@@ -145,10 +153,9 @@ public final class GeminiService implements LlmService {
                 registry.get(aiRequest.getReqType());
         if (processor == null) {
             throw new IllegalArgumentException("No processor found "
-                    +  "for request type: "
+                    + "for request type: "
                     + aiRequest.getReqType());
         }
-
 
 
         // We get the json request string to send to
@@ -203,6 +210,7 @@ public final class GeminiService implements LlmService {
                         + responseJson.toPrettyString());
             }
         }
+
 
     }
 }
