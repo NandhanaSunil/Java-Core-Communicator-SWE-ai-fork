@@ -109,30 +109,30 @@ public class AiClientService {
             final String jsonContent) {
 
         try {
-            CompletableFuture<String> future =
-                    asyncExecutor.execute(
-                            new AiSummarisationRequest(
-                                    jsonContent));
 
             lastSummaryUpdate =
-                    lastSummaryUpdate.thenCompose(v ->
-                            future.thenApply(response -> {
+                    lastSummaryUpdate.thenCompose(v -> {
 
-                                if (accumulatedSummary == null
-                                        || accumulatedSummary
-                                        .isEmpty()) {
-                                    accumulatedSummary =
-                                            response;
-                                } else {
-                                    accumulatedSummary =
-                                            accumulatedSummary
-                                                    + "+"
-                                                    + response;
-                                }
+                        // Prepare content for summarization
+                        String contentToSummarise;
 
-                                return null;
-                            })
-                    );
+                        if (accumulatedSummary == null || accumulatedSummary.isEmpty()) {
+                            contentToSummarise = jsonContent;
+                        } else {
+                            contentToSummarise = "Previous Summary: " + accumulatedSummary
+                                    + "\n\nNew Chat Data: " + jsonContent;
+                        }
+
+                        CompletableFuture<String> future =
+                                asyncExecutor.execute(
+                                        new AiSummarisationRequest(
+                                                contentToSummarise));
+
+                        return future.thenApply(response -> {
+                            accumulatedSummary = response;
+                            return null;
+                        });
+                    });
 
             return lastSummaryUpdate.thenApply(v ->
                     accumulatedSummary);

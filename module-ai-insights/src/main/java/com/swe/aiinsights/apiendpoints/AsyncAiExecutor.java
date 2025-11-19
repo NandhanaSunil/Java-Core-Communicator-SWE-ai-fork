@@ -1,6 +1,7 @@
 /**
  * Author : Abhirami R Iyer
  */
+
 package com.swe.aiinsights.apiendpoints;
 
 import com.swe.aiinsights.aiservice.GeminiService;
@@ -17,20 +18,32 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-
+/**
+ * Handles asynchronous execution of AI requests using the LLM orchestrator.
+ */
 public class AsyncAiExecutor {
-
+    /**
+     * Shared async executor for running AI tasks.
+     */
     private static final Executor aiExecutor = AsyncConfig.aiExecutor();
-
+    /**
+     * Orchestrates between Gemini and Ollama services.
+     */
     private final LlmService llmService = new LlmOrchestratorService(
         List.of(
-                new OllamaService(), // 2. Fallback
-            new GeminiService() // 1. Primary
+                // 2. Fallback
+            new GeminiService(),
+                 new OllamaService()// 1. Primary
 
         )
     );
 
-
+    /**
+     * Executes an AI request asynchronously and returns the model output as a future.
+     *
+     * @param req the AI request object
+     * @return future containing the AI model's response string
+     */
     public CompletableFuture<String> execute(final AiRequestable req) {
         return CompletableFuture.supplyAsync(() -> {
                     try {
