@@ -27,7 +27,7 @@ public final class AiSummarisationRequest implements AiRequestable<String> {
     public AiSummarisationRequest(final String chatJson) {
         this.metaData = new HashMap<>();
         this.metaData.put("InputChat", chatJson);
-        this.metaData.put("RequestPrompt", "give summary");
+        this.metaData.put("RequestPrompt", "give summary" + chatJson);
 
         this.type = "SUM";
     }

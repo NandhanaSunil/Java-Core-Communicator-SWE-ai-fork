@@ -36,7 +36,7 @@ public class Main {
         AiClientService service = AiInstance.getInstance();
         URL url = Main.class.getClassLoader().getResource("images/test.png");
         Path file = Paths.get(url.toURI());
-        // CompletableFuture<String> resp = service.describe(file);
+//        CompletableFuture<String> resp = service.describe(file);
 
         String points = "{\n" +
                 "  \"ShapeId\": \"c585b84a-d56c-45b8-a0e1-827ae20a014a\",\n" +
@@ -818,7 +818,7 @@ public class Main {
                 +"\"I'm almost done, thanks!\"}\n"
                 + "]";
         CompletableFuture<String> summary = service.summariseText(chatJson1);
-//        summary.thenAccept(System.out::println);
+        summary.thenAccept(System.out::println);
         String chatJson = "[\n"
                 + " {\"sender\": \"Gouthami\", \"message\": "
                 +"\"Hey, how are you?\"},\n"
@@ -926,9 +926,9 @@ public class Main {
         resp.thenAccept(response -> {System.out.println(response);});
 
         
-        // CompletableFuture<String> reg = service.regularise(points);
-        // reg.thenAccept(System.out::println);
-        // resp.thenAccept(System.out::println);
+//         CompletableFuture<String> reg = service.regularise(points);
+         reg.thenAccept(System.out::println);
+         resp.thenAccept(System.out::println);
         System.out.println("AI Process - Running in another thread");
 
 

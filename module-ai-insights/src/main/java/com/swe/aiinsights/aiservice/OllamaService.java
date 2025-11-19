@@ -46,7 +46,7 @@ public class OllamaService implements LlmService {
         ModelAdapter adapter = new OllamaAdapter();
         String jsonRequestBody = adapter.buildRequest(aiRequest);
 
-        System.out.println("DEBUG >>> RequestString: " + jsonRequestBody);
+        System.out.println("DEBUG >>> RequestString received");
 
 
         // ---- Send request to Ollama ----
