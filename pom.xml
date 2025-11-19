@@ -81,32 +81,39 @@
              <source>24</source>
              <target>24</target>
            </configuration>
+
+
         </plugin>
 
         <!-- Checkstyle Plugin -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.3.1</version>
-          <configuration>
-            <configLocation>${session.executionRootDirectory}/config/checkstyle/checkstyle.xml</configLocation>
-            <suppressionsLocation>${session.executionRootDirectory}/config/checkstyle/suppressions.xml</suppressionsLocation>
-            <encoding>UTF-8</encoding>
-            <consoleOutput>true</consoleOutput>
-            <failsOnError>true</failsOnError>
-          </configuration>
-          <executions>
-            <execution>
-              <id>checkstyle-validation</id>
-              <phase>verify</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <version>3.3.1</version>
 
-        <!-- JaCoCo for Coverage -->
+              <configuration>
+                  <!-- Load checkstyle from module-ai-insights/ -->
+                  <configLocation>checkstyle.xml</configLocation>
+                  <suppressionsLocation></suppressionsLocation>
+
+                  <encoding>UTF-8</encoding>
+                  <consoleOutput>true</consoleOutput>
+                  <failsOnError>true</failsOnError>
+              </configuration>
+
+              <executions>
+                  <execution>
+                      <id>checkstyle-validation</id>
+                      <phase>verify</phase>
+                      <goals>
+                          <goal>check</goal>
+                      </goals>
+                  </execution>
+              </executions>
+          </plugin>
+
+
+          <!-- JaCoCo for Coverage -->
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>

@@ -54,7 +54,7 @@ public class OllamaAdapter implements ModelAdapter{
             images.add(request.getImgData());
         }
 
-        return objectMapper.writeValueAsString(root);
+            return objectMapper.writeValueAsString(root);
 
     }
 
