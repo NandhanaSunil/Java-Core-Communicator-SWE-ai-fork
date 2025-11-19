@@ -1,3 +1,19 @@
+/**
+ * Author : Abhirami R Iyer
+ *
+ * <p>
+ * The GeminiAdapter converts generalised request data into the JSON format
+ * required by the Gemini API and extracts the textual response from the
+ * API output.
+ * </p>
+ *
+ * <p>
+ * References:
+ *     1. https://ai.google.dev/gemini-api/docs/api-key
+ *     2. https://ai.google.dev/gemini-api/docs#rest
+ * </p>
+ */
+
 package com.swe.aiinsights.modeladapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,7 +51,7 @@ public class GeminiAdapter implements ModelAdapter{
             // add the image into the request body
             inlineDataNode.put("mimeType", "image/png");
             inlineDataNode.put("data", request.getImgData());
-        } else {
+        } else if(request.getTextData() != null){
             partsArray.addObject().put("text", request.getTextData());
         }
 

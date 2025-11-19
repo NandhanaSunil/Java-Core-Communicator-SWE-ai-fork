@@ -31,9 +31,8 @@ public class AsyncAiExecutor {
      */
     private final LlmService llmService = new LlmOrchestratorService(
         List.of(
-                // 2. Fallback
-            new GeminiService(),
-                 new OllamaService()// 1. Primary
+                new GeminiService(), // 1. Primary 
+                new OllamaService() // 2. Fallback
 
         )
     );
@@ -53,8 +52,9 @@ public class AsyncAiExecutor {
                         System.out.println(">>> DEBUG : Calling llmService.runProcess()...");
                         AiResponse aiResponse = llmService.runProcess(general);
 
+                        String response = general.formatOutput(aiResponse);
                         System.out.println(">>> DEBUG : Received response");
-                        return aiResponse.getResponse();
+                        return response;
 
                     }  catch (IOException e) {
                         System.err.println(">>> DEBUG :  IOException in execute: " + e.getMessage());

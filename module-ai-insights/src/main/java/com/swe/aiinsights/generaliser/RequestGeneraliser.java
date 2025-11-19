@@ -1,5 +1,30 @@
+/**
+ * Author : Abhirami R Iyer
+ *
+ * <p>
+ * The RequestGeneraliser acts as the generalising layer between all
+ * incoming AI requests and the model adapters. It extracts request
+ * metadata, normalises input formats (text / image), and attaches the
+ * correct response container based on the request type.
+ * </p>
+ *
+ * <p>
+ * This class ensures that downstream adapters (Gemini, Ollama, etc.)
+ * do not need to understand request categories such as DESC, REG,
+ * SUM, INS, ACTION, or QNA. It also applies specialised output json
+ * formatting rules (e.g., regularisation, insights generation).
+ * </p>
+ *
+ * <p>
+ * References:
+  *     1. Strategy & Factory Method Patterns (GoF)
+ * </p>
+ */
+
 package com.swe.aiinsights.generaliser;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.swe.aiinsights.parser.RegulariserParser;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.*;
 
@@ -88,5 +113,16 @@ public class RequestGeneraliser {
 
     public AiResponse getAiResponse() {
         return aiResponse;
+    }
+
+    public String formatOutput(final AiResponse aiResponse) throws JsonProcessingException {
+
+       if (Objects.equals(reqType, "REG")) {
+           RegulariserParser parser = new RegulariserParser();
+
+           return parser.parseInput(this.textData, aiResponse.getResponse());
+       }
+
+       return aiResponse.getResponse();
     }
 }
