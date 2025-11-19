@@ -3,6 +3,7 @@
  */
 package com.swe.aiinsights.aiservice;
 
+import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
 
@@ -20,5 +21,5 @@ public interface LlmService {
      * @return AiResponse, returns the response from AI
      * @throws IOException
      */
-    AiResponse runProcess(AiRequestable request) throws IOException;
+    AiResponse runProcess(RequestGeneraliser request) throws IOException;
 }

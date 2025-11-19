@@ -24,7 +24,7 @@ import java.nio.file.Path;
 public class AiClientService {
 
 
-    private AsyncAiExecutor asyncExecutor = new AsyncAiExecutor();
+    private static final AsyncAiExecutor asyncExecutor = new AsyncAiExecutor();
 
     /**
      * Interprets an uploaded image and generates a textual description.

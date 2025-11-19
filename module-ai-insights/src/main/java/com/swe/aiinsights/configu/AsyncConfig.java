@@ -12,7 +12,7 @@ public class AsyncConfig {
      *
      * @return a configured executor service
      */
-    public Executor aiExecutor() {
+    public static Executor aiExecutor() {
         final int corePoolSize = 5;
         final int maxPoolSize = 10;
         final int queueCapacity = 50;
