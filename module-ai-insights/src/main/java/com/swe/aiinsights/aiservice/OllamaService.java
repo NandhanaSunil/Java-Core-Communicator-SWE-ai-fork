@@ -1,5 +1,12 @@
 /**
  * Author : Abhirami R Iyer
+ * Edited by : Nandhana Sunil
+ *
+ *<p>
+ *     References
+ *      1. https://docs.ollama.com/api/usage
+ *      2. https://ollama.readthedocs.io/en/api/
+ *</p>
  */
 package com.swe.aiinsights.aiservice;
 
@@ -10,7 +17,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.*;
 import com.swe.aiinsights.response.*;
 
-import com.swe.aiinsights.response.SummariserResponse;
 
 
 import java.io.IOException;
