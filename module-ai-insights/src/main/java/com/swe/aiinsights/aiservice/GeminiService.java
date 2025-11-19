@@ -17,9 +17,22 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import com.swe.aiinsights.response.AiResponse;
+import com.swe.aiinsights.response.InsightsResponse;
+import com.swe.aiinsights.response.InterpreterResponse;
+import com.swe.aiinsights.response.RegulariserResponse;
+import com.swe.aiinsights.summarisationgenerator.SummarisationGenerator;
+import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import com.swe.aiinsights.response.SummariserResponse;
 
+import com.swe.aiinsights.response.QuestionAnswerResponse;
+
+// import com.swe.cloud.datastructures.TimeRange;
+// import com.swe.cloud.datastructures.Entity;
+// import com.swe.cloud.functionlibrary.CloudFunctionLibrary;
+// import com.swe.cloud.datastructures.CloudResponse;
 
 /**
  * Gemini Service builds the request and calls the AI api.
@@ -36,7 +49,7 @@ public final class GeminiService implements LlmService {
     private static final String GEMINI_API_URL_TEMPLATE =
             dotenv.get("GEMINI_URL");
     /**
-     *  Sets the Media type used for JSON requests.
+     * Sets the Media type used for JSON requests.
      */
     private static final MediaType JSON =
             MediaType.get("application/json; charset=utf-8");
@@ -55,7 +68,16 @@ public final class GeminiService implements LlmService {
     public GeminiService() {
         //fetched the api key from the
         // env file (to be changed to fetch from cloud)
-        this.geminiApiKey = dotenv.get("GEMINI_API_KEY");
+        /** cloud functions to get key 
+        CloudFunctionLibrary cloud = new CloudFunctionLibrary();
+        Entity req = new Entity("AI_INSIGHT", "credentials", "gemini", "key", -1, new TimeRange(0, 0),null);
+        // Response response =testCloudFunctionLibrary.cloudPost(testEntity)
+        String key_from_cloud;
+        cloud.cloudGet(req).thenAccept(response -> {
+        // Object cleanedData = response.data;   // <- NO getData()
+        key_from_cloud = response.data();
+    });*/
+        this.geminiApiKey = dotenv.get("GEMINI_API_KEY"); //change this in production
 
         final int timeout = 200;
         final int readMul = 6;
@@ -111,6 +133,7 @@ public final class GeminiService implements LlmService {
 
             return returnResponse;
         }
+
 
     }
 }

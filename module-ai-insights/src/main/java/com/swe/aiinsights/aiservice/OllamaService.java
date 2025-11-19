@@ -10,6 +10,9 @@ import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.*;
 import com.swe.aiinsights.response.*;
 
+import com.swe.aiinsights.response.SummariserResponse;
+
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 

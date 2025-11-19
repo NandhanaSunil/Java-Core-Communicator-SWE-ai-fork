@@ -7,10 +7,8 @@ package com.swe.aiinsights.response;
 
 /**
  * Represents the AI's response to a chat summarisation request.
- * <p>
  * This class stores the summarised text returned by the model and
  * identifies the response type for downstream handling.
- * </p>
  */
 public class SummariserResponse implements AiResponse {
 
@@ -41,10 +39,7 @@ public class SummariserResponse implements AiResponse {
 
     /**
      * Provides direct access to the summary text.
-     * <p>
      * This is a helper method for readability
-     * </p>
-     *
      * @return the AI-generated summary
      */
     public String getResponseText() {
