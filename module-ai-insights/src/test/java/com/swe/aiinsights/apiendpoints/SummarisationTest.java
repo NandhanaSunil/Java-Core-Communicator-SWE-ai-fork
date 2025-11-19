@@ -11,6 +11,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import sun.misc.Unsafe;
+
 public class SummarisationTest {
 
     private AiClientService client;
@@ -35,12 +37,23 @@ public class SummarisationTest {
     @BeforeEach
     void setup() throws Exception {
         client = new AiClientService();
-
         stub = new StubExecutor();
 
+        // Get the final static field
         Field f = AiClientService.class.getDeclaredField("asyncExecutor");
         f.setAccessible(true);
-        f.set(client, stub);
+
+        // Get Unsafe
+        Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+        unsafeField.setAccessible(true);
+        Unsafe unsafe = (Unsafe) unsafeField.get(null);
+
+        // Static fields belong to the class, not an instance
+        Object base = unsafe.staticFieldBase(f);
+        long offset = unsafe.staticFieldOffset(f);
+
+        // Replace the static final executor with our stub
+        unsafe.putObject(base, offset, stub);
     }
 
     // Utility to load test json
@@ -183,4 +196,3 @@ public class SummarisationTest {
         assertEquals("NULL_SAFE", r);
     }
 }
-

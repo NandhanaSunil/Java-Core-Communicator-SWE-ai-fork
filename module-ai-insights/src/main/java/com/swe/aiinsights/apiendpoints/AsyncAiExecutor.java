@@ -24,8 +24,9 @@ public class AsyncAiExecutor {
 
     private final LlmService llmService = new LlmOrchestratorService(
         List.of(
-            new GeminiService(), // 1. Primary
-            new OllamaService() // 2. Fallback
+                new OllamaService(), // 2. Fallback
+            new GeminiService() // 1. Primary
+
         )
     );
 

@@ -25,11 +25,11 @@ public class OllamaAdapter implements ModelAdapter{
             ArrayNode images = root.putArray("images");
             images.add(request.getImgData());
         } else {
-            ArrayNode input = root.putArray("inputData");
-            input.add(request.getTextData());
+            String oldPrompt = root.get("prompt").asText();
+            root.put("prompt", oldPrompt + request.getTextData());
         }
 
-        return objectMapper.writeValueAsString(root);
+            return objectMapper.writeValueAsString(root);
 
     }
 
