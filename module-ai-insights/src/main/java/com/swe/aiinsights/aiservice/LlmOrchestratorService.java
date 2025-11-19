@@ -13,6 +13,7 @@
 
 package com.swe.aiinsights.aiservice;
 
+import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class LlmOrchestratorService implements LlmService {
      * it switches to the next service in the list and retries the request.
      */
     @Override
-    public AiResponse runProcess(final AiRequestable request) throws IOException {
+    public AiResponse runProcess(final RequestGeneraliser request) throws IOException {
         
         // Start from the currently active service index
         int startingIndex = activeServiceIndex;

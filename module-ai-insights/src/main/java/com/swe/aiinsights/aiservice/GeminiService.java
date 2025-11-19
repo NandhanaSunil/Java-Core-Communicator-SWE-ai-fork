@@ -2,7 +2,7 @@
  * Author : Abhirami R Iyer
  * Edited by : Nandhana Sunil
  *             Berelli Gouthami
- * 
+ *
  * <p>
  * References
  *      1. https://ai.google.dev/gemini-api/docs/rate-limits
@@ -10,8 +10,6 @@
  */
 package com.swe.aiinsights.aiservice;
 
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import com.swe.aiinsights.modeladapter.GeminiAdapter;
 import com.swe.aiinsights.modeladapter.ModelAdapter;
@@ -22,18 +20,9 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import com.swe.aiinsights.response.AiResponse;
-import com.swe.aiinsights.response.InsightsResponse;
-import com.swe.aiinsights.response.InterpreterResponse;
-import com.swe.aiinsights.response.RegulariserResponse;
-import com.swe.aiinsights.summarisationgenerator.SummarisationGenerator;
-import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import com.swe.aiinsights.response.SummariserResponse;
 import com.swe.aiinsights.customexceptions.RateLimitException;
-
-import com.swe.aiinsights.response.QuestionAnswerResponse;
 
 // import com.swe.cloud.datastructures.TimeRange;
 // import com.swe.cloud.datastructures.Entity;
@@ -74,15 +63,15 @@ public final class GeminiService implements LlmService {
     public GeminiService() {
         //fetched the api key from the
         // env file (to be changed to fetch from cloud)
-        /** cloud functions to get key 
-        CloudFunctionLibrary cloud = new CloudFunctionLibrary();
-        Entity req = new Entity("AI_INSIGHT", "credentials", "gemini", "key", -1, new TimeRange(0, 0),null);
-        // Response response =testCloudFunctionLibrary.cloudPost(testEntity)
-        String key_from_cloud;
-        cloud.cloudGet(req).thenAccept(response -> {
-        // Object cleanedData = response.data;   // <- NO getData()
-        key_from_cloud = response.data();
-    });*/
+        /** cloud functions to get key
+         CloudFunctionLibrary cloud = new CloudFunctionLibrary();
+         Entity req = new Entity("AI_INSIGHT", "credentials", "gemini", "key", -1, new TimeRange(0, 0),null);
+         // Response response =testCloudFunctionLibrary.cloudPost(testEntity)
+         String key_from_cloud;
+         cloud.cloudGet(req).thenAccept(response -> {
+         // Object cleanedData = response.data;   // <- NO getData()
+         key_from_cloud = response.data();
+         });*/
         this.geminiApiKey = dotenv.get("GEMINI_API_KEY"); //change this in production
 
         final int timeout = 200;
@@ -105,9 +94,9 @@ public final class GeminiService implements LlmService {
 
         AiResponse returnResponse = aiRequest.getAiResponse();
 
-       ModelAdapter adapter = new GeminiAdapter();
+        ModelAdapter adapter = new GeminiAdapter();
 
-       String requestBody = adapter.buildRequest(aiRequest);
+        String requestBody = adapter.buildRequest(aiRequest);
 
         System.out.println("DEBUG >>> RequestString: Recieved from adapter");
 
@@ -130,7 +119,7 @@ public final class GeminiService implements LlmService {
             if (!response.isSuccessful()) {
                 if (response.code() == 429) {
                     // This is the trigger for the failover
-                //     System.out.println("Rate limit is hit !!!!!");
+                    //     System.out.println("Rate limit is hit !!!!!");
                     throw new RateLimitException("Gemini API rate limit hit. Status code 429.");
                 }
 

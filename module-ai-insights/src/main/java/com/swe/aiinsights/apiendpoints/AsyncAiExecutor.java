@@ -20,7 +20,6 @@ import java.util.concurrent.Executor;
 
 public class AsyncAiExecutor {
 
-    private final LlmService llmService = new GeminiService();
     private static final Executor aiExecutor = AsyncConfig.aiExecutor();
 
     private final LlmService llmService = new LlmOrchestratorService(

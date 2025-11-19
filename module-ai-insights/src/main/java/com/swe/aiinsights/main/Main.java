@@ -851,7 +851,6 @@ public class Main {
         CompletableFuture<String> answer2 = service.answerQuestion(genericQ);
         answer2.thenAccept(System.out::println);
         reg.thenAccept(System.out::println);
-        resp.thenAccept(System.out::println);
         ObjectMapper mapper = new ObjectMapper();
 
         JsonNode chat_data = mapper.readTree("""

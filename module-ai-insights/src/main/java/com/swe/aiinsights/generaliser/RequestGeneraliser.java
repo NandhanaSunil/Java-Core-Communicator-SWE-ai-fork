@@ -5,6 +5,7 @@ import com.swe.aiinsights.response.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RequestGeneraliser {
 
@@ -14,10 +15,12 @@ public class RequestGeneraliser {
 
     private String imgData;
 
+    private String reqType;
+
     private AiResponse aiResponse;
 
     private ArrayList<String> registeredKeys = new ArrayList<>(
-            List.of("DESC", "REG", "INS", "SUMMARISE"));
+            List.of("DESC", "REG", "INS", "SUM", "ACTION", "QNA"));
 
 
     public RequestGeneraliser (AiRequestable request){
@@ -27,22 +30,31 @@ public class RequestGeneraliser {
 
         setPrompt(request.getContext());
 
-        switch (request.getReqType()) {
+        this.reqType = request.getReqType();
+        if (Objects.equals(reqType, "DESC")){
+            setImgData(request.getInput().toString());
+        }
+        else {
+            setTextData(request.getInput().toString());
+        }
+        switch (this.reqType) {
             case "DESC" :
-                setImgData(request.getInput().toString());
                 aiResponse = new InterpreterResponse();
                 break;
             case "REG":
-                setTextData(request.getInput().toString());
                 aiResponse = new RegulariserResponse();
                 break;
-            case "SUMMARISE" :
-                setTextData(request.getInput().toString());
+            case "SUM" :
                 aiResponse = new SummariserResponse();
                 break;
             case "INS" :
-                setTextData(request.getInput().toString());
                 aiResponse = new InsightsResponse();
+                break;
+            case "ACTION" :
+                aiResponse = new ActionItemsResponse();
+                break;
+            case "QNA" :
+                aiResponse = new QuestionAnswerResponse();
                 break;
         }
     }
@@ -59,6 +71,9 @@ public class RequestGeneraliser {
         return textData;
     }
 
+    public String getReqType(){
+        return reqType;
+    }
     public void setImgData(String imgData) {
         this.imgData = imgData;
     }
