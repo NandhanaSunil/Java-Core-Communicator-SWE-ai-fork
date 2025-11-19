@@ -1,3 +1,13 @@
+/**
+* <p>
+ *     Reference:
+ *      1. https://medium.com/@kapildevkhatik2/
+ *       how-to-run-and-call-local-llms-with-ollama-a-developers-
+ *          guide-to-building-offline-ai-apps-1161d9f3a0f8
+        * </p>
+*/
+
+
 package com.swe.aiinsights.modeladapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

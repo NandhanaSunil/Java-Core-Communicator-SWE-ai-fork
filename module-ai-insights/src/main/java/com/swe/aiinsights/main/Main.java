@@ -831,8 +831,6 @@ public class Main {
                 + "]";
         CompletableFuture<String> summary2 = service.summariseText(chatJson);
 
-
-
         String chatJson0 = "[\n"
                 + " {\"sender\": \"jayati\", \"message\": \"Hey, how are you?\"},\n"
                 + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n"
