@@ -2,6 +2,11 @@
  * Author : Abhirami R Iyer
  * Edited by : Nandhana Sunil
  *             Berelli Gouthami
+ * 
+ * <p>
+ * References
+ *      1. https://ai.google.dev/gemini-api/docs/rate-limits
+ * </p>
  */
 package com.swe.aiinsights.aiservice;
 
@@ -26,6 +31,7 @@ import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import com.swe.aiinsights.response.SummariserResponse;
+import com.swe.aiinsights.customexceptions.RateLimitException;
 
 import com.swe.aiinsights.response.QuestionAnswerResponse;
 
@@ -122,7 +128,12 @@ public final class GeminiService implements LlmService {
         // http post
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
-                assert response.body() != null;
+                if (response.code() == 429) {
+                    // This is the trigger for the failover
+                //     System.out.println("Rate limit is hit !!!!!");
+                    throw new RateLimitException("Gemini API rate limit hit. Status code 429.");
+                }
+
                 throw new
                         IOException("Unexpected code"
                         + response + " - " + response.body().string());
