@@ -11,8 +11,13 @@
  * References:
  *     1. https://github.com/ollama/ollama/blob/main/docs/api.md
  *     2. https://www.ollama.com/library
+ *     3. https://medium.com/@kapildevkhatik2/
+ *       how-to-run-and-call-local-llms-with-ollama-a-developers-
+ *          guide-to-building-offline-ai-apps-1161d9f3a0f8
  * </p>
- */
+*/
+
+
 package com.swe.aiinsights.modeladapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
