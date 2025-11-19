@@ -5,23 +5,17 @@
  */
 package com.swe.aiinsights.aiservice;
 
-import com.swe.aiinsights.actionitems.ActionItemsGenerator;
-import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.swe.aiinsights.imageinterpreter.ImageInterpreter;
-import com.swe.aiinsights.insightsgenerator.InsightsGenerator;
+import com.swe.aiinsights.generaliser.RequestGeneraliser;
+import com.swe.aiinsights.modeladapter.GeminiAdapter;
+import com.swe.aiinsights.modeladapter.ModelAdapter;
 import io.github.cdimascio.dotenv.Dotenv;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import com.swe.aiinsights.regulariser.ImageRegularize;
-import com.swe.aiinsights.request.AiRequestable;
-import com.swe.aiinsights.requestprocessor.RequestProcessor;
-import com.swe.aiinsights.response.ActionItemsResponse;
 import com.swe.aiinsights.response.AiResponse;
 import com.swe.aiinsights.response.InsightsResponse;
 import com.swe.aiinsights.response.InterpreterResponse;
@@ -30,10 +24,7 @@ import com.swe.aiinsights.summarisationgenerator.SummarisationGenerator;
 import com.swe.aiinsights.questionanswergenerator.QuestionAnswerGenerator;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
 import com.swe.aiinsights.response.SummariserResponse;
 
 import com.swe.aiinsights.response.QuestionAnswerResponse;
@@ -67,18 +58,9 @@ public final class GeminiService implements LlmService {
      */
     private final String geminiApiKey;
     /**
-     * Json parser -- serialising and deserialising.
-     */
-    private ObjectMapper objectMapper;
-    /**
      * http client for the requests.
      */
     private final OkHttpClient httpClient;
-    /**
-     * registry to hold the request processor against request types.
-     */
-    private final HashMap<String, RequestProcessor> registry =
-            new HashMap<>();
 
     /**
      * Constructor for initialising the http client for making the request.
@@ -105,71 +87,30 @@ public final class GeminiService implements LlmService {
                 .readTimeout(timeout * readMul, TimeUnit.SECONDS)
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .build();
-        this.objectMapper = new ObjectMapper();
 
-        // initialises the request builders to redirect to specific requests
-        registry.put("REG", new ImageRegularize());
-        registry.put("DESC", new ImageInterpreter());
-        registry.put("INS", new InsightsGenerator());
-        registry.put("SUM", new SummarisationGenerator());
-        registry.put("QNA", new QuestionAnswerGenerator());
-        registry.put("ACTION", new ActionItemsGenerator());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public AiResponse runProcess(final AiRequestable aiRequest)
+    public AiResponse runProcess(final RequestGeneraliser aiRequest)
             throws IOException {
-        this.objectMapper = new ObjectMapper();
-        AiResponse returnResponse = null;
 
-        if (Objects.equals(aiRequest.getReqType(), "DESC")) {
-            // if the request is of image interpretation,
-            // the request for it is built.
-            returnResponse = new InterpreterResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "REG")) {
-            // the request is of image regularization,
-            // the request builder for regularization is called
-            returnResponse = new RegulariserResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "INS")) {
-            // the request is for insights generation
-            returnResponse = new InsightsResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "SUM")) {
-            returnResponse = new SummariserResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "QNA")) {
-            returnResponse = new QuestionAnswerResponse();
-        } else if (Objects.equals(aiRequest.getReqType(), "ACTION")) {
-                returnResponse = new ActionItemsResponse();
-        }
+        AiResponse returnResponse = aiRequest.getAiResponse();
 
-        // from the registry we will get the requestProcessor
-        // according to the request type.
-        System.out.println("DEBUG >>> ReqType: " + aiRequest.getReqType());
-        System.out.println("DEBUG >>> Registered keys: " + registry.keySet());
+       ModelAdapter adapter = new GeminiAdapter();
 
-        RequestProcessor processor =
-                registry.get(aiRequest.getReqType());
-        if (processor == null) {
-            throw new IllegalArgumentException("No processor found "
-                    + "for request type: "
-                    + aiRequest.getReqType());
-        }
+       String requestBody = adapter.buildRequest(aiRequest);
 
+        System.out.println("DEBUG >>> RequestString: Recieved from adapter");
 
-        // We get the json request string to send to
-        // the api from the request processor.
-        String jsonRequestBody =
-                processor.processRequest(this.objectMapper, aiRequest);
-        // the api url is created concatenating
-        // the url template and the api key
         final String apiUrl =
                 GEMINI_API_URL_TEMPLATE + geminiApiKey;
 
         // the request body is created using the json string.
         final RequestBody body =
-                RequestBody.create(jsonRequestBody, JSON);
+                RequestBody.create(requestBody, JSON);
 
         // the post request is created.
         final Request request =
@@ -181,34 +122,16 @@ public final class GeminiService implements LlmService {
         // http post
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) {
+                assert response.body() != null;
                 throw new
                         IOException("Unexpected code"
                         + response + " - " + response.body().string());
             }
 
-            // extracting the response and add to the response object
-            final JsonNode responseJson =
-                    objectMapper.readTree(response.body().charStream());
-            final JsonNode textNode =
-                    responseJson.at("/candidates/0/content/parts/0/text");
+            String textResponse = adapter.getResponse(response);
+            returnResponse.setResponse(textResponse);
 
-            // if the response is a text
-            if (textNode.isTextual()) {
-                if (returnResponse != null) {
-                    // create the return response with the string given by AI
-                    String responseToreturn = textNode.asText();
-                    responseToreturn = responseToreturn
-                                                .replaceAll("```json", "")
-                                                .replaceAll("```", "")
-                                                .trim();
-                    returnResponse.setResponse(responseToreturn);
-                }
-                return returnResponse;
-            } else {
-                throw new
-                        IOException("No text in api response : "
-                        + responseJson.toPrettyString());
-            }
+            return returnResponse;
         }
 
 

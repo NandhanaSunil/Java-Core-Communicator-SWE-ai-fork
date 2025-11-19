@@ -29,7 +29,7 @@ public class AiClientService {
     /**
      * Executor used to run async AI calls.
      */
-    private AsyncAiExecutor asyncExecutor = new AsyncAiExecutor();
+    private static final AsyncAiExecutor asyncExecutor = new AsyncAiExecutor();
     /**
      * Accumulates all summaries.
      */

@@ -1,5 +1,10 @@
-package apiendpoints;
+package com.swe.aiinsights.apiendpoints;
 
-public class cloudSentimentAnalyserTest{
-    
+
+
+public class cloudSentimentAnalyserTest {
+
+
+
+
 }
