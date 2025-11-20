@@ -49,7 +49,6 @@ public class AiClientService {
             CompletableFuture.completedFuture(null);
 
 
-
     /**
      * Interprets an uploaded image and generates a textual description.
      *
@@ -150,8 +149,6 @@ public class AiClientService {
                 "Summary cleared successfully"
         );
     }
-
-
 
 
 

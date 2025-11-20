@@ -4,6 +4,10 @@
  * <p>
  * References
  *      1. https://ai.google.dev/gemini-api/docs/rate-limits
+ *      2. https://medium.com/google-cloud/
+ *          generating-request-body-for-apis-using-gemini-43977961ca2a
+ *      3. https://github.com/tanaikech/
+ *          Generating-Request-Body-for-APIs-using-Gemini
  * </p>
  *
  * @author Abhirami R Iyer
@@ -25,7 +29,6 @@ import okhttp3.RequestBody;
 import com.swe.aiinsights.response.AiResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -151,11 +154,11 @@ public final class GeminiService implements LlmService {
         final String requestBody = adapter.buildRequest(aiRequest);
 
         final int maxRetries = geminiApiKeyList.size();
-        System.out.println(maxRetries);
+//        System.out.println(maxRetries);
         int attempt = 0;
         while (attempt < maxRetries) {
-            System.out.println("Attempt");
-            System.out.println(attempt);
+//            System.out.println("Attempt");
+//            System.out.println(attempt);
             final String currentKey = getCurrentKey();
             final String apiUrl = GEMINI_API_URL_TEMPLATE + currentKey;
 
@@ -178,10 +181,11 @@ public final class GeminiService implements LlmService {
                     System.out.println("==========================================================key hit !!!!");
                     setKeyIndex(currentKey);
                     attempt++; // Increment attempt and loop again to try next key
-                    System.out.println(attempt);
+//                    System.out.println(attempt);
                     continue;  // Skip the rest and restart loop
                 }
             }
+            throw new RateLimitException("Some other error but trying to switch model");
         }
         throw new RateLimitException("All available API keys used");
     }
