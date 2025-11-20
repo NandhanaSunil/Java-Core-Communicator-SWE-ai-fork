@@ -22,7 +22,6 @@ import okhttp3.RequestBody;
 import com.swe.aiinsights.response.AiResponse;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -166,13 +165,14 @@ public final class GeminiService implements LlmService {
                     return returnResponse;
                 }
                 if (response.code() == 429) {
-                    System.out.println("==========================================================key hit !!!!");
+                    System.out.println("===================key hit !!!!");
                     setKeyIndex(currentKey);
                     attempt++; // Increment attempt and loop again to try next key
                     System.out.println(attempt);
                     continue;  // Skip the rest and restart loop
                 }
             }
+            throw new RateLimitException("Some other error but trying to switch model");
         }
         throw new RateLimitException("All available API keys used");
     }
