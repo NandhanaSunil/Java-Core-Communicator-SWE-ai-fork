@@ -1,13 +1,16 @@
 /**
- * Author : Abhirami R Iyer
- * Edited by : Nandhana Sunil
- *             Berelli Gouthami
+ * Service module for Gemini.
  *
  * <p>
  * References
  *      1. https://ai.google.dev/gemini-api/docs/rate-limits
  * </p>
+ *
+ * @author Abhirami R Iyer
+ * @editedby Nandhana Sunil, Berelli Gouthami
+ *
  */
+
 package com.swe.aiinsights.aiservice;
 
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
@@ -59,7 +62,7 @@ public final class GeminiService implements LlmService {
 //    private final String geminiApiKey;
 
     /**
-     * List of Gemini API Keys
+     * List of Gemini API Keys.
      */
     private List<String> geminiApiKeyList;
 
@@ -73,11 +76,11 @@ public final class GeminiService implements LlmService {
     private final OkHttpClient httpClient;
 
     /**
-     * This method is used to get the list of API Keys
+     * This method is used to get the list of API Keys.
      * @return list of Gemini API KEYS
      */
-    private List<String> GetKeyList(){
-        String keys = dotenv.get("GEMINI_API_KEY_LIST");
+    private List<String> getKeyList() {
+        final String keys = dotenv.get("GEMINI_API_KEY_LIST");
         if (keys == null || keys.trim().isEmpty()) {
             throw new RuntimeException("GEMINI_API_KEY_LIST is empty or missing");
         }
@@ -86,27 +89,31 @@ public final class GeminiService implements LlmService {
     }
 
     /**
-     * Get the next key available
+     * Get the next key available.
+     * @return thw next key available
      */
     private String getCurrentKey() {
-        int index = apiKeyIndex.get();
+        final int index = apiKeyIndex.get();
         return geminiApiKeyList.get(Math.abs(index));
     }
 
     /**
      * Using compare and swap, get the currently used keys index.
+     * @param expiredKey the expired key - max token count reached
      */
-    private void setKeyIndex(String expiredKey){
-        int currentIndex = apiKeyIndex.get();
-        String currentKey = geminiApiKeyList.get(Math.abs(currentIndex));
+    private void setKeyIndex(final String expiredKey) {
+        final int currentIndex = apiKeyIndex.get();
+        final String currentKey = geminiApiKeyList.get(Math.abs(currentIndex));
         if (currentKey.equals(expiredKey)) {
-            apiKeyIndex.compareAndSet(currentIndex, currentIndex+1);
+            apiKeyIndex.compareAndSet(currentIndex, currentIndex + 1);
             System.out.println(apiKeyIndex);
         }
     }
+
     /**
      * Constructor for initialising the http client for making the request.
      */
+
     public GeminiService() {
         //fetched the api key from the
         // env file (to be changed to fetch from cloud)
@@ -120,7 +127,7 @@ public final class GeminiService implements LlmService {
          key_from_cloud = response.data();
          });*/
 //        this.geminiApiKey = dotenv.get("GEMINI_API_KEY"); //change this in production
-        this.geminiApiKeyList = GetKeyList();
+        this.geminiApiKeyList = getKeyList();
         final int timeout = 200;
         final int readMul = 6;
         // creating an http client
@@ -139,33 +146,35 @@ public final class GeminiService implements LlmService {
     public AiResponse runProcess(final RequestGeneraliser aiRequest)
             throws IOException {
 
-        ModelAdapter adapter = new GeminiAdapter();
+        final ModelAdapter adapter = new GeminiAdapter();
 
-        String requestBody = adapter.buildRequest(aiRequest);
+        final String requestBody = adapter.buildRequest(aiRequest);
 
-        int maxRetries = geminiApiKeyList.size();
+        final int maxRetries = geminiApiKeyList.size();
         System.out.println(maxRetries);
         int attempt = 0;
         while (attempt < maxRetries) {
             System.out.println("Attempt");
             System.out.println(attempt);
-            String currentKey = getCurrentKey();
-            String apiUrl = GEMINI_API_URL_TEMPLATE + currentKey;
+            final String currentKey = getCurrentKey();
+            final String apiUrl = GEMINI_API_URL_TEMPLATE + currentKey;
 
-            Request request = new Request.Builder()
+            final Request request = new Request.Builder()
                     .url(apiUrl)
                     .post(RequestBody.create(requestBody, JSON))
                     .build();
 
+            final int keyLimitCode = 429;
+
             try (Response response = httpClient.newCall(request).execute()) {
                 System.out.println("trying to get response");
                 if (response.isSuccessful()) {
-                    AiResponse returnResponse = aiRequest.getAiResponse();
-                    String textResponse = adapter.getResponse(response);
+                    final AiResponse returnResponse = aiRequest.getAiResponse();
+                    final String textResponse = adapter.getResponse(response);
                     returnResponse.setResponse(textResponse);
                     return returnResponse;
                 }
-                if (response.code() == 429) {
+                if (response.code() == keyLimitCode) {
                     System.out.println("==========================================================key hit !!!!");
                     setKeyIndex(currentKey);
                     attempt++; // Increment attempt and loop again to try next key
