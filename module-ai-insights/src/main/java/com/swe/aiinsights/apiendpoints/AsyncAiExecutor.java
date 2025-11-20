@@ -18,10 +18,14 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+import com.swe.aiinsights.logging.CommonLogger;
+import org.slf4j.Logger;
+
 /**
  * Handles asynchronous execution of AI requests using the LLM orchestrator.
  */
 public class AsyncAiExecutor {
+    private static final Logger log = CommonLogger.getLogger(AsyncAiExecutor.class);
     /**
      * Shared async executor for running AI tasks.
      */
@@ -31,8 +35,9 @@ public class AsyncAiExecutor {
      */
     private final LlmService llmService = new LlmOrchestratorService(
         List.of(
-                new GeminiService(), // 1. Primary 
-                new OllamaService() // 2. Fallback
+                // 2. Fallback
+            new GeminiService(),
+                 new OllamaService()// 1. Primary
 
         )
     );
@@ -46,22 +51,26 @@ public class AsyncAiExecutor {
     public CompletableFuture<String> execute(final AiRequestable req) {
         return CompletableFuture.supplyAsync(() -> {
                     try {
-                        System.out.println(">>> DEBUG : Creating RequestGeneralised...");
+//                        System.out.println(">>> DEBUG : Creating RequestGeneralised...");
+                        log.debug("Creating RequestGeneralised...");
                         RequestGeneraliser general = new RequestGeneraliser(req);
 
-                        System.out.println(">>> DEBUG : Calling llmService.runProcess()...");
+//                        System.out.println(">>> DEBUG : Calling llmService.runProcess()...");
+                        log.debug("Calling llmService.runProcess()...");
                         AiResponse aiResponse = llmService.runProcess(general);
 
-                        String response = general.formatOutput(aiResponse);
-                        System.out.println(">>> DEBUG : Received response");
-                        return response;
+//                        System.out.println(">>> DEBUG : Received response");
+                        log.debug("Received response");
+                        return aiResponse.getResponse();
 
                     }  catch (IOException e) {
-                        System.err.println(">>> DEBUG :  IOException in execute: " + e.getMessage());
+//                        System.err.println(">>> DEBUG :  IOException in execute: " + e.getMessage());
+                        log.error("IOException in execute: {}", e.getMessage(), e);
                         e.printStackTrace();
                         throw new RuntimeException(e);
                     } catch (Exception e) {
-                        System.err.println(">>> DEBUG : Unexpected exception: " + e.getMessage());
+//                        System.err.println(">>> DEBUG : Unexpected exception: " + e.getMessage());
+                        log.error("Unexpected exception in execute: {}", e.getMessage(), e);
                         e.printStackTrace();
                         throw new RuntimeException(e);
                     }

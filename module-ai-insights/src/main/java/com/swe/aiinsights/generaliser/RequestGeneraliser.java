@@ -50,8 +50,8 @@ public class RequestGeneraliser {
 
     public RequestGeneraliser (AiRequestable request){
 
-        System.out.println("DEBUG >>> ReqType: " + request.getReqType());
-        System.out.println("DEBUG >>> Registered keys: " + registeredKeys);
+//        System.out.println("DEBUG >>> ReqType: " + request.getReqType());
+//        System.out.println("DEBUG >>> Registered keys: " + registeredKeys);
 
         setPrompt(request.getContext());
 

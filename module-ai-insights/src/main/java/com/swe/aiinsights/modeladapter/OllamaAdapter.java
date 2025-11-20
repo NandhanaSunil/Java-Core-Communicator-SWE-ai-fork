@@ -72,7 +72,7 @@ public class OllamaAdapter implements ModelAdapter{
                     + responseJson.toPrettyString());
         }
 
-        System.out.println("DEBUG >>> ResponseString: Recieved");
+//        System.out.println("DEBUG >>> ResponseString: Recieved");
 
         return textNode.asText();
     }

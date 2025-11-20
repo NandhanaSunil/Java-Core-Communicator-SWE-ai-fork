@@ -71,7 +71,7 @@ public class GeminiAdapter implements ModelAdapter{
 
         // if the response is a text
         if (textNode.isTextual()) {
-            System.out.println("DEBUG >>> ResponseString: Recieved");
+//            System.out.println("DEBUG >>> ResponseString: Recieved");
             return textNode.asText();
         } else {
             throw new
