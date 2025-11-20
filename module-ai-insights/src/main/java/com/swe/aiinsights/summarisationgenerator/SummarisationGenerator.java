@@ -19,10 +19,10 @@ public class SummarisationGenerator implements RequestProcessor {
             final AiRequestable request
     ) throws IOException {
 
-        ObjectNode rootNode = objectMapper.createObjectNode();
-        ArrayNode contents = rootNode.putArray("contents");
-        ObjectNode contentNode = contents.addObject();
-        ArrayNode parts = contentNode.putArray("parts");
+        final ObjectNode rootNode = objectMapper.createObjectNode();
+        final ArrayNode contents = rootNode.putArray("contents");
+        final ObjectNode contentNode = contents.addObject();
+        final ArrayNode parts = contentNode.putArray("parts");
 
         // prompt
         parts.addObject().put("text", request.getContext());

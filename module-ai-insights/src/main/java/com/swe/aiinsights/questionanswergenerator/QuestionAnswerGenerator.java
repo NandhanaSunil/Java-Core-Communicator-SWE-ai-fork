@@ -19,10 +19,10 @@ public class QuestionAnswerGenerator implements RequestProcessor {
             final AiRequestable request
     ) throws IOException {
 
-        ObjectNode rootNode = objectMapper.createObjectNode();
-        ArrayNode contentsArray = rootNode.putArray("contents");
-        ObjectNode contentNode = contentsArray.addObject();
-        ArrayNode partsArray = contentNode.putArray("parts");
+        final ObjectNode rootNode = objectMapper.createObjectNode();
+        final ArrayNode contentsArray = rootNode.putArray("contents");
+        final ObjectNode contentNode = contentsArray.addObject();
+        final ArrayNode partsArray = contentNode.putArray("parts");
 
         // Prompt (contains summary inside it)
         partsArray.addObject().put("text", request.getContext().toString());

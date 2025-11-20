@@ -1,6 +1,10 @@
 /**
- * Author : Abhirami R Iyer
+ * Asynchronous execution of various requests is handled here.
+ *
+ * @author Abhirami R Iyer
+ * @editedby Nandhana Sunil
  */
+
 package com.swe.aiinsights.apiendpoints;
 
 import com.swe.aiinsights.aiservice.GeminiService;
@@ -13,46 +17,58 @@ import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
 import java.util.List;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-
+/**
+ * Handles asynchronous execution of AI requests using the LLM orchestrator.
+ */
 public class AsyncAiExecutor {
-
-    private static final Executor aiExecutor = AsyncConfig.aiExecutor();
-
+    /**
+     * Shared async executor for running AI tasks.
+     */
+    private static final Executor AI_EXECUTOR = AsyncConfig.aiExecutor();
+    /**
+     * Orchestrates between Gemini and Ollama services.
+     */
     private final LlmService llmService = new LlmOrchestratorService(
         List.of(
-            new GeminiService(), // 1. Primary
-            new OllamaService() // 2. Fallback
+                new GeminiService(), // 1. Primary 
+                new OllamaService() // 2. Fallback
+
         )
     );
 
-
+    /**
+     * Executes an AI request asynchronously and returns the model output as a future.
+     *
+     * @param req the AI request object
+     * @return future containing the AI model's response string
+     */
     public CompletableFuture<String> execute(final AiRequestable req) {
         return CompletableFuture.supplyAsync(() -> {
-                    try {
-                        System.out.println(">>> DEBUG : Creating RequestGeneralised...");
-                        RequestGeneraliser general = new RequestGeneraliser(req);
+            try {
+                System.out.println(">>> DEBUG : Creating RequestGeneralised...");
+                final RequestGeneraliser general = new RequestGeneraliser(req);
 
-                        System.out.println(">>> DEBUG : Calling llmService.runProcess()...");
-                        AiResponse aiResponse = llmService.runProcess(general);
+                System.out.println(">>> DEBUG : Calling llmService.runProcess()...");
+                final AiResponse aiResponse = llmService.runProcess(general);
 
-                        System.out.println(">>> DEBUG : Received response");
-                        return aiResponse.getResponse();
+                final String response = general.formatOutput(aiResponse);
+                System.out.println(">>> DEBUG : Received response");
+                return response;
 
-                    }  catch (IOException e) {
-                        System.err.println(">>> DEBUG :  IOException in execute: " + e.getMessage());
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    } catch (Exception e) {
-                        System.err.println(">>> DEBUG : Unexpected exception: " + e.getMessage());
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-
-                }, aiExecutor);
+            }  catch (IOException e) {
+                System.err.println(">>> DEBUG :  IOException in execute: " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            } catch (Exception e) {
+                System.err.println(">>> DEBUG : Unexpected exception: " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            }, AI_EXECUTOR
+        );
     }
 
 }
