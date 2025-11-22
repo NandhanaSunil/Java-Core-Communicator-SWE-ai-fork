@@ -7,6 +7,9 @@
 
 package com.swe.aiinsights.request;
 
+import com.swe.aiinsights.logging.CommonLogger;
+import org.slf4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +18,11 @@ import java.util.Map;
  * Stores the metadata of the request to be made to the AI.
  */
 public class AiRegularisationRequest implements AiRequestable {
+    /**
+     * Get the log file path.
+     */
+    private static final Logger LOG =
+            CommonLogger.getLogger(AiRegularisationRequest.class);
     /**
      * metadata would store prompt, and other
      * details of the request like the content.
@@ -119,6 +127,7 @@ public class AiRegularisationRequest implements AiRequestable {
     @Override
     public String getContext() {
         // this function, returns the prompt.
+        LOG.info("Fetching regularisation prompt");
         return metaData.get("RequestPrompt");
     }
 
@@ -128,6 +137,7 @@ public class AiRegularisationRequest implements AiRequestable {
     @Override
     public String getInput() {
         // this function returns the input.
+        LOG.info("Fetching input json string containing points.");
         return metaData.get("InputData");
     }
 
@@ -138,6 +148,7 @@ public class AiRegularisationRequest implements AiRequestable {
     public String getReqType() {
         // this returns "REG" as this holds
         // the regularization request
+        LOG.info("Fetching Request type -- regularisation");
         return type;
     }
 }

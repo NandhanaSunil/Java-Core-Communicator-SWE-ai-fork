@@ -28,7 +28,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
+import com.swe.aiinsights.logging.CommonLogger;
 import okhttp3.Response;
+import org.slf4j.Logger;
+
 import java.io.IOException;
 
 /**
@@ -39,11 +42,17 @@ import java.io.IOException;
 public class OllamaAdapter implements ModelAdapter {
 
     /**
+     * Get the log file path.
+     */
+    private static final Logger LOG =
+            CommonLogger.getLogger(OllamaAdapter.class);
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String buildRequest(final RequestGeneraliser request) throws JsonProcessingException {
-
+        LOG.info("Building Ollama-specific request Json");
         final int maxPromptTokens = 16384;
         final double modelTemperature = 0.2;
         final double modelTop = 0.9;
@@ -63,6 +72,7 @@ public class OllamaAdapter implements ModelAdapter {
 
         final String imgData = request.getImgData();
         if (imgData != null) {
+            LOG.info("Embedding images in the Ollama request");
             final ArrayNode images = root.putArray("images");
             images.add(request.getImgData());
         } else {
@@ -87,11 +97,12 @@ public class OllamaAdapter implements ModelAdapter {
         final JsonNode textNode = responseJson.get("response");
 
         if (textNode == null || !textNode.isTextual()) {
+            LOG.error("Invalid Ollama response:" + responseJson.toPrettyString());
             throw new IOException("Invalid Ollama response: "
                     + responseJson.toPrettyString());
         }
 
-        System.out.println("DEBUG >>> ResponseString: Recieved");
+        LOG.info("Response from Ollama received");
 
         return textNode.asText();
     }
