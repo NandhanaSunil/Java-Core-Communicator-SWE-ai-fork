@@ -99,7 +99,7 @@ public class OllamaService implements LlmService {
 
             if (!response.isSuccessful()) {
                 assert response.body() != null;
-                String errorBody = response.body().string();
+                final String errorBody = response.body().string();
                 LOG.error("Ollama API failed - Code: {}, Error: {}", response.code(), errorBody);
                 throw new IOException("Unexpected code " + response
                         + " - " + response.body().string());

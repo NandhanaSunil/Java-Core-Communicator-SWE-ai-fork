@@ -27,7 +27,11 @@ import org.slf4j.Logger;
  * Handles asynchronous execution of AI requests using the LLM orchestrator.
  */
 public class AsyncAiExecutor {
-    private static final Logger log = CommonLogger.getLogger(AsyncAiExecutor.class);
+    /**
+     * Get the log file path.
+     */
+    private static final Logger LOG = CommonLogger.getLogger(AsyncAiExecutor.class);
+
     /**
      * Shared async executor for running AI tasks.
      */
@@ -50,26 +54,26 @@ public class AsyncAiExecutor {
      */
     public CompletableFuture<String> execute(final AiRequestable req) {
         return CompletableFuture.supplyAsync(() -> {
-                    try {
-                        log.debug("Creating RequestGeneralised...");
-                        final RequestGeneraliser general = new RequestGeneraliser(req);
+            try {
+                LOG.debug("Creating RequestGeneralised...");
+                final RequestGeneraliser general = new RequestGeneraliser(req);
 
-                        log.debug("Calling llmService.runProcess()...");
-                        final AiResponse aiResponse = llmService.runProcess(general);
+                LOG.debug("Calling llmService.runProcess()...");
+                final AiResponse aiResponse = llmService.runProcess(general);
 
                 final String response = general.formatOutput(aiResponse);
-                log.debug("Received response");
+                LOG.debug("Received response");
                 return response;
 
-                    }  catch (IOException e) {
-                        log.error("IOException in execute: {}", e.getMessage(), e);
-                        throw new RuntimeException(e);
-                    } catch (Exception e) {
-                        log.error("Unexpected exception in execute: {}", e.getMessage(), e);
-                        throw new RuntimeException(e);
-                    }
+            }  catch (IOException e) {
+                LOG.error("IOException in execute: {}", e.getMessage(), e);
+                throw new RuntimeException(e);
+                } catch (Exception e) {
+                    LOG.error("Unexpected exception in execute: {}", e.getMessage(), e);
+                    throw new RuntimeException(e);
+                }
 
-                }, AI_EXECUTOR
+            }, AI_EXECUTOR
         );
     }
 

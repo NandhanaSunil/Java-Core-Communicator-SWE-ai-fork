@@ -29,9 +29,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import okhttp3.Response;
-
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Implements the ModelAdapter interface.
@@ -68,11 +66,11 @@ public class OllamaAdapter implements ModelAdapter {
             final ArrayNode images = root.putArray("images");
             images.add(request.getImgData());
         } else {
-            ArrayNode input = root.putArray("inputData");
+            final ArrayNode input = root.putArray("inputData");
             input.add(request.getTextData());
         }
 
-            return objectMapper.writeValueAsString(root);
+        return objectMapper.writeValueAsString(root);
 
     }
 

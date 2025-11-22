@@ -14,7 +14,6 @@ import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.request.RequestFactory;
 
 import java.util.concurrent.CompletableFuture;
-import com.swe.aiinsights.request.AiQuestionAnswerRequest;
 import com.swe.aiinsights.logging.CommonLogger;
 import org.slf4j.Logger;
 

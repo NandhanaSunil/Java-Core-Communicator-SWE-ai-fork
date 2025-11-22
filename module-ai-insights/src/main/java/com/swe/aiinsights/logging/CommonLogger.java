@@ -3,11 +3,14 @@ package com.swe.aiinsights.logging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Log files for AI Insights module.
+ */
 public class CommonLogger {
 
-    private CommonLogger() {}
+    private CommonLogger() { }
 
-    public static Logger getLogger(Class<?> clazz) {
+    public static Logger getLogger(final Class<?> clazz) {
         return LoggerFactory.getLogger(clazz);
     }
 }
