@@ -10,13 +10,10 @@ package com.swe.aiinsights.apiendpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.swe.aiinsights.data.WhiteBoardData;
-import com.swe.aiinsights.request.AiDescriptionRequest;
-import com.swe.aiinsights.request.AiRegularisationRequest;
-import com.swe.aiinsights.request.AiInsightsRequest;
-import com.swe.aiinsights.request.AiSummarisationRequest;
-import com.swe.aiinsights.request.AiActionItemsRequest;
+import com.swe.aiinsights.request.AiRequestable;
+import com.swe.aiinsights.request.RequestFactory;
+
 import java.util.concurrent.CompletableFuture;
-import com.swe.aiinsights.request.AiQuestionAnswerRequest;
 import java.io.IOException;
 
 /**
@@ -29,6 +26,10 @@ public class AiClientService {
      * Executor used to run async AI calls.
      */
     private static final AsyncAiExecutor ASYNC_AI_EXECUTOR = new AsyncAiExecutor();
+    /**
+     * Request factory for generating various kinds of request.
+     */
+    private final RequestFactory factory = new RequestFactory();
     /**
      * Accumulates all summaries.
      */
@@ -59,7 +60,8 @@ public class AiClientService {
         try {
             // Pass file path to your existing data class
             final WhiteBoardData data = new WhiteBoardData(file);
-            return ASYNC_AI_EXECUTOR.execute(new AiDescriptionRequest(data));
+            final AiRequestable interpreterRequest = factory.getRequest("DESC", data);
+            return ASYNC_AI_EXECUTOR.execute(interpreterRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -73,7 +75,8 @@ public class AiClientService {
      */
     public  CompletableFuture<String> regularise(final String points) {
         try {
-            return ASYNC_AI_EXECUTOR.execute(new AiRegularisationRequest(points));
+            final AiRequestable regulariserRequest = factory.getRequest("REG", points);
+            return ASYNC_AI_EXECUTOR.execute(regulariserRequest);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -89,7 +92,9 @@ public class AiClientService {
     public  CompletableFuture<String> sentiment(
             final JsonNode chatData) {
         try {
-            return ASYNC_AI_EXECUTOR.execute(new AiInsightsRequest(chatData));
+            AiRequestable sentimentRequest = null;
+            sentimentRequest = factory.getRequest("INS", chatData);
+            return ASYNC_AI_EXECUTOR.execute(sentimentRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -111,7 +116,7 @@ public class AiClientService {
                     lastSummaryUpdate.thenCompose(v -> {
 
                         // Prepare content for summarization
-                        String contentToSummarise;
+                        final String contentToSummarise;
 
                         if (accumulatedSummary == null || accumulatedSummary.isEmpty()) {
                             contentToSummarise = jsonContent;
@@ -119,11 +124,15 @@ public class AiClientService {
                             contentToSummarise = "Previous Summary: " + accumulatedSummary
                                     + "\n\nNew Chat Data: " + jsonContent;
                         }
-
-                        CompletableFuture<String> future =
-                                ASYNC_AI_EXECUTOR.execute(
-                                        new AiSummarisationRequest(
-                                                contentToSummarise));
+                        AiRequestable requestSummarise = null;
+                        try {
+                            requestSummarise = factory.getRequest(
+                                    "SUM", contentToSummarise);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        final CompletableFuture<String> future =
+                                ASYNC_AI_EXECUTOR.execute(requestSummarise);
 
                         return future.thenApply(response -> {
                             accumulatedSummary = response;
@@ -138,6 +147,7 @@ public class AiClientService {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * Clears accumulated summaries.
      *
@@ -162,18 +172,24 @@ public class AiClientService {
             final String question) {
 
         try {
-            CompletableFuture<String> qaFuture =
+
+            final CompletableFuture<String> qaFuture =
                     lastSummaryUpdate.thenCompose(v ->
                             lastQaUpdate.thenCompose(v2 -> {
+                                AiRequestable req = null;
+                                try {
+                                    final String accSum;
+                                    if (accumulatedSummary != null) {
+                                        accSum = accumulatedSummary;
+                                    } else {
+                                        accSum = null;
+                                    }
+                                    req = factory.getRequest("QNA",
+                                            question, accumulatedSummary);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
 
-                                AiQuestionAnswerRequest req =
-                                        new AiQuestionAnswerRequest(
-                                                question,
-                                                accumulatedSummary
-                                                        != null
-                                                        ? accumulatedSummary
-                                                        : ""
-                                        );
 
                                 return ASYNC_AI_EXECUTOR.execute(
                                         req);
@@ -188,11 +204,16 @@ public class AiClientService {
         }
     }
 
-
+    /**
+     * Creates action items.
+     * @param chatData user chatData
+     * @return AI response
+     */
     public CompletableFuture<String> action(
         final JsonNode chatData) {
         try {
-            return ASYNC_AI_EXECUTOR.execute(new AiActionItemsRequest(chatData));
+            final AiRequestable actionRequest = factory.getRequest("ACTION", chatData);
+            return ASYNC_AI_EXECUTOR.execute(actionRequest);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

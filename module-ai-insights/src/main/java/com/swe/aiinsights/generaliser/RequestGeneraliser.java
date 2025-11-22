@@ -50,15 +50,15 @@ import java.util.Objects;
 public class RequestGeneraliser {
 
     /**
-     * Holds the prompt of the request
+     * Holds the prompt of the request.
      */
     private String prompt;
     /**
-     * Holds the supporting text data if any
+     * Holds the supporting text data if any.
      */
     private String textData;
     /**
-     * Holds supporting image data if any
+     * Holds supporting image data if any.
      */
     private String imgData;
     /**
@@ -76,7 +76,7 @@ public class RequestGeneraliser {
             List.of("DESC", "REG", "INS", "SUM", "ACTION", "QNA"));
 
 
-    public RequestGeneraliser (AiRequestable request){
+    public RequestGeneraliser(final AiRequestable request) {
 
         System.out.println("DEBUG >>> ReqType: " + request.getReqType());
         System.out.println("DEBUG >>> Registered keys: " + registeredKeys);
@@ -84,10 +84,9 @@ public class RequestGeneraliser {
         setPrompt(request.getContext());
 
         this.reqType = request.getReqType();
-        if (Objects.equals(reqType, "DESC")){
+        if (Objects.equals(reqType, "DESC")) {
             setImgData(request.getInput().toString());
-        }
-        else {
+        } else {
             setTextData(request.getInput().toString());
         }
         switch (this.reqType) {
@@ -109,6 +108,9 @@ public class RequestGeneraliser {
             case "QNA" :
                 aiResponse = new QuestionAnswerResponse();
                 break;
+            default:
+                aiResponse = null;
+                break;
         }
     }
 
@@ -124,33 +126,38 @@ public class RequestGeneraliser {
         return textData;
     }
 
-    public String getReqType(){
+    public String getReqType() {
         return reqType;
     }
-    public void setImgData(String imgData) {
-        this.imgData = imgData;
+
+    public void setImgData(final String givenImgData) {
+        this.imgData = givenImgData;
     }
 
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
+    public void setPrompt(final String givenPrompt) {
+        this.prompt = givenPrompt;
     }
 
-    public void setTextData(String textData) {
-        this.textData = textData;
+    public void setTextData(final String givenTextData) {
+        this.textData = givenTextData;
     }
 
     public AiResponse getAiResponse() {
         return aiResponse;
     }
 
-    public String formatOutput(final AiResponse aiResponse) throws JsonProcessingException {
+    /**
+     * formats the output in the required format.
+     * @param response response from AI
+     * @return Final string ouput
+     * @throws JsonProcessingException error during json parsing
+     */
+    public String formatOutput(final AiResponse response) throws JsonProcessingException {
+        if (Objects.equals(reqType, "REG")) {
+            final RegulariserParser parser = new RegulariserParser();
 
-       if (Objects.equals(reqType, "REG")) {
-           RegulariserParser parser = new RegulariserParser();
-
-           return parser.parseInput(this.textData, aiResponse.getResponse());
-       }
-
-       return aiResponse.getResponse();
+            return parser.parseInput(this.textData, response.getResponse());
+        }
+        return response.getResponse();
     }
 }
