@@ -233,7 +233,7 @@ public class AiClientService {
      * @return AI response
      */
     public CompletableFuture<String> action(
-        final JsonNode chatData) {
+            final JsonNode chatData) {
         try {
             final AiRequestable actionRequest = factory.getRequest("ACTION", chatData);
             return ASYNC_AI_EXECUTOR.execute(actionRequest);
