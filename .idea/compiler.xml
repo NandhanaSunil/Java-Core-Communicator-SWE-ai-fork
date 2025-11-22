@@ -7,6 +7,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="module-ai" />
+        <module name="module-ai-insights" />
+      </profile>
+      <profile name="Annotation profile for Core Communicator SWE - Parent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/com/microsoft/azure/functions/azure-functions-java-library/3.2.0/azure-functions-java-library-3.2.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/microsoft/azure/functions/azure-functions-java-core-library/1.2.0/azure-functions-java-core-library-1.2.0.jar" />
+        </processorPath>
+        <module name="module-cloud" />
       </profile>
     </annotationProcessing>
   </component>
