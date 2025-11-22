@@ -121,11 +121,13 @@ public class AiClientService {
      */
     public CompletableFuture<String> summariseText(
             final String jsonContent) {
+        LOG.info("Received request: summariseText()");
 
         try {
 
             lastSummaryUpdate =
                     lastSummaryUpdate.thenCompose(v -> {
+                        LOG.info("Preparing content for summarisation");
 
                         // Prepare content for summarization
                         final String contentToSummarise;
@@ -141,12 +143,15 @@ public class AiClientService {
                             requestSummarise = factory.getRequest(
                                     "SUM", contentToSummarise);
                         } catch (IOException e) {
+                            LOG.error("Failed to build summarisation request", e);
                             throw new RuntimeException(e);
                         }
+                        LOG.info("Dispatching summarisation request");
                         final CompletableFuture<String> future =
                                 ASYNC_AI_EXECUTOR.execute(requestSummarise);
 
                         return future.thenApply(response -> {
+                            LOG.info("Summary updated successfully");
                             accumulatedSummary = response;
                             return null;
                         });
@@ -156,6 +161,7 @@ public class AiClientService {
                     accumulatedSummary);
 
         } catch (Exception e) {
+            LOG.error("Unexpected error in summariseText()", e);
             throw new RuntimeException(e);
         }
     }
@@ -166,6 +172,7 @@ public class AiClientService {
      * @return success message
      */
     public CompletableFuture<String> clearSummary() {
+        LOG.info("Clearing accumulated summary");
         accumulatedSummary = "";
         return CompletableFuture.completedFuture(
                 "Summary cleared successfully"
@@ -182,6 +189,8 @@ public class AiClientService {
      */
     public CompletableFuture<String> answerQuestion(
             final String question) {
+        LOG.info("Received request: answerQuestion()");
+        LOG.info("Question received: {}", question);
 
         try {
 
@@ -199,10 +208,11 @@ public class AiClientService {
                                     req = factory.getRequest("QNA",
                                             question, accumulatedSummary);
                                 } catch (IOException e) {
+                                    LOG.error("Failed to build Q&A request", e);
                                     throw new RuntimeException(e);
                                 }
 
-
+                                LOG.info("Dispatching Q&A request to executor");
                                 return ASYNC_AI_EXECUTOR.execute(
                                         req);
                             })
@@ -211,6 +221,7 @@ public class AiClientService {
             return qaFuture;
 
         } catch (Exception e) {
+            LOG.error("Unexpected error in answerQuestion()", e);
             throw new RuntimeException(
                     "Error processing Q&A request", e);
         }
