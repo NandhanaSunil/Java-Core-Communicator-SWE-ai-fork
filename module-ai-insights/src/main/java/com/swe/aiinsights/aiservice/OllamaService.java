@@ -25,7 +25,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import com.swe.aiinsights.response.AiResponse;
 
-import com.swe.aiinsights.response.SummariserResponse;
 import com.swe.aiinsights.logging.CommonLogger;
 import org.slf4j.Logger;
 
@@ -38,7 +37,11 @@ import java.util.concurrent.TimeUnit;
  * Receives the AI response.
  */
 public class OllamaService implements LlmService {
-    private static final Logger log = CommonLogger.getLogger(OllamaService.class);
+
+    /**
+     * Get the log file path.
+     */
+    private static final Logger LOG = CommonLogger.getLogger(OllamaService.class);
 
     /**
      * Loads environment variables from the .env file.
@@ -67,7 +70,7 @@ public class OllamaService implements LlmService {
                 .readTimeout(timeout, TimeUnit.SECONDS)
                 .writeTimeout(timeout, TimeUnit.SECONDS)
                 .build();
-        log.info("OllamaService initialized with timeout: {} seconds", timeout);
+        LOG.info("OllamaService initialized with timeout: {} seconds", timeout);
     }
 
     /**
@@ -82,7 +85,7 @@ public class OllamaService implements LlmService {
         final ModelAdapter adapter = new OllamaAdapter();
         final String jsonRequestBody = adapter.buildRequest(aiRequest);
 
-        log.debug("RequestString recieved");
+        LOG.debug("RequestString recieved");
 
         // ---- Send request to Ollama ----
         final RequestBody body = RequestBody.create(jsonRequestBody, JSON);
@@ -92,12 +95,12 @@ public class OllamaService implements LlmService {
                 .build();
 
         try (Response response = httpClient.newCall(request).execute()) {
-            log.debug("Response code: {}", response.code());
+            LOG.debug("Response code: {}", response.code());
 
             if (!response.isSuccessful()) {
                 assert response.body() != null;
                 String errorBody = response.body().string();
-                log.error("Ollama API failed - Code: {}, Error: {}", response.code(), errorBody);
+                LOG.error("Ollama API failed - Code: {}, Error: {}", response.code(), errorBody);
                 throw new IOException("Unexpected code " + response
                         + " - " + response.body().string());
             }
@@ -105,7 +108,7 @@ public class OllamaService implements LlmService {
             final String textResponse = adapter.getResponse(response);
 
             returnResponse.setResponse(textResponse);
-            log.info("Ollama API completed successfully");
+            LOG.info("Ollama API completed successfully");
 
             return returnResponse;
         }

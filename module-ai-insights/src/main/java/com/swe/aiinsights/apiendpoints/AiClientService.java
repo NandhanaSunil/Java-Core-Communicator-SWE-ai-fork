@@ -29,7 +29,10 @@ import java.io.IOException;
  */
 
 public class AiClientService {
-    private static final Logger log = CommonLogger.getLogger(AiClientService.class);
+    /**
+     * Get the log file path.
+     */
+    private static final Logger LOG = CommonLogger.getLogger(AiClientService.class);
 
 
     /**

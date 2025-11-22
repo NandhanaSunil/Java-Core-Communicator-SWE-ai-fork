@@ -36,6 +36,11 @@ public class LlmOrchestratorService implements LlmService {
     private volatile int activeServiceIndex = 0;
 
     /**
+     * Get the log file path.
+     */
+    private static final Logger LOG = CommonLogger.getLogger(LlmOrchestratorService.class);
+
+    /**
      * This constructor takes a list of LlmService instances in the order of execution needed.
      * @param services all the services available
      */
@@ -44,7 +49,7 @@ public class LlmOrchestratorService implements LlmService {
             throw new IllegalArgumentException("Provide a list of LLM Services !!!!");
         }
         this.llmServices = services;
-        log.info("LlmOrchestratorService initialized with {} services", services.size());
+        LOG.info("LlmOrchestratorService initialized with {} services", services.size());
     }
 
     /**
@@ -64,7 +69,7 @@ public class LlmOrchestratorService implements LlmService {
 
 //            System.out.println("INFO: Attempting service: "
 //                    + serviceName + " for request: " + request.getReqType());
-            log.info("Attempting service: {} for request: {}", serviceName, request.getReqType());
+            LOG.info("Attempting service: {} for request: {}", serviceName, request.getReqType());
             
             try {
                 // process the request with the current service
@@ -75,7 +80,7 @@ public class LlmOrchestratorService implements LlmService {
                     // Switch was successful, permanently use this new service
                     activeServiceIndex = i; 
 //                    System.out.println("SUCCESS: Permanently switched to service: " + serviceName);
-                    log.info("Permanently switched to service: {}", serviceName);
+                    LOG.info("Permanently switched to service: {}", serviceName);
                 }
                 return response;
 
@@ -83,7 +88,7 @@ public class LlmOrchestratorService implements LlmService {
                 // Rate limit exception is hit, move to next service in the list.
 //                System.err.println("WARNING: Service " + serviceName +
 //                        " failed due to rate limit. Attempting next service.");
-                log.warn("Service {} failed due to rate limit. Attempting next service.", serviceName);
+                LOG.warn("Service {} failed due to rate limit. Attempting next service.", serviceName);
 
                 // Here we set the last AI service to local LLM
                 // It will not throw Rate limit exception.
