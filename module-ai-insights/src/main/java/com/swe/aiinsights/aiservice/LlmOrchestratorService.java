@@ -14,7 +14,6 @@
 package com.swe.aiinsights.aiservice;
 
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
-import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
 import java.io.IOException;
 import java.util.List;
@@ -22,18 +21,25 @@ import com.swe.aiinsights.customexceptions.RateLimitException;
 import com.swe.aiinsights.logging.CommonLogger;
 import org.slf4j.Logger;
 
-// Acts as an orchestrator to provide an LLM Service
-public class LlmOrchestratorService implements LlmService {
-    private static final Logger log = CommonLogger.getLogger(LlmOrchestratorService.class);
+/**
+ * Acts as an orchestrator to provide an LLM Service.
+ */
 
-    private final List<LlmService> llmServices; // List of all LLMs in order of preference
-    private volatile int activeServiceIndex = 0; // Index of the currently used service
+public class LlmOrchestratorService implements LlmService {
+    /**
+     * List of all LLMs in order of preference.
+     */
+    private final List<LlmService> llmServices;
+    /**
+     * Index of the currently used service.
+     */
+    private volatile int activeServiceIndex = 0;
 
     /**
-     * This constructor takes a list of LlmService instances in the order
-     * that we need to execute.
+     * This constructor takes a list of LlmService instances in the order of execution needed.
+     * @param services all the services available
      */
-    public LlmOrchestratorService(List<LlmService> services) {
+    public LlmOrchestratorService(final List<LlmService> services) {
         if (services == null || services.isEmpty()) {
             throw new IllegalArgumentException("Provide a list of LLM Services !!!!");
         }
@@ -44,16 +50,17 @@ public class LlmOrchestratorService implements LlmService {
     /**
      * Tries the active a service. If it fails due to a RateLimitException,
      * it switches to the next service in the list and retries the request.
+     * {@inheritDoc}
      */
     @Override
     public AiResponse runProcess(final RequestGeneraliser request) throws IOException {
         
         // Start from the currently active service index
-        int startingIndex = activeServiceIndex;
+        final int startingIndex = activeServiceIndex;
         
         for (int i = startingIndex; i < llmServices.size(); i++) {
-            LlmService currentService = llmServices.get(i);
-            String serviceName = currentService.getClass().getSimpleName();
+            final LlmService currentService = llmServices.get(i);
+            final String serviceName = currentService.getClass().getSimpleName();
 
 //            System.out.println("INFO: Attempting service: "
 //                    + serviceName + " for request: " + request.getReqType());
@@ -61,7 +68,7 @@ public class LlmOrchestratorService implements LlmService {
             
             try {
                 // process the request with the current service
-                AiResponse response = currentService.runProcess(request);
+                final AiResponse response = currentService.runProcess(request);
                 
                 // If successful, update the active index if a switch occurred
                 if (i != startingIndex) {

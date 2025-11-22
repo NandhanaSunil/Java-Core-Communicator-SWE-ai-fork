@@ -64,7 +64,7 @@ public class AiInstance {
      */
     public static AiClientService getInstance() {
         AiClientService localReference = aiClientService;
-        if (localReference == null){ // 1st check: there is no locking here
+        if (localReference == null) { // 1st check: there is no locking here
             synchronized (AiInstance.class) { //AiClientInstance is static, 
                 // therefore we should lock on sth common, which is the class object here.
                 if (localReference == null) { // 2nd check: with locking
