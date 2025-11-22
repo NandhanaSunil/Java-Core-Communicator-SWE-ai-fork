@@ -28,6 +28,7 @@ package com.swe.aiinsights.generaliser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.swe.aiinsights.logging.CommonLogger;
 import com.swe.aiinsights.parser.RegulariserParser;
+import com.swe.aiinsights.parser.InsightsParser;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
 import com.swe.aiinsights.response.InterpreterResponse;
@@ -160,6 +161,8 @@ public class RequestGeneraliser {
             LOG.info("Calling parser for regularisation output");
             final RegulariserParser parser = new RegulariserParser();
             return parser.parseInput(this.textData, response.getResponse());
+        } else if (Objects.equals(reqType, "INS")) {
+            return InsightsParser.parse(response.getResponse());
         }
         return response.getResponse();
     }
