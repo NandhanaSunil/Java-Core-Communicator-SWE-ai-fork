@@ -1,14 +1,29 @@
 /**
- * Author : Abhirami R Iyer
+ * Service module for Ollama.
+ *
+ *<p>
+ *     References
+ *      1. https://docs.ollama.com/api/usage
+ *      2. https://ollama.readthedocs.io/en/api/
+ *</p>
+ *
+ * @author Abhirami R Iyer
+ * @editedby Nandhana Sunil
+ *
  */
+
 package com.swe.aiinsights.aiservice;
 
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import com.swe.aiinsights.modeladapter.ModelAdapter;
 import com.swe.aiinsights.modeladapter.OllamaAdapter;
 import io.github.cdimascio.dotenv.Dotenv;
-import okhttp3.*;
-import com.swe.aiinsights.response.*;
+import okhttp3.MediaType;
+import okhttp3.Response;
+import okhttp3.Request;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import com.swe.aiinsights.response.AiResponse;
 
 import com.swe.aiinsights.response.SummariserResponse;
 import com.swe.aiinsights.logging.CommonLogger;
@@ -18,15 +33,29 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Ollama Service builds the request and calls the AI api.
+ * Receives the AI response.
+ */
 public class OllamaService implements LlmService {
     private static final Logger log = CommonLogger.getLogger(OllamaService.class);
 
+    /**
+     * Loads environment variables from the .env file.
+     */
     private static Dotenv dotenv = Dotenv.load();
-
+    /**
+     * gets the OLLAMA_URL from the .env file.
+     */
     private static final String OLLAMA_URL = dotenv.get("OLLAMA_URL");
+    /**
+     * Sets the Media type used for JSON requests.
+     */
     private static final MediaType JSON =
             MediaType.get("application/json; charset=utf-8");
-
+    /**
+     * http client for the requests.
+     */
     private final OkHttpClient httpClient;
 
 
@@ -41,21 +70,23 @@ public class OllamaService implements LlmService {
         log.info("OllamaService initialized with timeout: {} seconds", timeout);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public AiResponse runProcess(final RequestGeneraliser aiRequest)
             throws IOException {
 
-        AiResponse returnResponse = aiRequest.getAiResponse();
+        final AiResponse returnResponse = aiRequest.getAiResponse();
 
-        ModelAdapter adapter = new OllamaAdapter();
-        String jsonRequestBody = adapter.buildRequest(aiRequest);
+        final ModelAdapter adapter = new OllamaAdapter();
+        final String jsonRequestBody = adapter.buildRequest(aiRequest);
 
-//        System.out.println("DEBUG >>> RequestString: " + jsonRequestBody);
-        log.debug("RequestString: {}", jsonRequestBody.substring(0, Math.min(200, jsonRequestBody.length())));
+        log.debug("RequestString recieved");
 
         // ---- Send request to Ollama ----
-        RequestBody body = RequestBody.create(jsonRequestBody, JSON);
-        Request request = new Request.Builder()
+        final RequestBody body = RequestBody.create(jsonRequestBody, JSON);
+        final Request request = new Request.Builder()
                 .url(OLLAMA_URL)
                 .post(body)
                 .build();
@@ -71,7 +102,7 @@ public class OllamaService implements LlmService {
                         + " - " + response.body().string());
             }
 
-            String textResponse = adapter.getResponse(response);
+            final String textResponse = adapter.getResponse(response);
 
             returnResponse.setResponse(textResponse);
             log.info("Ollama API completed successfully");

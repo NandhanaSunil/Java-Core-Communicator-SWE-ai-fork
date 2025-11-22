@@ -1,6 +1,10 @@
 /**
- * Authors : Abhirami R Iyer
+ * API functions for various AI services.
+ *
+ * @author Abhirami R Iyer
+ * @editedby Nandhana Sunil, Berelli Gouthami
  */
+
 package com.swe.aiinsights.apiendpoints;
 
 
@@ -20,7 +24,6 @@ import org.slf4j.Logger;
 
 
 import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  * AI client service.
@@ -34,7 +37,7 @@ public class AiClientService {
     /**
      * Executor used to run async AI calls.
      */
-    private static final AsyncAiExecutor asyncExecutor = new AsyncAiExecutor();
+    private static final AsyncAiExecutor ASYNC_AI_EXECUTOR = new AsyncAiExecutor();
     /**
      * Accumulates all summaries.
      */
@@ -55,20 +58,17 @@ public class AiClientService {
             CompletableFuture.completedFuture(null);
 
 
-
     /**
      * Interprets an uploaded image and generates a textual description.
      *
      * @param file uploaded image file (from client)
      * @return textual description of the image
      */
-    public CompletableFuture<String> describe(final Path file) {
+    public CompletableFuture<String> describe(final String file) {
         try {
-
-
             // Pass file path to your existing data class
-            WhiteBoardData data = new WhiteBoardData(file.toString());
-            return asyncExecutor.execute(new AiDescriptionRequest(data));
+            final WhiteBoardData data = new WhiteBoardData(file);
+            return ASYNC_AI_EXECUTOR.execute(new AiDescriptionRequest(data));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -80,13 +80,14 @@ public class AiClientService {
      * @param points JSON string containing the points data
      * @return regularised point data as a response
      */
-    public  CompletableFuture<String> regularise (final String points) {
+    public  CompletableFuture<String> regularise(final String points) {
         try {
-            return asyncExecutor.execute(new AiRegularisationRequest(points));
+            return ASYNC_AI_EXECUTOR.execute(new AiRegularisationRequest(points));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
     /**
      * API for sentiment analysis.
      * Recieves chats as a json file, does sentiment analysis,
@@ -95,9 +96,9 @@ public class AiClientService {
      * @return a list float values to plot in the sentiment graph.
      */
     public  CompletableFuture<String> sentiment(
-            final JsonNode chatData){
+            final JsonNode chatData) {
         try {
-            return asyncExecutor.execute(new AiInsightsRequest(chatData));
+            return ASYNC_AI_EXECUTOR.execute(new AiInsightsRequest(chatData));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -129,7 +130,7 @@ public class AiClientService {
                         }
 
                         CompletableFuture<String> future =
-                                asyncExecutor.execute(
+                                ASYNC_AI_EXECUTOR.execute(
                                         new AiSummarisationRequest(
                                                 contentToSummarise));
 
@@ -160,8 +161,6 @@ public class AiClientService {
 
 
 
-
-
     /**
      * Answers a question using accumulated summary.
      *
@@ -185,7 +184,7 @@ public class AiClientService {
                                                         : ""
                                         );
 
-                                return asyncExecutor.execute(
+                                return ASYNC_AI_EXECUTOR.execute(
                                         req);
                             })
                     );
@@ -200,9 +199,9 @@ public class AiClientService {
 
 
     public CompletableFuture<String> action(
-        final JsonNode chatData){
+        final JsonNode chatData) {
         try {
-            return asyncExecutor.execute(new AiActionItemsRequest(chatData));
+            return ASYNC_AI_EXECUTOR.execute(new AiActionItemsRequest(chatData));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
