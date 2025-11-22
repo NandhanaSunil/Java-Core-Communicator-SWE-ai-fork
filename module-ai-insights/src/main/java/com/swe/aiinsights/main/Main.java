@@ -6,6 +6,7 @@
 //
 // import com.swe.aiinsights.apiendpoints.AiClientService;
 // import com.swe.aiinsights.aiinstance.AiInstance;
+// import com.swe.aiinsights.parser.InsightsParser;
 //
 // import java.net.URISyntaxException;
 //
@@ -31,12 +32,13 @@
 ////     * @param args  arguments of main
 ////     * @throws IOException throws error if any of the implementation fails
 ////     */
-//     public static void main(final String[] args) throws IOException, URISyntaxException {
-//       AiClientService service = AiInstance.getInstance();
+//     public static void main(final String[] args) throws Exception {
+////       AiClientService service = AiInstance.getInstance();
+////
+////        String contextualQ = " What is Bob working on?";
+////        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
+////        answer1.thenAccept(System.out::println).join();
 //
-//        String contextualQ = " What is Bob working on?";
-//        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
-//        answer1.thenAccept(System.out::println).join();
 //
 //     }
 // }
