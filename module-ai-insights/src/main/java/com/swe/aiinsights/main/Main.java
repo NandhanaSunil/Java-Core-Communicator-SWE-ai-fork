@@ -36,7 +36,7 @@
 //        AiClientService service = AiInstance.getInstance();
 //        URL url = Main.class.getClassLoader().getResource("images/test.png");
 //        Path file = Paths.get(url.toURI());
-////        CompletableFuture<String> resp = service.describe(file);
+//        // CompletableFuture<String> resp = service.describe(file);
 //
 //        String points = "{\n" +
 //                "  \"ShapeId\": \"c585b84a-d56c-45b8-a0e1-827ae20a014a\",\n" +
@@ -831,11 +831,13 @@
 //                + "]";
 //        CompletableFuture<String> summary2 = service.summariseText(chatJson);
 //
+//
+//
 //        String chatJson0 = "[\n"
-//                + " {\"sender\": \"jayati\", \"message\": \"Hey, how are you?\"},\n"
-//                + " {\"sender\": \"Bob\", \"message\": \"I'm good! Just working on the llm project.\"},\n"
-//                + " {\"sender\": \"Alice\", \"message\": \"That's great! Need any help?\"},\n"
-//                + " {\"sender\": \"Bob\", \"message\": \"I'm almost done, thanks!\"}\n"
+//                + " {\"sender\": \"jayajynhbgvfcxti\", \"message\": \"Hey, how are you?\"},\n"
+//                + " {\"sender\": \"Bofcfb\", \"message\": \"I'm good! Just working on the llm project.\"},\n"
+//                + " {\"sender\": \"Alicrdcdce\", \"message\": \"That's great! Need any help?\"},\n"
+//                + " {\"sender\": \"Bofdcerdfcb\", \"message\": \"I'm almost done, thanks!\"}\n"
 //                + "]";
 //        CompletableFuture<String> summary5 = service.summariseText(chatJson0);
 //        summary.thenAccept(System.out::println);
@@ -845,10 +847,10 @@
 //
 //
 //        // 2. Generic Question (LLM should ignore the summary)
-//        String genericQ = " is jayati in meeting?";
+//        String genericQ = " who is working on llm project?";
 //        CompletableFuture<String> answer2 = service.answerQuestion(genericQ);
 //        answer2.thenAccept(System.out::println);
-//        reg.thenAccept(System.out::println);
+////        reg.thenAccept(System.out::println);
 //        ObjectMapper mapper = new ObjectMapper();
 //
 //        JsonNode chat_data = mapper.readTree("""
@@ -921,12 +923,12 @@
 //                                """);
 //
 //        CompletableFuture<String> resp = service.sentiment(chat_data);
-//        resp.thenAccept(response -> {System.out.println(response);});
+////        resp.thenAccept(response -> {System.out.println(response);});
 //
 //
-////         CompletableFuture<String> reg = service.regularise(points);
-//        reg.thenAccept(System.out::println);
-//        resp.thenAccept(System.out::println);
+//        // CompletableFuture<String> reg = service.regularise(points);
+//        // reg.thenAccept(System.out::println);
+//        // resp.thenAccept(System.out::println);
 //        System.out.println("AI Process - Running in another thread");
 //
 //
