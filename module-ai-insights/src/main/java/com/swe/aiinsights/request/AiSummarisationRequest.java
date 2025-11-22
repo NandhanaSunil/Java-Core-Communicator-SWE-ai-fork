@@ -1,3 +1,7 @@
+/**
+ * Author Berelli Gouthami.
+ */
+
 package com.swe.aiinsights.request;
 
 import com.swe.aiinsights.logging.CommonLogger;
@@ -11,7 +15,9 @@ import java.util.Map;
  * Stores the chat input and the prompt used by the AI model.
  */
 public final class AiSummarisationRequest implements AiRequestable<String> {
-
+    /**
+     * Get the log file path.
+     */
     private static final Logger LOG =
             CommonLogger.getLogger(AiSummarisationRequest.class);
 

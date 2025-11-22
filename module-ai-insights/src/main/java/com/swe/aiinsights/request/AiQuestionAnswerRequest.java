@@ -1,3 +1,7 @@
+/**
+ * Author Berelli Gouthami.
+ */
+
 package com.swe.aiinsights.request;
 
 import com.swe.aiinsights.logging.CommonLogger;
@@ -11,7 +15,9 @@ import java.util.Map;
  * Contains both the user's question and the accumulated summary.
  */
 public class AiQuestionAnswerRequest implements AiRequestable<String> {
-
+    /**
+     * Get the log file path.
+     */
     private static final Logger LOG =
             CommonLogger.getLogger(AiQuestionAnswerRequest.class);
     /**

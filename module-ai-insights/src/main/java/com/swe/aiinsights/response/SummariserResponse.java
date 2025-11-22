@@ -1,6 +1,7 @@
 /**
  * Author Berelli Gouthami.
  */
+
 package com.swe.aiinsights.response;
 
 import com.swe.aiinsights.logging.CommonLogger;
@@ -12,7 +13,9 @@ import org.slf4j.Logger;
  * identifies the response type for downstream handling.
  */
 public class SummariserResponse implements AiResponse {
-
+    /**
+     * Get the log file path.
+     */
     private static final Logger LOG =
             CommonLogger.getLogger(SummariserResponse.class);
 
