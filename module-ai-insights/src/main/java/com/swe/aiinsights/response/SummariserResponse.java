@@ -1,5 +1,11 @@
-/**
- * Author Berelli Gouthami.
+/*
+ * -----------------------------------------------------------------------------
+ *  File: SummariserResonse.java
+ *  Owner: < Name >
+ *  Roll Number :
+ *  Module :
+ *
+ * -----------------------------------------------------------------------------
  */
 
 package com.swe.aiinsights.response;

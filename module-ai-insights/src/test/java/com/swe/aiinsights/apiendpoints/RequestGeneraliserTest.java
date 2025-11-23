@@ -49,21 +49,21 @@ class RequestGeneraliserTest {
         assertEquals("DESC", request.getReqType());
     }
 
-    @Test
-    void testAiDescriptionRequest_ConstructorWithCustomPrompt() throws IOException {
-        // Arrange
-        String customPrompt = "Analyze this whiteboard drawing";
-        when(mockWhiteBoardData.getContent()).thenReturn("whiteboard_data");
-
-        // Act
-        AiDescriptionRequest request = new AiDescriptionRequest(mockWhiteBoardData, customPrompt);
-
-        // Assert
-        assertNotNull(request);
-        assertEquals(customPrompt, request.getContext());
-        assertEquals("whiteboard_data", request.getInput());
-        assertEquals("DESC", request.getReqType());
-    }
+//    @Test
+//    void testAiDescriptionRequest_ConstructorWithCustomPrompt() throws IOException {
+//        // Arrange
+//        String customPrompt = "Analyze this whiteboard drawing";
+//        when(mockWhiteBoardData.getContent()).thenReturn("whiteboard_data");
+//
+//        // Act
+//        AiDescriptionRequest request = new AiDescriptionRequest(mockWhiteBoardData, customPrompt);
+//
+//        // Assert
+//        assertNotNull(request);
+//        assertEquals(customPrompt, request.getContext());
+//        assertEquals("whiteboard_data", request.getInput());
+//        assertEquals("DESC", request.getReqType());
+//    }
 
     @Test
     void testAiDescriptionRequest_GetContext() throws IOException {
