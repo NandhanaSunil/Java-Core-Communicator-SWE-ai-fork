@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: AiClientService.java
+ *  Owner: Abhirami R Iyer, Nandhana Sunil, Berelli Gouthami
+ *  Roll Number : 112201001, 112201008, 112201003
+ *  Module : com.swe.aiinsights.apiendpoints
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * API functions for various AI services.
  *

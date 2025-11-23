@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: AsyncConfig.java
+ *  Owner: Berelli Gouthami
+ *  Roll Number : 112201003
+ *  Module : com.swe.aiinsights.configu
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Provides configuration for asynchronous AI execution.
  * This includes creation of a thread pool used for AI-related tasks.

@@ -1,9 +1,16 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: WhiteboardData.java
+ *  Owner: Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights.data
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * To store the snapshot of whiteboard sent by the Canvas team.
  *
  * @author Abhirami R Iyer
- *
- *
  */
 
 package com.swe.aiinsights.data;

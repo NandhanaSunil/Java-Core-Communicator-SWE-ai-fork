@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: InsightsResponse.java
+ *  Owner: Nandhana Sunil
+ *  Roll Number : 112201008
+ *  Module : com.swe.aiinsights.response
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Class that handles insights response creation.
  * @author Nandhana Sunil

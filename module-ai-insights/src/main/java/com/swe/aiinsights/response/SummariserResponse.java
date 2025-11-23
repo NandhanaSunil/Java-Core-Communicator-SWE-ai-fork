@@ -1,11 +1,14 @@
 /*
  * -----------------------------------------------------------------------------
- *  File: SummariserResonse.java
- *  Owner: < Name >
- *  Roll Number :
- *  Module :
- *
+ *  File: SummariserResponse.java
+ *  Owner: Berelli Gouthami
+ *  Roll Number : 112201003
+ *  Module : com.swe.aiinsights.response
  * -----------------------------------------------------------------------------
+ */
+
+/**
+ * Author Berelli Gouthami.
  */
 
 package com.swe.aiinsights.response;

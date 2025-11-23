@@ -33,11 +33,11 @@
 ////     * @throws IOException throws error if any of the implementation fails
 ////     */
 //     public static void main(final String[] args) throws Exception {
-////       AiClientService service = AiInstance.getInstance();
-////
-////        String contextualQ = " What is Bob working on?";
-////        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
-////        answer1.thenAccept(System.out::println).join();
+//       AiClientService service = AiInstance.getInstance();
+//
+//        String contextualQ = " What is Bob working on?";
+//        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
+//        answer1.thenAccept(System.out::println).join();
 //
 //
 //     }

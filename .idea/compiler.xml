@@ -26,8 +26,11 @@
           <entry name="$MAVEN_REPOSITORY$/net/bytebuddy/byte-buddy-agent/1.9.0/byte-buddy-agent-1.9.0.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/objenesis/objenesis/2.6/objenesis-2.6.jar" />
         </processorPath>
-        <module name="module-cloud" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="java-core-communicator" target="24" />
+      <module name="module-cloud" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

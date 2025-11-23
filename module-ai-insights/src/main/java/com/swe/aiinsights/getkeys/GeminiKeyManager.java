@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: GeminiKeyManager.java
+ *  Owner: Nandhana Sunil
+ *  Roll Number : 112201008
+ *  Module : com.swe.aiinsights.getkeys
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * <p>
  *     Used to get Gemini key list from cloud.
@@ -9,9 +18,12 @@ package com.swe.aiinsights.getkeys;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swe.aiinsights.logging.CommonLogger;
 import com.swe.cloud.datastructures.Entity;
 import com.swe.cloud.datastructures.TimeRange;
 import com.swe.cloud.functionlibrary.CloudFunctionLibrary;
+import org.slf4j.Logger;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,6 +33,10 @@ import java.util.concurrent.atomic.AtomicReference;
  * The key manager class to get Gemini Key from cloud.
  */
 public final class GeminiKeyManager {
+    /**
+     * Get the log file path.
+     */
+    private static final Logger LOG = CommonLogger.getLogger(GeminiKeyManager.class);
     /**
      * THe cloud function library which will fetch the keys.
      */
@@ -40,6 +56,7 @@ public final class GeminiKeyManager {
      * Constructor to create the key manager.
      */
     public GeminiKeyManager() {
+        LOG.info("Constructing Key manager");
         this.cloud = new CloudFunctionLibrary();
         this.apiKeys = Collections.unmodifiableList(getKeyList());
     }
@@ -49,6 +66,7 @@ public final class GeminiKeyManager {
      * @return thw next key available
      */
     public String getCurrentKey() {
+        LOG.info("Fetching current key");
         final int index = apiKeyIndex.get();
         return apiKeys.get(Math.abs(index));
     }
@@ -58,6 +76,7 @@ public final class GeminiKeyManager {
      * @param expiredKey the expired key - max token count reached
      */
     public void setKeyIndex(final String expiredKey) {
+        LOG.debug("Fetching currently used key using compare and swap");
         final int currentIndex = apiKeyIndex.get();
         final String currentKey = apiKeys.get(Math.abs(currentIndex));
         if (currentKey.equals(expiredKey)) {
@@ -76,7 +95,7 @@ public final class GeminiKeyManager {
         );
 
         final AtomicReference<Object> keyList = new AtomicReference<>();
-
+        LOG.debug("Getting key list from Cloud");
         cloud.cloudGet(req).thenAccept(response -> {
             final ObjectMapper objectMapper = new ObjectMapper();
             keyList.set(objectMapper.convertValue(
