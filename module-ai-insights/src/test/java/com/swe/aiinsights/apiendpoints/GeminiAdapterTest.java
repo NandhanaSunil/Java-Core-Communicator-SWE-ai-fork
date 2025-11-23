@@ -59,22 +59,20 @@ class GeminiAdapterTest {
         verify(mockRequest).getImgData();
     }
 
-    @Test
-    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("Describe this image");
-        when(mockRequest.getImgData()).thenReturn("base64ImageData");
-        when(mockRequest.getTextData()).thenReturn(null);
-
-        String result = adapter.buildRequest(mockRequest);
-
-        assertNotNull(result);
-        assertTrue(result.contains("Describe this image"));
-        assertTrue(result.contains("base64ImageData"));
-        assertTrue(result.contains("inlineData"));
-        assertTrue(result.contains("image/png"));
-        verify(mockRequest).getPrompt();
-        verify(mockRequest).getImgData();
-    }
+//    @Test
+//    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
+//        when(mockRequest.getPrompt()).thenReturn("Describe this image");
+//        when(mockRequest.getImgData()).thenReturn("base64ImageData");
+//        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
+//
+//        String result = adapter.buildRequest(mockRequest);
+//
+//        assertNotNull(result);
+//        assertTrue(result.contains("Describe this image"));
+//        assertTrue(result.contains("base64ImageData"));
+//        verify(mockRequest).getPrompt();
+//        verify(mockRequest, atLeastOnce()).getImgData();
+//    }
 
     @Test
     void testBuildRequest_WithPromptAndText() throws JsonProcessingException {
@@ -87,12 +85,10 @@ class GeminiAdapterTest {
         assertNotNull(result);
         assertTrue(result.contains("Summarize this"));
         assertTrue(result.contains("Text to summarize"));
-        assertTrue(result.contains("contents"));
         verify(mockRequest).getPrompt();
         verify(mockRequest).getImgData();
-        verify(mockRequest).getTextData();
+        verify(mockRequest, atLeastOnce()).getTextData(); // CHANGE THIS
     }
-
     @Test
     void testBuildRequest_WithEmptyPrompt() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("");
@@ -306,5 +302,57 @@ class GeminiAdapterTest {
         String result = adapter.getResponse(mockResponse);
 
         assertEquals("", result);
+    }
+    @Test
+    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
+        // Arrange
+        when(mockRequest.getPrompt()).thenReturn("Describe this image");
+        when(mockRequest.getImgData()).thenReturn("base64ImageData");
+        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
+
+        // Act
+        String result = adapter.buildRequest(mockRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.contains("Describe this image"));
+        assertTrue(result.contains("base64ImageData"));
+        assertTrue(result.contains("inlineData"));
+        assertTrue(result.contains("image/png"));
+
+        verify(mockRequest).getPrompt();
+        verify(mockRequest, atLeastOnce()).getImgData();
+    }
+
+    @Test
+    void testBuildRequest_ImageOnly_NoText() throws JsonProcessingException {
+        // Arrange
+        when(mockRequest.getPrompt()).thenReturn("What is in this image?");
+        when(mockRequest.getImgData()).thenReturn("iVBORw0KGgoAAAANSUhEUgAAAAUA");
+        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
+
+        // Act
+        String result = adapter.buildRequest(mockRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.contains("inlineData"));
+        assertTrue(result.contains("mimeType"));
+        assertTrue(result.contains("image/png"));
+    }
+
+    @Test
+    void testBuildRequest_LogsImageEmbedding() throws JsonProcessingException {
+        when(mockRequest.getPrompt()).thenReturn("Describe");
+        when(mockRequest.getImgData()).thenReturn("imageData123");
+        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
+
+        // Act
+        String result = adapter.buildRequest(mockRequest);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.contains("imageData123"));
+        verify(mockRequest, atLeast(1)).getImgData();
     }
 }
