@@ -18,7 +18,6 @@ package com.swe.aiinsights.getkeys;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swe.aiinsights.apiendpoints.AiClientService;
 import com.swe.aiinsights.logging.CommonLogger;
 import com.swe.cloud.datastructures.Entity;
 import com.swe.cloud.datastructures.TimeRange;
@@ -77,7 +76,7 @@ public final class GeminiKeyManager {
      * @param expiredKey the expired key - max token count reached
      */
     public void setKeyIndex(final String expiredKey) {
-        LOG.debug("Fetching currently used key using compare and swap")
+        LOG.debug("Fetching currently used key using compare and swap");
         final int currentIndex = apiKeyIndex.get();
         final String currentKey = apiKeys.get(Math.abs(currentIndex));
         if (currentKey.equals(expiredKey)) {
