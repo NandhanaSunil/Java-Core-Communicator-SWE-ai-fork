@@ -2,6 +2,7 @@ package com.swe.aiinsights;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swe.aiinsights.apiendpoints.AiClientService;
 import com.swe.aiinsights.request.RequestFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
