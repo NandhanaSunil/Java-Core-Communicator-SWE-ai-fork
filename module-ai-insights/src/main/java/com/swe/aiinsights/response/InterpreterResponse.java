@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: InterpreterResponse.java
+ *  Owner: Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights.response
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Holds the AI output for image description requests.
  *

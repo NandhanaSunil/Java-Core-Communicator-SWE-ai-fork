@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: AiRegularisationRequest.java
+ *  Owner:Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights.request
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Stores the AI request, for regularisation.
  * prompt, and the input data of points are stored.

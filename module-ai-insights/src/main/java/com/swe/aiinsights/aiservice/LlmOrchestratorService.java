@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: LlmOrchestratorService.java
+ *  Owner: Nandhana Sunil
+ *  Roll Number : 112201008
+ *  Module : com.swe.aiinsights.aiinstance
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Switches between cloud models and local LLMs when rate limit is hit.
  * 

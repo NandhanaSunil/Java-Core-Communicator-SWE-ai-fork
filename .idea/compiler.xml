@@ -17,8 +17,11 @@
           <entry name="$MAVEN_REPOSITORY$/com/microsoft/azure/functions/azure-functions-java-library/3.2.0/azure-functions-java-library-3.2.0.jar" />
           <entry name="$MAVEN_REPOSITORY$/com/microsoft/azure/functions/azure-functions-java-core-library/1.2.0/azure-functions-java-core-library-1.2.0.jar" />
         </processorPath>
-        <module name="module-cloud" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="java-core-communicator" target="24" />
+      <module name="module-cloud" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

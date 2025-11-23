@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: GeminiService.java
+ *  Owner: Abhirami R Iyer, Nandhana Sunil
+ *  Roll Number : 112201001, 112201008
+ *  Module : com.swe.aiinsights.aiservice
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Service module for Gemini.
  *
