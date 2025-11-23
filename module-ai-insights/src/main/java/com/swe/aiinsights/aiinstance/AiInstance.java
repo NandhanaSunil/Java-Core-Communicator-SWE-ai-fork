@@ -88,8 +88,8 @@ public class AiInstance {
                         localReference = new AiClientService();
                         aiClientService = localReference;
                     } catch (Exception e) {
-                        System.out.println("Failure in initialising AI service\n");
-                        System.out.println("Error is " + e.getMessage());
+                        LOG.error("Failure in initialising AI service");
+                        LOG.error("Error is " + e.getMessage());
                         throw new RuntimeException("AI Service Initialization Failed", e);
                     }
                 }
