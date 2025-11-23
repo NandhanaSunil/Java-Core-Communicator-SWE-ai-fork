@@ -1,4 +1,4 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiservice.LlmService;
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;

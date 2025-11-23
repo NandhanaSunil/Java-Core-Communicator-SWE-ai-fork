@@ -1,9 +1,8 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swe.aiinsights.request.RequestFactory;
-import com.swe.aiinsights.request.AiRequestable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,6 @@ import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.*;
 
 /**
  * Complete test class for AiClientService with 100% coverage.

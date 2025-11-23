@@ -1,4 +1,4 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.swe.aiinsights.data.WhiteBoardData;
 import org.junit.jupiter.api.Test;

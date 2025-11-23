@@ -14,7 +14,7 @@
  * @editedby Nandhana Sunil, Berelli Gouthami
  */
 
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 
 import com.fasterxml.jackson.databind.JsonNode;

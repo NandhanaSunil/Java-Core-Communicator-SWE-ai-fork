@@ -39,7 +39,7 @@
 
 package com.swe.aiinsights.aiinstance;
 
-import com.swe.aiinsights.apiendpoints.AiClientService;
+import com.swe.aiinsights.AiClientService;
 import com.swe.aiinsights.logging.CommonLogger;
 import org.slf4j.Logger;
 

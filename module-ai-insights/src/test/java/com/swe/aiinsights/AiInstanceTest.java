@@ -1,7 +1,6 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiinstance.AiInstance;
-import com.swe.aiinsights.apiendpoints.AiClientService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +11,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ConcurrentHashMap;
 

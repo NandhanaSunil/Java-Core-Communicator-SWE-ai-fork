@@ -1,4 +1,4 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiservice.GeminiService;
 import com.swe.aiinsights.aiservice.LlmOrchestratorService;

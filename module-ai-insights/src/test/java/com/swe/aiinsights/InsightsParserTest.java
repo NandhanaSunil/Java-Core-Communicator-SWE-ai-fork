@@ -1,4 +1,4 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.swe.aiinsights.parser.InsightsParser;

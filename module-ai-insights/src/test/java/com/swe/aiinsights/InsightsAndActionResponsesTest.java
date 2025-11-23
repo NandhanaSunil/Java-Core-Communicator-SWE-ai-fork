@@ -1,4 +1,4 @@
-package com.swe.aiinsights.apiendpoints;
+package com.swe.aiinsights;
 
 import com.swe.aiinsights.response.ActionItemsResponse;
 import com.swe.aiinsights.response.AiResponse;
