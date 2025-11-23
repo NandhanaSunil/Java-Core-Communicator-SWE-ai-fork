@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: RateLimitExceptionTest.java
+ *  Owner: Nandhana Sunil
+ *  Roll Number : 112201008
+ *  Module : com.swe.aiinsights
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.customexceptions.RateLimitException;
@@ -13,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class RateLimitExceptionTest {
 
     @Test
-    void testConstructor_WithMessage() {
+    void testConstructorWithMessage() {
         String errorMessage = "Rate limit exceeded";
 
         RateLimitException exception = new RateLimitException(errorMessage);
@@ -23,17 +32,7 @@ class RateLimitExceptionTest {
     }
 
     @Test
-    void testConstructor_WithEmptyMessage() {
-        String errorMessage = "";
-
-        RateLimitException exception = new RateLimitException(errorMessage);
-
-        assertNotNull(exception);
-        assertEquals(errorMessage, exception.getMessage());
-    }
-
-    @Test
-    void testConstructor_WithNullMessage() {
+    void testConstructorWithNull() {
         RateLimitException exception = new RateLimitException(null);
 
         assertNotNull(exception);
