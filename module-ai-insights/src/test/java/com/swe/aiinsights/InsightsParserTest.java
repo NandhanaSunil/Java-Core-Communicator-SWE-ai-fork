@@ -15,9 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Comprehensive test class for InsightsParser with 100% code coverage.
- */
 class InsightsParserTest {
 
     // Valid Input

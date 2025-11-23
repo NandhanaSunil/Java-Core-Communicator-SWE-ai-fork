@@ -16,9 +16,6 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test class for RateLimitException with 100% code coverage.
- */
 class RateLimitExceptionTest {
 
     @Test
