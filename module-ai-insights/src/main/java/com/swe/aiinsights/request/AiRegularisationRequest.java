@@ -63,7 +63,7 @@ public class AiRegularisationRequest implements AiRequestable {
          Your tasks:
         1. Use ONLY the provided points.
         2. Identify the geometric shape that best matches those points.
-           Allowed values (case-sensitive): Ellipse, Square, Triangle, Rectangle, StraightLine.
+           Allowed values (case-sensitive): Ellipse, Triangle, Rectangle, StraightLine.
         3. Compute the axis-aligned bounding box of that shape.
         4. Output EXACTLY TWO points:
            - First: the top-left coordinate
@@ -79,7 +79,7 @@ public class AiRegularisationRequest implements AiRequestable {
        \s
         {
           "ShapeId": "<ShapeId>",
-          "type": "<OneOf: Ellipse | Square | Triangle | Rectangle | StraightLine>",
+          "type": "<OneOf: Ellipse | Triangle | Rectangle | StraightLine>",
           "Points": [
             { "x": <number>, "y": <number> },
             { "x": <number>, "y": <number> }
