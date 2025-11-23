@@ -90,7 +90,7 @@ public final class GeminiKeyManager {
      * @return list of Gemini API KEYS
      */
     private List<String> getKeyList() {
-        final Entity req = new Entity("AI_INSIGHT", "credentials", "gemini_list", "key",
+        final Entity req = new Entity("AI_INSIGHT", "credentials", "gemini_list", "Key",
                 -1, new TimeRange(0, 0), null
         );
 

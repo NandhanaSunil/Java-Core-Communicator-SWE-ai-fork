@@ -122,6 +122,7 @@ public class RequestGeneraliser {
                 aiResponse = new QuestionAnswerResponse();
                 break;
             default:
+                // this case is not reachable
                 aiResponse = null;
                 break;
         }

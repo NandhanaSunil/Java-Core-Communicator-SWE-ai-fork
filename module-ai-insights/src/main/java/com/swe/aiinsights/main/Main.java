@@ -1,44 +1,816 @@
-//package com.swe.aiinsights.main;
-//
-// import java.io.IOException;
-// import java.util.concurrent.CompletableFuture;
-//
-//
-// import com.swe.aiinsights.apiendpoints.AiClientService;
-// import com.swe.aiinsights.aiinstance.AiInstance;
-// import com.swe.aiinsights.parser.InsightsParser;
-//
-// import java.net.URISyntaxException;
-//
-////
-////
-//import java.io.IOException;
-////
-/////**
-//// * Main class for running the Image Interpreter application.
-//// *
-//// * <p>This class loads the necessary classes,
-//// * prepares the request, and calls the Gemini API.
-//// * </p>
-//// */
-// public class Main {
-////
-////
-////
-//
-////    /**
-////     * Entry point of application.
-////     *
-////     * @param args  arguments of main
-////     * @throws IOException throws error if any of the implementation fails
-////     */
-//     public static void main(final String[] args) throws Exception {
-//       AiClientService service = AiInstance.getInstance();
-//
-//        String contextualQ = " What is Bob working on?";
-//        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
-//        answer1.thenAccept(System.out::println).join();
+package com.swe.aiinsights.main;
+
+ import java.io.IOException;
+ import java.util.concurrent.CompletableFuture;
+
+
+ import com.swe.aiinsights.apiendpoints.AiClientService;
+ import com.swe.aiinsights.aiinstance.AiInstance;
+ import com.swe.aiinsights.parser.InsightsParser;
+
+ import java.net.URISyntaxException;
+
 //
 //
-//     }
-// }
+import java.io.IOException;
+//
+///**
+// * Main class for running the Image Interpreter application.
+// *
+// * <p>This class loads the necessary classes,
+// * prepares the request, and calls the Gemini API.
+// * </p>
+// */
+ public class Main {
+//
+//
+//
+
+//    /**
+//     * Entry point of application.
+//     *
+//     * @param args  arguments of main
+//     * @throws IOException throws error if any of the implementation fails
+//     */
+     public static void main(final String[] args) throws Exception {
+       AiClientService service = AiInstance.getInstance();
+
+        String contextualQ = " What is Bob working on?";
+        CompletableFuture<String> answer1 = service.answerQuestion(contextualQ);
+        answer1.thenAccept(System.out::println).join();
+
+
+
+        String points = """
+                {
+                  "ShapeId": "c585b84a-d56c-45b8-a0e1-827ae20a014a",
+                  "Type": "FreeHand",
+                  "Points": [
+                    {
+                      "X": 450,
+                      "Y": 60
+                    },
+                    {
+                      "X": 449,
+                      "Y": 60
+                    },
+                    {
+                      "X": 446,
+                      "Y": 59
+                    },
+                    {
+                      "X": 445,
+                      "Y": 58
+                    },
+                    {
+                      "X": 443,
+                      "Y": 58
+                    },
+                    {
+                      "X": 441,
+                      "Y": 58
+                    },
+                    {
+                      "X": 439,
+                      "Y": 57
+                    },
+                    {
+                      "X": 436,
+                      "Y": 57
+                    },
+                    {
+                      "X": 435,
+                      "Y": 57
+                    },
+                    {
+                      "X": 433,
+                      "Y": 57
+                    },
+                    {
+                      "X": 431,
+                      "Y": 57
+                    },
+                    {
+                      "X": 430,
+                      "Y": 57
+                    },
+                    {
+                      "X": 428,
+                      "Y": 57
+                    },
+                    {
+                      "X": 427,
+                      "Y": 57
+                    },
+                    {
+                      "X": 425,
+                      "Y": 57
+                    },
+                    {
+                      "X": 423,
+                      "Y": 57
+                    },
+                    {
+                      "X": 422,
+                      "Y": 58
+                    },
+                    {
+                      "X": 420,
+                      "Y": 59
+                    },
+                    {
+                      "X": 419,
+                      "Y": 59
+                    },
+                    {
+                      "X": 417,
+                      "Y": 59
+                    },
+                    {
+                      "X": 416,
+                      "Y": 60
+                    },
+                    {
+                      "X": 414,
+                      "Y": 60
+                    },
+                    {
+                      "X": 413,
+                      "Y": 62
+                    },
+                    {
+                      "X": 412,
+                      "Y": 62
+                    },
+                    {
+                      "X": 411,
+                      "Y": 63
+                    },
+                    {
+                      "X": 409,
+                      "Y": 65
+                    },
+                    {
+                      "X": 408,
+                      "Y": 65
+                    },
+                    {
+                      "X": 407,
+                      "Y": 67
+                    },
+                    {
+                      "X": 405,
+                      "Y": 68
+                    },
+                    {
+                      "X": 404,
+                      "Y": 70
+                    },
+                    {
+                      "X": 403,
+                      "Y": 71
+                    },
+                    {
+                      "X": 402,
+                      "Y": 74
+                    },
+                    {
+                      "X": 401,
+                      "Y": 77
+                    },
+                    {
+                      "X": 400,
+                      "Y": 80
+                    },
+                    {
+                      "X": 399,
+                      "Y": 82
+                    },
+                    {
+                      "X": 397,
+                      "Y": 86
+                    },
+                    {
+                      "X": 396,
+                      "Y": 89
+                    },
+                    {
+                      "X": 396,
+                      "Y": 92
+                    },
+                    {
+                      "X": 395,
+                      "Y": 94
+                    },
+                    {
+                      "X": 394,
+                      "Y": 97
+                    },
+                    {
+                      "X": 393,
+                      "Y": 99
+                    },
+                    {
+                      "X": 393,
+                      "Y": 101
+                    },
+                    {
+                      "X": 392,
+                      "Y": 104
+                    },
+                    {
+                      "X": 392,
+                      "Y": 107
+                    },
+                    {
+                      "X": 392,
+                      "Y": 109
+                    },
+                    {
+                      "X": 392,
+                      "Y": 112
+                    },
+                    {
+                      "X": 392,
+                      "Y": 115
+                    },
+                    {
+                      "X": 392,
+                      "Y": 117
+                    },
+                    {
+                      "X": 392,
+                      "Y": 120
+                    },
+                    {
+                      "X": 392,
+                      "Y": 123
+                    },
+                    {
+                      "X": 392,
+                      "Y": 125
+                    },
+                    {
+                      "X": 393,
+                      "Y": 129
+                    },
+                    {
+                      "X": 394,
+                      "Y": 131
+                    },
+                    {
+                      "X": 395,
+                      "Y": 133
+                    },
+                    {
+                      "X": 395,
+                      "Y": 136
+                    },
+                    {
+                      "X": 396,
+                      "Y": 138
+                    },
+                    {
+                      "X": 397,
+                      "Y": 141
+                    },
+                    {
+                      "X": 398,
+                      "Y": 143
+                    },
+                    {
+                      "X": 399,
+                      "Y": 145
+                    },
+                    {
+                      "X": 400,
+                      "Y": 147
+                    },
+                    {
+                      "X": 401,
+                      "Y": 149
+                    },
+                    {
+                      "X": 402,
+                      "Y": 150
+                    },
+                    {
+                      "X": 403,
+                      "Y": 152
+                    },
+                    {
+                      "X": 404,
+                      "Y": 153
+                    },
+                    {
+                      "X": 406,
+                      "Y": 155
+                    },
+                    {
+                      "X": 406,
+                      "Y": 157
+                    },
+                    {
+                      "X": 408,
+                      "Y": 159
+                    },
+                    {
+                      "X": 410,
+                      "Y": 160
+                    },
+                    {
+                      "X": 410,
+                      "Y": 162
+                    },
+                    {
+                      "X": 412,
+                      "Y": 163
+                    },
+                    {
+                      "X": 414,
+                      "Y": 165
+                    },
+                    {
+                      "X": 415,
+                      "Y": 166
+                    },
+                    {
+                      "X": 418,
+                      "Y": 169
+                    },
+                    {
+                      "X": 419,
+                      "Y": 170
+                    },
+                    {
+                      "X": 422,
+                      "Y": 171
+                    },
+                    {
+                      "X": 423,
+                      "Y": 173
+                    },
+                    {
+                      "X": 426,
+                      "Y": 174
+                    },
+                    {
+                      "X": 428,
+                      "Y": 175
+                    },
+                    {
+                      "X": 430,
+                      "Y": 176
+                    },
+                    {
+                      "X": 433,
+                      "Y": 177
+                    },
+                    {
+                      "X": 435,
+                      "Y": 177
+                    },
+                    {
+                      "X": 438,
+                      "Y": 178
+                    },
+                    {
+                      "X": 441,
+                      "Y": 179
+                    },
+                    {
+                      "X": 444,
+                      "Y": 179
+                    },
+                    {
+                      "X": 448,
+                      "Y": 179
+                    },
+                    {
+                      "X": 450,
+                      "Y": 179
+                    },
+                    {
+                      "X": 452,
+                      "Y": 179
+                    },
+                    {
+                      "X": 456,
+                      "Y": 179
+                    },
+                    {
+                      "X": 459,
+                      "Y": 178
+                    },
+                    {
+                      "X": 461,
+                      "Y": 178
+                    },
+                    {
+                      "X": 465,
+                      "Y": 176
+                    },
+                    {
+                      "X": 467,
+                      "Y": 175
+                    },
+                    {
+                      "X": 470,
+                      "Y": 175
+                    },
+                    {
+                      "X": 472,
+                      "Y": 174
+                    },
+                    {
+                      "X": 475,
+                      "Y": 172
+                    },
+                    {
+                      "X": 476,
+                      "Y": 171
+                    },
+                    {
+                      "X": 479,
+                      "Y": 170
+                    },
+                    {
+                      "X": 480,
+                      "Y": 168
+                    },
+                    {
+                      "X": 482,
+                      "Y": 167
+                    },
+                    {
+                      "X": 483,
+                      "Y": 165
+                    },
+                    {
+                      "X": 486,
+                      "Y": 163
+                    },
+                    {
+                      "X": 487,
+                      "Y": 162
+                    },
+                    {
+                      "X": 488,
+                      "Y": 160
+                    },
+                    {
+                      "X": 490,
+                      "Y": 159
+                    },
+                    {
+                      "X": 490,
+                      "Y": 156
+                    },
+                    {
+                      "X": 492,
+                      "Y": 155
+                    },
+                    {
+                      "X": 494,
+                      "Y": 152
+                    },
+                    {
+                      "X": 494,
+                      "Y": 150
+                    },
+                    {
+                      "X": 496,
+                      "Y": 148
+                    },
+                    {
+                      "X": 497,
+                      "Y": 144
+                    },
+                    {
+                      "X": 498,
+                      "Y": 142
+                    },
+                    {
+                      "X": 499,
+                      "Y": 138
+                    },
+                    {
+                      "X": 499,
+                      "Y": 136
+                    },
+                    {
+                      "X": 499,
+                      "Y": 134
+                    },
+                    {
+                      "X": 500,
+                      "Y": 131
+                    },
+                    {
+                      "X": 500,
+                      "Y": 130
+                    },
+                    {
+                      "X": 500,
+                      "Y": 127
+                    },
+                    {
+                      "X": 500,
+                      "Y": 126
+                    },
+                    {
+                      "X": 500,
+                      "Y": 124
+                    },
+                    {
+                      "X": 500,
+                      "Y": 121
+                    },
+                    {
+                      "X": 500,
+                      "Y": 119
+                    },
+                    {
+                      "X": 500,
+                      "Y": 117
+                    },
+                    {
+                      "X": 500,
+                      "Y": 113
+                    },
+                    {
+                      "X": 500,
+                      "Y": 111
+                    },
+                    {
+                      "X": 500,
+                      "Y": 109
+                    },
+                    {
+                      "X": 500,
+                      "Y": 105
+                    },
+                    {
+                      "X": 500,
+                      "Y": 102
+                    },
+                    {
+                      "X": 499,
+                      "Y": 99
+                    },
+                    {
+                      "X": 498,
+                      "Y": 97
+                    },
+                    {
+                      "X": 497,
+                      "Y": 94
+                    },
+                    {
+                      "X": 496,
+                      "Y": 91
+                    },
+                    {
+                      "X": 495,
+                      "Y": 88
+                    },
+                    {
+                      "X": 494,
+                      "Y": 85
+                    },
+                    {
+                      "X": 493,
+                      "Y": 83
+                    },
+                    {
+                      "X": 492,
+                      "Y": 80
+                    },
+                    {
+                      "X": 491,
+                      "Y": 77
+                    },
+                    {
+                      "X": 490,
+                      "Y": 75
+                    },
+                    {
+                      "X": 489,
+                      "Y": 72
+                    },
+                    {
+                      "X": 488,
+                      "Y": 70
+                    },
+                    {
+                      "X": 486,
+                      "Y": 67
+                    },
+                    {
+                      "X": 486,
+                      "Y": 66
+                    },
+                    {
+                      "X": 485,
+                      "Y": 64
+                    },
+                    {
+                      "X": 484,
+                      "Y": 63
+                    },
+                    {
+                      "X": 483,
+                      "Y": 60
+                    },
+                    {
+                      "X": 481,
+                      "Y": 59
+                    },
+                    {
+                      "X": 480,
+                      "Y": 59
+                    },
+                    {
+                      "X": 479,
+                      "Y": 57
+                    },
+                    {
+                      "X": 477,
+                      "Y": 56
+                    },
+                    {
+                      "X": 476,
+                      "Y": 55
+                    },
+                    {
+                      "X": 475,
+                      "Y": 55
+                    },
+                    {
+                      "X": 474,
+                      "Y": 53
+                    },
+                    {
+                      "X": 472,
+                      "Y": 52
+                    },
+                    {
+                      "X": 470,
+                      "Y": 51
+                    },
+                    {
+                      "X": 469,
+                      "Y": 51
+                    },
+                    {
+                      "X": 467,
+                      "Y": 50
+                    },
+                    {
+                      "X": 465,
+                      "Y": 50
+                    },
+                    {
+                      "X": 463,
+                      "Y": 49
+                    },
+                    {
+                      "X": 462,
+                      "Y": 49
+                    },
+                    {
+                      "X": 460,
+                      "Y": 49
+                    },
+                    {
+                      "X": 459,
+                      "Y": 49
+                    },
+                    {
+                      "X": 458,
+                      "Y": 49
+                    },
+                    {
+                      "X": 456,
+                      "Y": 49
+                    },
+                    {
+                      "X": 454,
+                      "Y": 49
+                    },
+                    {
+                      "X": 451,
+                      "Y": 49
+                    },
+                    {
+                      "X": 449,
+                      "Y": 50
+                    },
+                    {
+                      "X": 447,
+                      "Y": 50
+                    },
+                    {
+                      "X": 445,
+                      "Y": 50
+                    },
+                    {
+                      "X": 443,
+                      "Y": 51
+                    },
+                    {
+                      "X": 441,
+                      "Y": 52
+                    },
+                    {
+                      "X": 440,
+                      "Y": 53
+                    },
+                    {
+                      "X": 438,
+                      "Y": 53
+                    },
+                    {
+                      "X": 437,
+                      "Y": 54
+                    },
+                    {
+                      "X": 435,
+                      "Y": 54
+                    },
+                    {
+                      "X": 434,
+                      "Y": 55
+                    },
+                    {
+                      "X": 433,
+                      "Y": 55
+                    },
+                    {
+                      "X": 432,
+                      "Y": 56
+                    },
+                    {
+                      "X": 431,
+                      "Y": 57
+                    },
+                    {
+                      "X": 430,
+                      "Y": 58
+                    },
+                    {
+                      "X": 429,
+                      "Y": 58
+                    },
+                    {
+                      "X": 428,
+                      "Y": 59
+                    },
+                    {
+                      "X": 427,
+                      "Y": 60
+                    },
+                    {
+                      "X": 427,
+                      "Y": 61
+                    },
+                    {
+                      "X": 426,
+                      "Y": 61
+                    },
+                    {
+                      "X": 426,
+                      "Y": 62
+                    },
+                    {
+                      "X": 425,
+                      "Y": 62
+                    },
+                    {
+                      "X": 425,
+                      "Y": 63
+                    },
+                    {
+                      "X": 424,
+                      "Y": 63
+                    },
+                    {
+                      "X": 424,
+                      "Y": 64
+                    }
+                  ],
+                  "Color": "#FF000000",
+                  "Thickness": 2,
+                  "CreatedBy": "user_default",
+                  "LastModifiedBy": "user_default",
+                  "IsDeleted": false
+                }
+                """;
+
+        CompletableFuture<String> reg = service.regularise(points);
+
+        reg.thenAccept(System.out::println).join();
+
+
+     }
+ }

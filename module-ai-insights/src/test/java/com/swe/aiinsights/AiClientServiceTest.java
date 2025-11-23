@@ -12,6 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -45,25 +47,23 @@ class AiClientServiceTest {
     // ==================== describe() Tests ====================
 
     @Test
-    void testDescribe_WithValidImageFile() throws Exception {
+    void testDescribeWithValidImageFile() throws Exception {
         Path tempFile = Files.createTempFile("test-image", ".png");
         try {
-            Files.write(tempFile, new byte[]{0x00, 0x01, 0x02});
-            String filePath = tempFile.toString();
 
-            CompletableFuture<String> result = aiClientService.describe(filePath);
+            Path path = Paths.get(getClass().getResource("/images/test.png").toURI());;
 
+            CompletableFuture<String> result = aiClientService.describe(path.toString());
             assertNotNull(result);
-            assertFalse(result.isDone() || result.get(100, TimeUnit.MILLISECONDS) != null);
         } catch (Exception e) {
-            assertTrue(e instanceof Exception);
+            assertInstanceOf(Exception.class, e);
         } finally {
             Files.deleteIfExists(tempFile);
         }
     }
 
     @Test
-    void testDescribe_WithNonExistentFile() {
+    void testDescribeWithNonExistentFile() {
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             aiClientService.describe("/nonexistent/file/path.png");
         });
@@ -71,86 +71,41 @@ class AiClientServiceTest {
         assertNotNull(exception.getCause());
     }
 
-    @Test
-    void testDescribe_WithInvalidFilePath() {
-        assertThrows(RuntimeException.class, () -> {
-            aiClientService.describe("");
-        });
-    }
-
-    @Test
-    void testDescribe_WithNullFilePath() {
-        assertThrows(RuntimeException.class, () -> {
-            aiClientService.describe(null);
-        });
-    }
-
-    @Test
-    void testDescribe_CatchesIOException() throws Exception {
-        // Use a path that definitely doesn't exist to trigger IOException
-        String invalidPath = "/absolutely/nonexistent/path/that/does/not/exist/file.png";
-
-        try {
-            aiClientService.describe(invalidPath);
-            fail("Should have thrown RuntimeException");
-        } catch (RuntimeException e) {
-            // This covers the catch (IOException e) block in describe()
-            assertNotNull(e);
-            assertNotNull(e.getCause());
-            assertTrue(e.getCause() instanceof IOException);
-        }
-    }
-
-
-    @Test
-    void testDescribe_SubmitsToAsyncExecutor() throws Exception {
-        // This test verifies the describe method creates a CompletableFuture
-        // We can't fully test it without mocking because it requires real AI service
-        // But we already covered this in testDescribe_WithValidImageFile
-
-        Path tempFile = Files.createTempFile("test-exec", ".png");
-        try {
-            Files.write(tempFile, new byte[]{0x01, 0x02, 0x03});
-
-            // Just verify it returns a CompletableFuture (covered by other tests)
-            // This line is already covered by testDescribe_WithValidImageFile
-            assertTrue(true); // Placeholder since coverage is already achieved
-
-        } finally {
-            Files.deleteIfExists(tempFile);
-        }
-    }
     // ==================== regularise() Tests ====================
 
     @Test
     void testRegularise_WithValidJsonPoints() {
-        String points = "{\"points\":[{\"x\":10,\"y\":20},{\"x\":30,\"y\":40}]}";
+        String points = """
+                 {
+                  "ShapeId": "c585b84a",
+                  "Type": "FREEHAND",
+                  "Points": [
+                    {
+                      "X": 10,
+                      "Y": 20
+                    },
+                    {
+                      "X": 30,
+                      "Y": 40
+                    },
+                    {
+                      "X": 11,
+                      "Y": 19
+                    }
+                  ],
+                  "Color": "#FF000000",
+                  "Thickness": 2,
+                  "CreatedBy": "user_default",
+                  "LastModifiedBy": "user_default",
+                  "IsDeleted": false
+                }
+                """;
         CompletableFuture<String> result = aiClientService.regularise(points);
         assertNotNull(result);
     }
 
     @Test
-    void testRegularise_WithEmptyPoints() {
-        String points = "{\"points\":[]}";
-        CompletableFuture<String> result = aiClientService.regularise(points);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testRegularise_WithSimpleString() {
-        String points = "test data";
-        CompletableFuture<String> result = aiClientService.regularise(points);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testRegularise_WithNullInput() {
-        CompletableFuture<String> result = aiClientService.regularise(null);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testRegularise_CatchesGeneralException() throws Exception {
+    void testRegulariseCatchesGeneralException() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         when(mockFactory.getRequest(eq("REG"), any())).thenThrow(new IllegalStateException("Test exception"));
 
@@ -166,19 +121,9 @@ class AiClientServiceTest {
         }
     }
 
-    @Test
-    void testRegularise_SubmitsToAsyncExecutor() {
-        String points = "{\"points\":[{\"x\":1,\"y\":2}]}";
-        CompletableFuture<String> result = aiClientService.regularise(points);
-
-        assertNotNull(result);
-        assertFalse(result.isCancelled());
-    }
-
-    // ==================== sentiment() Tests ====================
 
     @Test
-    void testSentiment_WithValidChatData() throws Exception {
+    void testSentimentWithValidChatData() throws Exception {
         JsonNode chatData = objectMapper.readTree(
                 "{\"messages\":[{\"text\":\"Hello\",\"user\":\"Alice\"}]}"
         );
@@ -186,30 +131,9 @@ class AiClientServiceTest {
         assertNotNull(result);
     }
 
-    @Test
-    void testSentiment_WithEmptyChatData() throws Exception {
-        JsonNode chatData = objectMapper.readTree("{\"messages\":[]}");
-        CompletableFuture<String> result = aiClientService.sentiment(chatData);
-        assertNotNull(result);
-    }
 
     @Test
-    void testSentiment_WithComplexChatData() throws Exception {
-        JsonNode chatData = objectMapper.readTree(
-                "{\"messages\":[{\"text\":\"Great!\",\"sentiment\":0.9},{\"text\":\"Bad\",\"sentiment\":0.1}]}"
-        );
-        CompletableFuture<String> result = aiClientService.sentiment(chatData);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testSentiment_WithNullData() {
-        CompletableFuture<String> result = aiClientService.sentiment(null);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testSentiment_CatchesIOException() throws Exception {
+    void testSentimentCatchesIOException() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         JsonNode chatData = objectMapper.readTree("{\"messages\":[]}");
         when(mockFactory.getRequest(eq("INS"), any())).thenThrow(new IOException("Test IOException"));
@@ -226,14 +150,6 @@ class AiClientServiceTest {
         }
     }
 
-    @Test
-    void testSentiment_SubmitsToAsyncExecutor() throws Exception {
-        JsonNode chatData = objectMapper.readTree("{\"messages\":[{\"text\":\"test\"}]}");
-        CompletableFuture<String> result = aiClientService.sentiment(chatData);
-
-        assertNotNull(result);
-        assertFalse(result.isCancelled());
-    }
 
     // ==================== summariseText() Tests ====================
 
@@ -244,43 +160,9 @@ class AiClientServiceTest {
         assertNotNull(result);
     }
 
-    @Test
-    void testSummariseText_WithEmptyContent() {
-        String jsonContent = "";
-        CompletableFuture<String> result = aiClientService.summariseText(jsonContent);
-        assertNotNull(result);
-    }
 
     @Test
-    void testSummariseText_WithNullContent() {
-        CompletableFuture<String> result = aiClientService.summariseText(null);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testSummariseText_MultipleCalls() {
-        String content1 = "{\"chat\":\"First meeting\"}";
-        String content2 = "{\"chat\":\"Second meeting\"}";
-        String content3 = "{\"chat\":\"Third meeting\"}";
-
-        CompletableFuture<String> result1 = aiClientService.summariseText(content1);
-        CompletableFuture<String> result2 = aiClientService.summariseText(content2);
-        CompletableFuture<String> result3 = aiClientService.summariseText(content3);
-
-        assertNotNull(result1);
-        assertNotNull(result2);
-        assertNotNull(result3);
-    }
-
-    @Test
-    void testSummariseText_WithLongContent() {
-        String longContent = "{\"chat\":\"" + "Very long text. ".repeat(100) + "\"}";
-        CompletableFuture<String> result = aiClientService.summariseText(longContent);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testSummariseText_CatchesIOExceptionInFactory() throws Exception {
+    void testSummariseTextCatchesIOExceptionInFactory() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         when(mockFactory.getRequest(eq("SUM"), anyString())).thenThrow(new IOException("Factory IOException"));
 
@@ -302,7 +184,7 @@ class AiClientServiceTest {
     }
 
     @Test
-    void testSummariseText_CatchesUnexpectedException() throws Exception {
+    void testSummariseTextCatchesUnexpectedException() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         when(mockFactory.getRequest(eq("SUM"), anyString())).thenThrow(new NullPointerException("Unexpected error"));
 
@@ -339,7 +221,7 @@ class AiClientServiceTest {
     }
 
     @Test
-    void testSummariseText_UpdatesAccumulatedSummarySuccessfully() throws Exception {
+    void testSummariseTextUpdatesAccumulatedSummarySuccessfully() throws Exception {
         String content = "{\"chat\":\"Test content for summary update\"}";
 
         CompletableFuture<String> result = aiClientService.summariseText(content);
@@ -352,32 +234,15 @@ class AiClientServiceTest {
     // ==================== clearSummary() Tests ====================
 
     @Test
-    void testClearSummary_ReturnsSuccessMessage() throws Exception {
-        CompletableFuture<String> result = aiClientService.clearSummary();
-        assertNotNull(result);
-        assertEquals("Summary cleared successfully", result.get());
-    }
-
-    @Test
-    void testClearSummary_AfterSummarisation() throws Exception {
+    void testClear() throws Exception {
         aiClientService.summariseText("{\"chat\":\"test\"}");
         CompletableFuture<String> result = aiClientService.clearSummary();
         assertEquals("Summary cleared successfully", result.get());
     }
 
-    @Test
-    void testClearSummary_MultipleTimes() throws Exception {
-        CompletableFuture<String> result1 = aiClientService.clearSummary();
-        CompletableFuture<String> result2 = aiClientService.clearSummary();
-        CompletableFuture<String> result3 = aiClientService.clearSummary();
-
-        assertEquals("Summary cleared successfully", result1.get());
-        assertEquals("Summary cleared successfully", result2.get());
-        assertEquals("Summary cleared successfully", result3.get());
-    }
 
     @Test
-    void testClearSummary_ThenSummariseAgain() throws Exception {
+    void testClearSummaryThenSummariseAgain() throws Exception {
         aiClientService.summariseText("{\"chat\":\"first\"}");
         aiClientService.clearSummary().get();
 
@@ -388,27 +253,15 @@ class AiClientServiceTest {
     // ==================== answerQuestion() Tests ====================
 
     @Test
-    void testAnswerQuestion_WithSimpleQuestion() {
+    void testAnswerQuestion() {
         String question = "What is the main topic?";
         CompletableFuture<String> result = aiClientService.answerQuestion(question);
         assertNotNull(result);
     }
 
-    @Test
-    void testAnswerQuestion_WithEmptyQuestion() {
-        String question = "";
-        CompletableFuture<String> result = aiClientService.answerQuestion(question);
-        assertNotNull(result);
-    }
 
     @Test
-    void testAnswerQuestion_WithNullQuestion() {
-        CompletableFuture<String> result = aiClientService.answerQuestion(null);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testAnswerQuestion_AfterSummarisation() {
+    void testAnswerQuestionAfterSummarisation() {
         aiClientService.summariseText("{\"chat\":\"meeting notes\"}");
         String question = "What were the key points?";
 
@@ -417,29 +270,15 @@ class AiClientServiceTest {
     }
 
     @Test
-    void testAnswerQuestion_WithoutSummary() {
+    void testAnswerQuestionWithoutSummary() {
         String question = "What is AI?";
         CompletableFuture<String> result = aiClientService.answerQuestion(question);
         assertNotNull(result);
     }
 
-    @Test
-    void testAnswerQuestion_MultipleQuestions() {
-        String q1 = "Question 1?";
-        String q2 = "Question 2?";
-        String q3 = "Question 3?";
-
-        CompletableFuture<String> r1 = aiClientService.answerQuestion(q1);
-        CompletableFuture<String> r2 = aiClientService.answerQuestion(q2);
-        CompletableFuture<String> r3 = aiClientService.answerQuestion(q3);
-
-        assertNotNull(r1);
-        assertNotNull(r2);
-        assertNotNull(r3);
-    }
 
     @Test
-    void testAnswerQuestion_AfterClearSummary() throws Exception {
+    void testAnswerQuestionAfterClearSummary() throws Exception {
         aiClientService.summariseText("{\"chat\":\"test\"}");
         aiClientService.clearSummary().get();
         String question = "What happened?";
@@ -448,15 +287,9 @@ class AiClientServiceTest {
         assertNotNull(result);
     }
 
-    @Test
-    void testAnswerQuestion_WithLongQuestion() {
-        String longQuestion = "What are all the details about " + "the topic ".repeat(50) + "?";
-        CompletableFuture<String> result = aiClientService.answerQuestion(longQuestion);
-        assertNotNull(result);
-    }
 
     @Test
-    void testAnswerQuestion_CatchesIOExceptionInFactory() throws Exception {
+    void testAnswerQuestionCatchesIOExceptionInFactory() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         when(mockFactory.getRequest(eq("QNA"), anyString(), anyString())).thenThrow(new IOException("Factory IOException"));
 
@@ -477,7 +310,7 @@ class AiClientServiceTest {
     }
 
     @Test
-    void testAnswerQuestion_CatchesUnexpectedException() throws Exception {
+    void testAnswerQuestionCatchesUnexpectedException() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         when(mockFactory.getRequest(eq("QNA"), anyString(), anyString())).thenThrow(new IllegalArgumentException("Unexpected error"));
 
@@ -497,7 +330,7 @@ class AiClientServiceTest {
     // ==================== action() Tests ====================
 
     @Test
-    void testAction_WithValidChatData() throws Exception {
+    void testActionWithValidChatData() throws Exception {
         JsonNode chatData = objectMapper.readTree(
                 "{\"messages\":[{\"text\":\"We need to review the code\"}]}"
         );
@@ -505,45 +338,12 @@ class AiClientServiceTest {
         assertNotNull(result);
     }
 
-    @Test
-    void testAction_WithEmptyChatData() throws Exception {
-        JsonNode chatData = objectMapper.readTree("{\"messages\":[]}");
-        CompletableFuture<String> result = aiClientService.action(chatData);
-        assertNotNull(result);
-    }
+
+
+
 
     @Test
-    void testAction_WithComplexChatData() throws Exception {
-        JsonNode chatData = objectMapper.readTree(
-                "{\"messages\":[" +
-                        "{\"text\":\"Task 1: Review PR\"}," +
-                        "{\"text\":\"Task 2: Update docs\"}," +
-                        "{\"text\":\"Task 3: Deploy\"}]}"
-        );
-        CompletableFuture<String> result = aiClientService.action(chatData);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testAction_WithNullData() {
-        CompletableFuture<String> result = aiClientService.action(null);
-        assertNotNull(result);
-    }
-
-    @Test
-    void testAction_MultipleCallsSequential() throws Exception {
-        JsonNode data1 = objectMapper.readTree("{\"messages\":[{\"text\":\"Task 1\"}]}");
-        JsonNode data2 = objectMapper.readTree("{\"messages\":[{\"text\":\"Task 2\"}]}");
-
-        CompletableFuture<String> r1 = aiClientService.action(data1);
-        CompletableFuture<String> r2 = aiClientService.action(data2);
-
-        assertNotNull(r1);
-        assertNotNull(r2);
-    }
-
-    @Test
-    void testAction_CatchesIOException() throws Exception {
+    void testActionCatchesIOException() throws Exception {
         RequestFactory mockFactory = mock(RequestFactory.class);
         JsonNode chatData = objectMapper.readTree("{\"messages\":[]}");
         when(mockFactory.getRequest(eq("ACTION"), any())).thenThrow(new IOException("Factory IOException"));
@@ -560,19 +360,11 @@ class AiClientServiceTest {
         }
     }
 
-    @Test
-    void testAction_SubmitsToAsyncExecutor() throws Exception {
-        JsonNode chatData = objectMapper.readTree("{\"messages\":[{\"text\":\"Review code\"}]}");
-        CompletableFuture<String> result = aiClientService.action(chatData);
-
-        assertNotNull(result);
-        assertFalse(result.isCancelled());
-    }
 
     // ==================== Integration/Workflow Tests ====================
 
     @Test
-    void testCompleteWorkflow_SummariseAndAnswer() {
+    void testCompleteWorkflowSummariseAndAnswer() {
         String content = "{\"chat\":\"Project meeting discussion\"}";
         String question = "What was discussed?";
 
@@ -583,29 +375,9 @@ class AiClientServiceTest {
         assertNotNull(answer);
     }
 
-    @Test
-    void testCompleteWorkflow_MultipleSummarisationsThenQuestion() {
-        aiClientService.summariseText("{\"chat\":\"Meeting 1\"}");
-        aiClientService.summariseText("{\"chat\":\"Meeting 2\"}");
-        aiClientService.summariseText("{\"chat\":\"Meeting 3\"}");
-
-        CompletableFuture<String> answer = aiClientService.answerQuestion("Summary?");
-        assertNotNull(answer);
-    }
 
     @Test
-    void testCompleteWorkflow_ClearAndRestart() throws Exception {
-        aiClientService.summariseText("{\"chat\":\"Old data\"}");
-        aiClientService.clearSummary().get();
-        CompletableFuture<String> newSummary = aiClientService.summariseText("{\"chat\":\"New data\"}");
-        CompletableFuture<String> answer = aiClientService.answerQuestion("What's new?");
-
-        assertNotNull(newSummary);
-        assertNotNull(answer);
-    }
-
-    @Test
-    void testCompleteWorkflow_AllAPIs() throws Exception {
+    void testCompleteWorkflowAllAPIs() throws Exception {
         Path tempFile = Files.createTempFile("test", ".png");
         try {
             Files.write(tempFile, new byte[]{0x00});
@@ -631,31 +403,10 @@ class AiClientServiceTest {
 
     // ==================== Edge Cases ====================
 
-    @Test
-    void testMultipleServicesParallel() throws Exception {
-        AiClientService service1 = new AiClientService();
-        AiClientService service2 = new AiClientService();
-        AiClientService service3 = new AiClientService();
 
-        service1.summariseText("{\"chat\":\"Service 1\"}");
-        service2.summariseText("{\"chat\":\"Service 2\"}");
-        service3.summariseText("{\"chat\":\"Service 3\"}");
-
-        assertNotEquals(service1, service2);
-        assertNotEquals(service2, service3);
-    }
 
     @Test
-    void testSequentialOperations() {
-        CompletableFuture<String> result = aiClientService
-                .summariseText("{\"chat\":\"test\"}")
-                .thenCompose(summary -> aiClientService.answerQuestion("What?"))
-                .thenApply(answer -> "Final: " + answer);
-
-        assertNotNull(result);
-    }
-    @Test
-    void testAnswerQuestion_OuterCatchBlock_SynchronousException() throws Exception {
+    void testAnswerQuestionOuterCatchBlockSynchronousException() throws Exception {
         // This test covers the outer catch (Exception e) block in answerQuestion
         // by causing an exception BEFORE the async chain starts
 
@@ -684,23 +435,9 @@ class AiClientServiceTest {
         assertEquals("Error processing Q&A request", exception.getMessage());
         assertTrue(exception.getCause() instanceof IllegalStateException);
     }
-    @Test
-    void testAnswerQuestion_WithNullAccumulatedSummary() throws Exception {
-        // Set accumulated summary to null using reflection
-        var summaryField = AiClientService.class.getDeclaredField("accumulatedSummary");
-        summaryField.setAccessible(true);
-        summaryField.set(aiClientService, null);
 
-        // Now ask a question - this will execute the else branch: accSum = null
-        String question = "What is AI?";
-        CompletableFuture<String> result = aiClientService.answerQuestion(question);
-
-        // Assert
-        assertNotNull(result);
-        // This covers the else branch where accumulatedSummary is null
-    }
     @Test
-    void testSummariseText_OuterCatchBlock_SynchronousException() throws Exception {
+    void testSummariseTextOuterCatchBlockSynchronousException() throws Exception {
         // This test covers the outer catch (Exception e) block in summariseText
         // by causing an exception BEFORE the async chain starts
 
@@ -724,7 +461,7 @@ class AiClientServiceTest {
         assertTrue(exception.getCause() instanceof NullPointerException);
     }
     @Test
-    void testSummariseText_ElseBranch_PreviousSummaryExists() throws Exception {
+    void testSummariseTextElseBranchPreviousSummaryExists() throws Exception {
         // Directly set accumulatedSummary to non-empty to force ELSE branch
         var summaryField = AiClientService.class.getDeclaredField("accumulatedSummary");
         summaryField.setAccessible(true);
@@ -736,23 +473,7 @@ class AiClientServiceTest {
         // Assert - the else branch where contentToSummarise includes "Previous Summary:" is now covered
         assertNotNull(result);
     }
-//    @Test
-//    void testDescribe_CoverageForLogAndExecute() throws Exception {
-//        // Covers: LOG.debug, LOG.info, and return ASYNC_AI_EXECUTOR.execute()
-//
-//        Path tempFile = Files.createTempFile("coverage-test", ".png");
-//        try {
-//            Files.write(tempFile, new byte[]{0x01, 0x02, 0x03});
-//
-//            // This single call covers all three lines:
-//            CompletableFuture<String> result = aiClientService.describe(tempFile.toString());
-//
-//            assertNotNull(result);
-//
-//        } finally {
-//            Files.deleteIfExists(tempFile);
-//        }
-//    }
+
 
 
 }

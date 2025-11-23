@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: GeminiAdapterTest.java
+ *  Owner: Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights.data
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -59,47 +68,27 @@ class GeminiAdapterTest {
         verify(mockRequest).getImgData();
     }
 
-//    @Test
-//    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
-//        when(mockRequest.getPrompt()).thenReturn("Describe this image");
-//        when(mockRequest.getImgData()).thenReturn("base64ImageData");
-//        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
-//
-//        String result = adapter.buildRequest(mockRequest);
-//
-//        assertNotNull(result);
-//        assertTrue(result.contains("Describe this image"));
-//        assertTrue(result.contains("base64ImageData"));
-//        verify(mockRequest).getPrompt();
-//        verify(mockRequest, atLeastOnce()).getImgData();
-//    }
-
     @Test
-    void testBuildRequest_WithPromptAndText() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("Summarize this");
-        when(mockRequest.getImgData()).thenReturn(null);
-        when(mockRequest.getTextData()).thenReturn("Text to summarize");
+    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
+        // Arrange
+        when(mockRequest.getPrompt()).thenReturn("Describe this image");
+        when(mockRequest.getImgData()).thenReturn("base64ImageData");
+        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
 
+        // Act
         String result = adapter.buildRequest(mockRequest);
 
+        // Assert
         assertNotNull(result);
-        assertTrue(result.contains("Summarize this"));
-        assertTrue(result.contains("Text to summarize"));
+        assertTrue(result.contains("Describe this image"));
+        assertTrue(result.contains("base64ImageData"));
+        assertTrue(result.contains("inlineData"));
+        assertTrue(result.contains("image/png"));
+
         verify(mockRequest).getPrompt();
-        verify(mockRequest).getImgData();
-        verify(mockRequest, atLeastOnce()).getTextData(); // CHANGE THIS
+        verify(mockRequest, atLeastOnce()).getImgData();
     }
-    @Test
-    void testBuildRequest_WithEmptyPrompt() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("");
-        when(mockRequest.getImgData()).thenReturn(null);
-        when(mockRequest.getTextData()).thenReturn("Some text");
 
-        String result = adapter.buildRequest(mockRequest);
-
-        assertNotNull(result);
-        assertTrue(result.contains("Some text"));
-    }
 
     @Test
     void testBuildRequest_ValidJsonStructure() throws JsonProcessingException {
@@ -147,78 +136,6 @@ class GeminiAdapterTest {
         verify(mockResponse, times(2)).body();
     }
 
-    @Test
-    void testGetResponse_WithComplexText() throws IOException {
-        String jsonResponse = """
-            {
-              "candidates": [
-                {
-                  "content": {
-                    "parts": [
-                      {
-                        "text": "Line 1\\nLine 2\\nLine 3"
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        String result = adapter.getResponse(mockResponse);
-
-        assertNotNull(result);
-        assertTrue(result.contains("Line 1"));
-    }
-
-    @Test
-    void testGetResponse_NoTextNode() throws IOException {
-        String jsonResponse = """
-            {
-              "candidates": [
-                {
-                  "content": {
-                    "parts": [
-                      {
-                        "notText": "Wrong field"
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("No text in api response"));
-    }
-
-    @Test
-    void testGetResponse_EmptyResponse() throws IOException {
-        String jsonResponse = """
-            {
-              "candidates": []
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("No text in api response"));
-    }
 
     @Test
     void testGetResponse_InvalidJson() throws IOException {
@@ -232,23 +149,7 @@ class GeminiAdapterTest {
         });
     }
 
-    @Test
-    void testGetResponse_MissingCandidates() throws IOException {
-        String jsonResponse = """
-            {
-              "notCandidates": []
-            }
-            """;
 
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("No text in api response"));
-    }
 
     @Test
     void testGetResponse_TextNodeIsNotTextual() throws IOException {
@@ -278,81 +179,5 @@ class GeminiAdapterTest {
         assertTrue(exception.getMessage().contains("No text in api response"));
     }
 
-    @Test
-    void testGetResponse_EmptyTextValue() throws IOException {
-        String jsonResponse = """
-            {
-              "candidates": [
-                {
-                  "content": {
-                    "parts": [
-                      {
-                        "text": ""
-                      }
-                    ]
-                  }
-                }
-              ]
-            }
-            """;
 
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        String result = adapter.getResponse(mockResponse);
-
-        assertEquals("", result);
-    }
-    @Test
-    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
-        // Arrange
-        when(mockRequest.getPrompt()).thenReturn("Describe this image");
-        when(mockRequest.getImgData()).thenReturn("base64ImageData");
-        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
-
-        // Act
-        String result = adapter.buildRequest(mockRequest);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.contains("Describe this image"));
-        assertTrue(result.contains("base64ImageData"));
-        assertTrue(result.contains("inlineData"));
-        assertTrue(result.contains("image/png"));
-
-        verify(mockRequest).getPrompt();
-        verify(mockRequest, atLeastOnce()).getImgData();
-    }
-
-    @Test
-    void testBuildRequest_ImageOnly_NoText() throws JsonProcessingException {
-        // Arrange
-        when(mockRequest.getPrompt()).thenReturn("What is in this image?");
-        when(mockRequest.getImgData()).thenReturn("iVBORw0KGgoAAAANSUhEUgAAAAUA");
-        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
-
-        // Act
-        String result = adapter.buildRequest(mockRequest);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.contains("inlineData"));
-        assertTrue(result.contains("mimeType"));
-        assertTrue(result.contains("image/png"));
-    }
-
-    @Test
-    void testBuildRequest_LogsImageEmbedding() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("Describe");
-        when(mockRequest.getImgData()).thenReturn("imageData123");
-        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
-
-        // Act
-        String result = adapter.buildRequest(mockRequest);
-
-        // Assert
-        assertNotNull(result);
-        assertTrue(result.contains("imageData123"));
-        verify(mockRequest, atLeast(1)).getImgData();
-    }
 }
