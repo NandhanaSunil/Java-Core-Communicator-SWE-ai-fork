@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class for RegulariserParser with 100% code coverage.
+ * Test class for RegulariserParser.
  */
 class RegulariserParserTest {
 

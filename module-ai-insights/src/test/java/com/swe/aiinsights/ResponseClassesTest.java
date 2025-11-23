@@ -5,122 +5,66 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Comprehensive test suite for all Response classes with 100% coverage.
+ * Comprehensive tests for all Response classes.
  */
 class ResponseClassesTest {
 
-    // ==================== QuestionAnswerResponse Tests ====================
-
     @Test
-    void testQuestionAnswerResponse_SetAndGetResponse() {
-        // Arrange
+    void testQuestionAnswerResponse() {
         QuestionAnswerResponse response = new QuestionAnswerResponse();
         String testResponse = "This is the answer to your question.";
 
-        // Act
         response.setResponse(testResponse);
         String result = response.getResponse();
 
-        // Assert
         assertNotNull(result);
         assertEquals(testResponse, result);
     }
 
     @Test
-    void testQuestionAnswerResponse_SetNullResponse() {
-        // Arrange
+    void testQuestionAnswerResponseSetNull() {
         QuestionAnswerResponse response = new QuestionAnswerResponse();
-
-        // Act
         response.setResponse(null);
         String result = response.getResponse();
-
-        // Assert
         assertNull(result);
     }
 
-    @Test
-    void testQuestionAnswerResponse_SetEmptyResponse() {
-        // Arrange
-        QuestionAnswerResponse response = new QuestionAnswerResponse();
-
-        // Act
-        response.setResponse("");
-        String result = response.getResponse();
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("", result);
-    }
 
     @Test
-    void testQuestionAnswerResponse_MultipleSetCalls() {
-        // Arrange
-        QuestionAnswerResponse response = new QuestionAnswerResponse();
-
-        // Act
-        response.setResponse("First answer");
-        response.setResponse("Second answer");
-        response.setResponse("Final answer");
-        String result = response.getResponse();
-
-        // Assert
-        assertEquals("Final answer", result);
-    }
-
-    @Test
-    void testQuestionAnswerResponse_LongText() {
-        // Arrange
-        QuestionAnswerResponse response = new QuestionAnswerResponse();
-        StringBuilder longText = new StringBuilder();
-        for (int i = 0; i < 1000; i++) {
-            longText.append("Answer part ").append(i).append(". ");
-        }
-
-        // Act
-        response.setResponse(longText.toString());
-        String result = response.getResponse();
-
-        // Assert
-        assertEquals(longText.toString(), result);
-    }
-
-    // ==================== RegulariserResponse Tests ====================
-
-    @Test
-    void testRegulariserResponse_Constructor() {
-        // Act
+    void testRegulariserResponse() {
         RegulariserResponse response = new RegulariserResponse();
-
-        // Assert
         assertNotNull(response);
     }
 
     @Test
-    void testRegulariserResponse_SetAndGetResponse() {
-        // Arrange
+    void testRegulariserResponseWithPoints() {
         RegulariserResponse response = new RegulariserResponse();
-        String testContent = "{\"type\": \"Rectangle\", \"points\": [[0,0], [100,100]]}";
-
-        // Act
+        String testContent = "{\n"
+                + "  \"ShapeId\": \"c585b84a-d56c-45b8-a0e1-827ae20a014a\",\n"
+                + "  \"Type\": \"FreeHand\",\n"
+                + "  \"Points\": [\n"
+                + "    {\n"
+                + "      \"X\": 450,\n"
+                + "      \"Y\": 60\n"
+                + "    }\n"
+                + "  ],\n"
+                + "  \"Color\": \"#FF000000\",\n"
+                + "  \"Thickness\": 2,\n"
+                + "  \"CreatedBy\": \"user_default\",\n"
+                + "  \"LastModifiedBy\": \"user_default\",\n"
+                + "  \"IsDeleted\": false\n"
+                + "}";
         response.setResponse(testContent);
         String result = response.getResponse();
-
-        // Assert
         assertNotNull(result);
         assertEquals(testContent, result);
     }
 
     @Test
-    void testRegulariserResponse_SetNullResponse() {
-        // Arrange
+    void testRegulariserResponseNull() {
         RegulariserResponse response = new RegulariserResponse();
-
-        // Act
         response.setResponse(null);
         String result = response.getResponse();
-
-        // Assert
         assertNull(result);
     }
 

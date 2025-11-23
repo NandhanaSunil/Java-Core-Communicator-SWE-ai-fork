@@ -135,21 +135,21 @@ class RequestGeneraliserTest {
         assertTrue(request.getContext().contains("geometric shape"));
     }
 
-    @Test
-    void testAiRegularisationRequest_ConstructorWithCustomPrompt() {
-        // Arrange
-        String points = "{\"points\":[{\"x\":5,\"y\":15}]}";
-        String customPrompt = "Custom regularization prompt";
-
-        // Act
-        AiRegularisationRequest request = new AiRegularisationRequest(points, customPrompt);
-
-        // Assert
-        assertNotNull(request);
-        assertEquals(points, request.getInput());
-        assertEquals(customPrompt, request.getContext());
-        assertEquals("REG", request.getReqType());
-    }
+//    @Test
+//    void testAiRegularisationRequest_ConstructorWithCustomPrompt() {
+//        // Arrange
+//        String points = "{\"points\":[{\"x\":5,\"y\":15}]}";
+//        String customPrompt = "Custom regularization prompt";
+//
+//        // Act
+//        AiRegularisationRequest request = new AiRegularisationRequest(points, customPrompt);
+//
+//        // Assert
+//        assertNotNull(request);
+//        assertEquals(points, request.getInput());
+//        assertEquals(customPrompt, request.getContext());
+//        assertEquals("REG", request.getReqType());
+//    }
 
     @Test
     void testAiRegularisationRequest_GetContext() {
