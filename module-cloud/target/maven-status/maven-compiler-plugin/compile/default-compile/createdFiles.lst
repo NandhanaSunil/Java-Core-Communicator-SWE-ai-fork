@@ -1,7 +1,0 @@
-com/swe/cloud/datastructures/Entity.class
-com/swe/cloud/functionlibrary/CloudFunctionLibrary.class
-com/swe/cloud/datastructures/Response.class
-com/swe/cloud/interfaces/IdbConnector.class
-com/swe/cloud/datastructures/CloudResponse.class
-com/swe/cloud/datastructures/TimeRange.class
-com/swe/cloud/interfaces/ICrashHandler.class
