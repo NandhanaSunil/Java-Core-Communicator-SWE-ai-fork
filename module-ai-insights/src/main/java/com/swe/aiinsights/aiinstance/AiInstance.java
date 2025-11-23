@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: AiInstance.java
+ *  Owner: Nandhana Sunil
+ *  Roll Number : 112201008
+ *  Module : com.swe.aiinsights.aiinstance
+ * -----------------------------------------------------------------------------
+ */
+
 /**
  * Creates an Instance of AI Service.
  * <p>

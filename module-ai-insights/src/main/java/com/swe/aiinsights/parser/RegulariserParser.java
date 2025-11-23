@@ -179,5 +179,4 @@ public class RegulariserParser {
         return finalPoints;
     }
 
-
 }
