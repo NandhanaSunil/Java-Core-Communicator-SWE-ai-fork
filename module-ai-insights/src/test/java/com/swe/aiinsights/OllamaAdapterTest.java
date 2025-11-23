@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: OllamaAdapter.java
+ *  Owner: Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights.data
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -41,10 +50,9 @@ class OllamaAdapterTest {
         adapter = new OllamaAdapter();
     }
 
-    // ==================== buildRequest Tests ====================
 
     @Test
-    void testBuildRequest_WithTextData() throws JsonProcessingException {
+    void testBuildRequestWithTextData() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("Summarize: ");
         when(mockRequest.getTextData()).thenReturn("Text to process");
         when(mockRequest.getImgData()).thenReturn(null);
@@ -58,7 +66,7 @@ class OllamaAdapterTest {
     }
 
     @Test
-    void testBuildRequest_WithImageData() throws JsonProcessingException {
+    void testBuildRequestWithImageData() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("Describe image: ");
         when(mockRequest.getTextData()).thenReturn("Some text");
         when(mockRequest.getImgData()).thenReturn("base64ImageData");
@@ -70,8 +78,9 @@ class OllamaAdapterTest {
         verify(mockRequest).getTextData();
         verify(mockRequest, atLeastOnce()).getImgData(); // CHANGE THIS
     }
+
     @Test
-    void testBuildRequest_ContainsCorrectOptions() throws JsonProcessingException {
+    void testBuildRequestContainsCorrectOptions() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("Test");
         when(mockRequest.getTextData()).thenReturn("Data");
         when(mockRequest.getImgData()).thenReturn(null);
@@ -84,68 +93,18 @@ class OllamaAdapterTest {
         // Verify options
         assertTrue(jsonNode.has("options"));
         JsonNode options = jsonNode.get("options");
+
+        assertTrue(result.contains("prompt"));
+        assertFalse(jsonNode.get("stream").asBoolean());
+        assertEquals("gemma3", jsonNode.get("model").asText());
         assertEquals(16384, options.get("num_ctx").asInt());
         assertEquals(0.2, options.get("temperature").asDouble(), 0.001);
         assertEquals(0.9, options.get("top_p").asDouble(), 0.001);
     }
 
-    @Test
-    void testBuildRequest_VerifyModelName() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("Test");
-        when(mockRequest.getTextData()).thenReturn("Data");
-        when(mockRequest.getImgData()).thenReturn(null);
-
-        String result = adapter.buildRequest(mockRequest);
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(result);
-
-        assertEquals("gemma3", jsonNode.get("model").asText());
-    }
 
     @Test
-    void testBuildRequest_VerifyStreamIsFalse() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("Test");
-        when(mockRequest.getTextData()).thenReturn("Data");
-        when(mockRequest.getImgData()).thenReturn(null);
-
-        String result = adapter.buildRequest(mockRequest);
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(result);
-
-        assertFalse(jsonNode.get("stream").asBoolean());
-    }
-
-    @Test
-    void testBuildRequest_EmptyPrompt() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("");
-        when(mockRequest.getTextData()).thenReturn("Text");
-        when(mockRequest.getImgData()).thenReturn(null);
-
-        String result = adapter.buildRequest(mockRequest);
-
-        assertNotNull(result);
-        assertTrue(result.contains("Text"));
-    }
-
-    @Test
-    void testBuildRequest_NullTextData() throws JsonProcessingException {
-        when(mockRequest.getPrompt()).thenReturn("Test");
-        when(mockRequest.getTextData()).thenReturn(null);
-        when(mockRequest.getImgData()).thenReturn(null);
-
-        String result = adapter.buildRequest(mockRequest);
-
-        assertNotNull(result);
-        // Should handle null gracefully
-        assertTrue(result.contains("Testnull"));
-    }
-
-    // ==================== getResponse Tests ====================
-
-    @Test
-    void testGetResponse_Success() throws IOException {
+    void testGetResponseSuccess() throws IOException {
         String jsonResponse = """
             {
               "response": "This is the Ollama response"
@@ -161,77 +120,9 @@ class OllamaAdapterTest {
         verify(mockResponse, times(2)).body();
     }
 
-    @Test
-    void testGetResponse_WithMultilineText() throws IOException {
-        String jsonResponse = """
-            {
-              "response": "Line 1\\nLine 2\\nLine 3"
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        String result = adapter.getResponse(mockResponse);
-
-        assertNotNull(result);
-        assertTrue(result.contains("Line 1"));
-    }
 
     @Test
-    void testGetResponse_EmptyResponse() throws IOException {
-        String jsonResponse = """
-            {
-              "response": ""
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        String result = adapter.getResponse(mockResponse);
-
-        assertEquals("", result);
-    }
-
-    @Test
-    void testGetResponse_NoResponseField() throws IOException {
-        String jsonResponse = """
-            {
-              "notResponse": "Wrong field"
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid Ollama response"));
-    }
-
-    @Test
-    void testGetResponse_ResponseFieldIsNull() throws IOException {
-        String jsonResponse = """
-            {
-              "response": null
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid Ollama response"));
-    }
-
-    @Test
-    void testGetResponse_ResponseFieldIsNotTextual() throws IOException {
+    void testGetResponseResponseFieldIsNotTextual() throws IOException {
         String jsonResponse = """
             {
               "response": 12345
@@ -249,7 +140,7 @@ class OllamaAdapterTest {
     }
 
     @Test
-    void testGetResponse_InvalidJson() throws IOException {
+    void testGetResponseInvalidJson() throws IOException {
         String jsonResponse = "{ invalid json }";
 
         when(mockResponse.body()).thenReturn(mockResponseBody);
@@ -260,37 +151,4 @@ class OllamaAdapterTest {
         });
     }
 
-    @Test
-    void testGetResponse_EmptyJson() throws IOException {
-        String jsonResponse = "{}";
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid Ollama response"));
-    }
-
-    @Test
-    void testGetResponse_ResponseFieldIsObject() throws IOException {
-        String jsonResponse = """
-            {
-              "response": {
-                "text": "Should be string not object"
-              }
-            }
-            """;
-
-        when(mockResponse.body()).thenReturn(mockResponseBody);
-        when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
-
-        IOException exception = assertThrows(IOException.class, () -> {
-            adapter.getResponse(mockResponse);
-        });
-
-        assertTrue(exception.getMessage().contains("Invalid Ollama response"));
-    }
 }

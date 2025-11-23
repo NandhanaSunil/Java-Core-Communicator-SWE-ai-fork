@@ -79,7 +79,7 @@ public class RegulariserParser {
         final String newType = extractType(aiNode, input);
 
         final ArrayNode aiPoints = (ArrayNode) aiNode.get("Points");
-        if (aiPoints == null || aiPoints.isEmpty()) {
+        if (aiPoints == null || aiPoints.isEmpty() || aiPoints.size() <= 1) {
             LOG.info("Response output has no points in the points field -- inconsistent AI output");
             return inputJsonString;
         }
@@ -179,10 +179,6 @@ public class RegulariserParser {
             LOG.info("Regularisation points output size >= 2");
             finalPoints.add(aiPoints.get(0));
             finalPoints.add(aiPoints.get(1));
-        } else {
-            LOG.info("Regularisation points output <= 1");
-            finalPoints.add(aiPoints.get(0));
-            finalPoints.add(aiPoints.get(0));
         }
 
         return finalPoints;

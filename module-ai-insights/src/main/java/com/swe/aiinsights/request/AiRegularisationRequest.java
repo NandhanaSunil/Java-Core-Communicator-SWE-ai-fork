@@ -112,23 +112,23 @@ public class AiRegularisationRequest implements AiRequestable {
         type = "REG";
     }
 
-    /**
-     * Constructs an AIRegularisationRequest and
-     * initializes the metadata with a default prompt.
-     * the default prompt corresponds to asking for
-     * a regularising to the nearest shape.
-     * @param points to store the string
-     *               containing points of the curve for regularisation
-     * @param prompt to get the prompt if any
-     */
-    public AiRegularisationRequest(final String points, final String prompt) {
-        // constructor, initialised the metadata,
-        // adding the prompt.
-        metaData = new HashMap<>();
-        metaData.put("InputData", points);
-        metaData.put("RequestPrompt", prompt);
-        type = "REG";
-    }
+//    /**
+//     * Constructs an AIRegularisationRequest and
+//     * initializes the metadata with a default prompt.
+//     * the default prompt corresponds to asking for
+//     * a regularising to the nearest shape.
+//     * @param points to store the string
+//     *               containing points of the curve for regularisation
+//     * @param prompt to get the prompt if any
+//     */
+//    public AiRegularisationRequest(final String points, final String prompt) {
+//        // constructor, initialised the metadata,
+//        // adding the prompt.
+//        metaData = new HashMap<>();
+//        metaData.put("InputData", points);
+//        metaData.put("RequestPrompt", prompt);
+//        type = "REG";
+//    }
 
     /**
      * {@inheritDoc}
