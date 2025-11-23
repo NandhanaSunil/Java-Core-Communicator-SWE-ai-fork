@@ -14,7 +14,7 @@
  * @editedby Nandhana Sunil
  */
 
-package com.swe.aiinsights;
+package com.swe.aiinsights.apiendpoints;
 
 import com.swe.aiinsights.aiservice.GeminiService;
 import com.swe.aiinsights.aiservice.LlmService;

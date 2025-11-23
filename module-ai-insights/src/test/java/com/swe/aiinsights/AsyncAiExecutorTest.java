@@ -1,6 +1,7 @@
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiservice.LlmService;
+import com.swe.aiinsights.apiendpoints.AsyncAiExecutor;
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.response.AiResponse;
