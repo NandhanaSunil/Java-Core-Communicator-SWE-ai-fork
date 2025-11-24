@@ -18,35 +18,62 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 /**
- * Complete test suite for all RequestGeneraliser
+ * Complete test suite for all RequestGeneraliser.
  */
 @ExtendWith(MockitoExtension.class)
 class RequestGeneraliserTest {
 
+    /**
+     * whiteboard data mocked.
+     */
     @Mock
     private WhiteBoardData mockWhiteBoardData;
 
+    /**
+     * mocked regularisation request.
+     */
     @Mock
     private AiRegularisationRequest regularisationRequest;
 
+    /**
+     * Mocked summarisationRequest.
+     */
     @Mock
     private AiSummarisationRequest aiSummarisationRequest;
 
+    /**
+     * Mocked insights request.
+     */
     @Mock
     private AiInsightsRequest aiInsightsRequest;
 
+    /**
+     * Mocked action items request.
+     */
     @Mock
     AiActionItemsRequest aiActionItemsRequest;
 
+    /**
+     * AiQuestionAnswer test - mocked.
+     */
     @Mock
     AiQuestionAnswerRequest aiQuestionAnswerRequest;
 
+    /**
+     * Description request mocked.
+     */
     @Mock
     AiDescriptionRequest aiDescriptionRequest;
 
+    /**
+     * mockedd json node
+     */
     @Mock
     JsonNode jsonChat;
 
+    /**
+     * object mapper to create json.
+     */
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
@@ -58,7 +85,7 @@ class RequestGeneraliserTest {
         when(aiDescriptionRequest.getReqType()).thenReturn("DESC");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiDescriptionRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiDescriptionRequest);
 
         assertNotNull(req);
         assertEquals("DESC", req.getReqType());
@@ -75,7 +102,7 @@ class RequestGeneraliserTest {
         when(regularisationRequest.getReqType()).thenReturn("REG");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(regularisationRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(regularisationRequest);
 
         assertNotNull(req);
         assertEquals("REG", req.getReqType());
@@ -92,7 +119,7 @@ class RequestGeneraliserTest {
         when(aiSummarisationRequest.getReqType()).thenReturn("SUM");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiSummarisationRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiSummarisationRequest);
 
         assertNotNull(req);
         assertEquals("SUM", req.getReqType());
@@ -104,15 +131,15 @@ class RequestGeneraliserTest {
 
     @Test
     void testAiInsightsRequestGeneralisation() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
         // Arrange
         when(aiInsightsRequest.getInput()).thenReturn(node);
         when(aiInsightsRequest.getContext()).thenReturn("insights");
         when(aiInsightsRequest.getReqType()).thenReturn("INS");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiInsightsRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiInsightsRequest);
 
         assertNotNull(req);
         assertEquals("INS", req.getReqType());
@@ -130,7 +157,7 @@ class RequestGeneraliserTest {
         when(aiQuestionAnswerRequest.getReqType()).thenReturn("QNA");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiQuestionAnswerRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiQuestionAnswerRequest);
 
         assertNotNull(req);
         assertEquals("QNA", req.getReqType());
@@ -142,15 +169,15 @@ class RequestGeneraliserTest {
     @Test
     void testAiActionItemsRequestGeneralisation() throws IOException {
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
         // Arrange
         when(aiActionItemsRequest.getInput()).thenReturn(node);
         when(aiActionItemsRequest.getContext()).thenReturn("action items");
         when(aiActionItemsRequest.getReqType()).thenReturn("ACTION");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiActionItemsRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiActionItemsRequest);
 
         assertNotNull(req);
         assertEquals("ACTION", req.getReqType());
@@ -167,10 +194,10 @@ class RequestGeneraliserTest {
         when(aiDescriptionRequest.getReqType()).thenReturn("DESC");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiDescriptionRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiDescriptionRequest);
 
         AiResponse response = req.getAiResponse();
-        String format = req.formatOutput(response);
+        final String format = req.formatOutput(response);
         assertNotNull(response);
     }
 

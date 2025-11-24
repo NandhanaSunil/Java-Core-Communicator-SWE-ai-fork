@@ -23,18 +23,31 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 /**
  * Test class for RequestFactory.
  */
 class RequestFactoryTest {
-
+    /**
+     * request factory for testing.
+     */
     private RequestFactory requestFactory;
+    /**
+     * object mapper for building json.
+     */
     private ObjectMapper objectMapper;
 
+    /**
+     * to create a temporary png.
+     */
     @TempDir
-    Path tempDir;
+    private Path tempDir;
 
     @BeforeEach
     void setUp() {
@@ -47,8 +60,8 @@ class RequestFactoryTest {
     void testGetRequestInterpretWithFilePath() throws IOException {
         final Path testFile = tempDir.resolve("test-image.png");
         Files.write(testFile, "test image data".getBytes());
-        String filePath = testFile.toString();
-        AiRequestable request = requestFactory.getRequest("DESC", filePath);
+        final String filePath = testFile.toString();
+        final AiRequestable request = requestFactory.getRequest("DESC", filePath);
         assertNotNull(request);
         assertNotNull(request.getInput());
         assertEquals("DESC", request.getReqType());
@@ -102,7 +115,7 @@ class RequestFactoryTest {
                      "message": "I am really excited about today's class!"
                    }]"""
         );
-        AiRequestable request = requestFactory.getRequest("INS", chatData);
+        final AiRequestable request = requestFactory.getRequest("INS", chatData);
         assertNotNull(request);
         assertNotNull(request.getInput());
         assertEquals("INS", request.getReqType());
@@ -131,14 +144,14 @@ class RequestFactoryTest {
     // summarisation request
     @Test
     void testGetRequestAction() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
 
-        ObjectNode messageNode = mapper.createObjectNode();
+        final ObjectNode messageNode = mapper.createObjectNode();
         messageNode.put("from", "student");
         messageNode.put("to", "teacher");
         messageNode.put("timestamp", "2025-11-07T10:00:00Z");
         messageNode.put("message", "I am really excited about today's class!");
-        ArrayNode content = mapper.createArrayNode();
+        final ArrayNode content = mapper.createArrayNode();
         content.add(messageNode);
         final JsonNode jsonContent = content;
 
@@ -151,9 +164,9 @@ class RequestFactoryTest {
 
     @Test
     void testGetRequestQna() throws IOException {
-        String question = "What were the main points discussed?";
-        String accumulatedSummary = "The team discussed project timeline and budget";
-        AiRequestable request = requestFactory.getRequest("QNA", question, accumulatedSummary);
+        final String question = "What were the main points discussed?";
+        final String accumulatedSummary = "The team discussed project timeline and budget";
+        final AiRequestable request = requestFactory.getRequest("QNA", question, accumulatedSummary);
         assertNotNull(request);
         assertNotNull(request.getInput());
         assertEquals("QNA", request.getReqType());
@@ -164,7 +177,7 @@ class RequestFactoryTest {
     @Test
     void testGetRequestDefault() throws IOException {
         final String unknownType = "UNKNOWN";
-        AiRequestable request = requestFactory.getRequest(unknownType, "some data");
+        final AiRequestable request = requestFactory.getRequest(unknownType, "some data");
         assertNull(request);
     }
 
