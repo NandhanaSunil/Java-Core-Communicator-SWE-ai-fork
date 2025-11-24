@@ -63,13 +63,13 @@ public class AiDescriptionRequest implements AiRequestable {
         type = "DESC";
     }
 
-    /**
-     * Constructs an AIDescriptionRequest.
-     * Initializes the metadata with a prompt given by the user.
-     * @param inputData gets the image data
-     * @param prompt gets the prompt given by the user
-     * @throws IOException in case of any exception
-     */
+//    /**
+//     * Constructs an AIDescriptionRequest.
+//     * Initializes the metadata with a prompt given by the user.
+//     * @param inputData gets the image data
+//     * @param prompt gets the prompt given by the user
+//     * @throws IOException in case of any exception
+//     */
 //    public AiDescriptionRequest(final WhiteBoardData inputData,
 //                                final String prompt) throws IOException {
 //        // constructor, initialised the metadata,
