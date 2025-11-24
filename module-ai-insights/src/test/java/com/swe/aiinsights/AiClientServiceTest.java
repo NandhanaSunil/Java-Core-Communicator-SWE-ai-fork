@@ -7,6 +7,12 @@
  * -----------------------------------------------------------------------------
  */
 
+/*
+ * Tried using reflection
+ * but AsyncAiExecutor is declared static, hence cannot be mocked!
+ * Making actual http calls
+ */
+
 package com.swe.aiinsights;
 
 import com.fasterxml.jackson.databind.JsonNode;

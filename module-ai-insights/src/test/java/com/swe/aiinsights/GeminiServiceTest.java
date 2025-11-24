@@ -7,6 +7,12 @@
  * -----------------------------------------------------------------------------
  */
 
+/*
+ * References :
+ * https://www.baeldung.com/java-reflection,
+ * https://medium.com/@AlexanderObregon/how-to-test-private-methods-in-java-ec1872e81911
+ */
+
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiservice.GeminiService;
