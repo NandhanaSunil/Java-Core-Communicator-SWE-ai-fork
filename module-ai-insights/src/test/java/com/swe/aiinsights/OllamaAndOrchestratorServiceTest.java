@@ -9,7 +9,6 @@
 
 package com.swe.aiinsights;
 
-import com.swe.aiinsights.aiservice.GeminiService;
 import com.swe.aiinsights.aiservice.LlmOrchestratorService;
 import com.swe.aiinsights.aiservice.LlmService;
 import com.swe.aiinsights.aiservice.OllamaService;
@@ -18,7 +17,10 @@ import com.swe.aiinsights.generaliser.RequestGeneraliser;
 import com.swe.aiinsights.modeladapter.OllamaAdapter;
 import com.swe.aiinsights.response.AiResponse;
 import io.github.cdimascio.dotenv.Dotenv;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -30,10 +32,15 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 /**
  * Tests for OllamaService and LlmOrchestratorService
@@ -41,12 +48,21 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class OllamaAndOrchestratorServiceTest {
 
+    /**
+     * mock dotenv object.
+     */
     @Mock
     private Dotenv mockDotenv;
 
+    /**
+     * mock http client.
+     */
     @Mock
     private OkHttpClient mockHttpClient;
 
+    /**
+     * mock calling object.
+     */
     @Mock
     private Call mockCall;
 

@@ -12,17 +12,18 @@ package com.swe.aiinsights;
 import com.swe.aiinsights.customexceptions.RateLimitException;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class RateLimitExceptionTest {
 
     @Test
     void testConstructorWithMessage() {
-        String errorMessage = "Rate limit exceeded";
+        final String errorMessage = "Rate limit exceeded";
 
-        RateLimitException exception = new RateLimitException(errorMessage);
+        final RateLimitException exception = new RateLimitException(errorMessage);
 
         assertNotNull(exception);
         assertEquals(errorMessage, exception.getMessage());
@@ -30,7 +31,7 @@ class RateLimitExceptionTest {
 
     @Test
     void testConstructorWithNull() {
-        RateLimitException exception = new RateLimitException(null);
+        final RateLimitException exception = new RateLimitException(null);
 
         assertNotNull(exception);
         assertNull(exception.getMessage());
