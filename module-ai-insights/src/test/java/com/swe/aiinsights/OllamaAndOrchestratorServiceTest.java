@@ -43,7 +43,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.never;
 
 /**
- * Tests for OllamaService and LlmOrchestratorService
+ * Tests for OllamaService and LlmOrchestratorService.
  */
 @ExtendWith(MockitoExtension.class)
 class OllamaAndOrchestratorServiceTest {
@@ -66,26 +66,42 @@ class OllamaAndOrchestratorServiceTest {
     @Mock
     private Call mockCall;
 
+    /**
+     * mockResponse.
+     */
     @Mock
     private Response mockResponse;
 
+    /**
+     * mockResponseBody.
+     */
     @Mock
     private ResponseBody mockResponseBody;
 
+    /**
+     * mock RequestGeneralilser.
+     */
     @Mock
     private RequestGeneraliser mockRequestGeneraliser;
 
+    /**
+     * mockAiResponse.
+     */
     @Mock
     private AiResponse mockAiResponse;
 
+    /**
+     * mock LLmService.
+     */
     @Mock
     private LlmService mockLlmService1;
 
+    /**
+     * mock Llmservice.
+     */
     @Mock
     private LlmService mockLlmService2;
 
-    @Mock
-    private LlmService mockLlmService3;
 
     // test constructor of Ollama service
     @Test
@@ -102,14 +118,13 @@ class OllamaAndOrchestratorServiceTest {
     //test successful execution of run process in Ollama Service
     @Test
     void testOllamaServiceRunProcessSuccess() throws Exception {
-        // Arrange
         try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
             dotenvMock.when(Dotenv::load).thenReturn(mockDotenv);
             lenient().when(mockDotenv.get("OLLAMA_URL")).thenReturn("http://localhost:11434/api/generate");
 
-            OllamaService service = new OllamaService();
+            final OllamaService service = new OllamaService();
 
-            var httpClientField = OllamaService.class.getDeclaredField("httpClient");
+            final var httpClientField = OllamaService.class.getDeclaredField("httpClient");
             httpClientField.setAccessible(true);
             httpClientField.set(service, mockHttpClient);
 
@@ -124,8 +139,9 @@ class OllamaAndOrchestratorServiceTest {
                 when(mockHttpClient.newCall(any())).thenReturn(mockCall);
                 when(mockCall.execute()).thenReturn(mockResponse);
                 when(mockResponse.isSuccessful()).thenReturn(true);
-                when(mockResponse.code()).thenReturn(200);
-                AiResponse result = service.runProcess(mockRequestGeneraliser);
+                final int success = 200;
+                when(mockResponse.code()).thenReturn(success);
+                final AiResponse result = service.runProcess(mockRequestGeneraliser);
 
                 assertNotNull(result);
                 verify(mockAiResponse).setResponse("Ollama response");
@@ -140,9 +156,9 @@ class OllamaAndOrchestratorServiceTest {
             dotenvMock.when(Dotenv::load).thenReturn(mockDotenv);
             lenient().when(mockDotenv.get("OLLAMA_URL")).thenReturn("http://localhost:11434/api/generate");
 
-            OllamaService service = new OllamaService();
+            final OllamaService service = new OllamaService();
 
-            var httpClientField = OllamaService.class.getDeclaredField("httpClient");
+            final var httpClientField = OllamaService.class.getDeclaredField("httpClient");
             httpClientField.setAccessible(true);
             httpClientField.set(service, mockHttpClient);
 
@@ -156,7 +172,8 @@ class OllamaAndOrchestratorServiceTest {
                 when(mockHttpClient.newCall(any())).thenReturn(mockCall);
                 when(mockCall.execute()).thenReturn(mockResponse);
                 when(mockResponse.isSuccessful()).thenReturn(false);
-                when(mockResponse.code()).thenReturn(500);
+                final int error = 500;
+                when(mockResponse.code()).thenReturn(error);
                 when(mockResponse.body()).thenReturn(mockResponseBody);
                 when(mockResponseBody.string()).thenReturn("Internal server error");
 
@@ -195,37 +212,34 @@ class OllamaAndOrchestratorServiceTest {
     // first service will be successful
     @Test
     void testOrchestratorRunProcessFirstService() throws IOException {
-        List<LlmService> services = Arrays.asList(mockLlmService1, mockLlmService2);
-        LlmOrchestratorService orchestrator = new LlmOrchestratorService(services);
+        final List<LlmService> services = Arrays.asList(mockLlmService1, mockLlmService2);
+        final LlmOrchestratorService orchestrator = new LlmOrchestratorService(services);
         when(mockLlmService1.runProcess(any())).thenReturn(mockAiResponse);
-        AiResponse result = orchestrator.runProcess(mockRequestGeneraliser);
+        final AiResponse result = orchestrator.runProcess(mockRequestGeneraliser);
         assertNotNull(result);
         verify(mockLlmService1).runProcess(mockRequestGeneraliser);
         verify(mockLlmService2, never()).runProcess(any());
     }
 
     @Test
-    void testOrchestrator_RunProcess_FirstFailsSecondSucceeds() throws IOException {
-        // Arrange
-        List<LlmService> services = Arrays.asList(mockLlmService1, mockLlmService2);
-        LlmOrchestratorService orchestrator = new LlmOrchestratorService(services);
+    void testOrchestratorRunProcessFirstFailSecondSuccess() throws IOException {
+        final List<LlmService> services = Arrays.asList(mockLlmService1, mockLlmService2);
+        final LlmOrchestratorService orchestrator = new LlmOrchestratorService(services);
 
         when(mockLlmService1.runProcess(any())).thenThrow(new RateLimitException("Rate limit hit"));
         when(mockLlmService2.runProcess(any())).thenReturn(mockAiResponse);
 
-        // Act
         AiResponse result = orchestrator.runProcess(mockRequestGeneraliser);
 
-        // Assert
         assertNotNull(result);
         verify(mockLlmService1).runProcess(mockRequestGeneraliser);
         verify(mockLlmService2).runProcess(mockRequestGeneraliser);
     }
 
     @Test
-    void testOrchestrator_RunProcess_AllServicesFail() throws IOException {
-        List<LlmService> services = Arrays.asList(mockLlmService1, mockLlmService2);
-        LlmOrchestratorService orchestrator = new LlmOrchestratorService(services);
+    void testOrchestratorRunProcessAllServicesFail() throws IOException {
+        final List<LlmService> services = Arrays.asList(mockLlmService1, mockLlmService2);
+        final LlmOrchestratorService orchestrator = new LlmOrchestratorService(services);
 
         when(mockLlmService1.runProcess(any())).thenThrow(new RateLimitException("Rate limit 1"));
         when(mockLlmService2.runProcess(any())).thenThrow(new RateLimitException("Rate limit 2"));

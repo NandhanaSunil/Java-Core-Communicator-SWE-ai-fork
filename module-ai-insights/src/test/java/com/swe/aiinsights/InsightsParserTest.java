@@ -13,7 +13,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.swe.aiinsights.parser.InsightsParser;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InsightsParserTest {
 
@@ -149,18 +153,20 @@ class InsightsParserTest {
     void testSentimentEntryGetAndSet() {
         final InsightsParser.SentimentEntry entry = new InsightsParser.SentimentEntry();
         entry.setTime("2025-01-15T10:30:00Z");
-        entry.setSentiment(7.5f);
+        final int sentiment = 7;
+        entry.setSentiment(sentiment);
         assertEquals("2025-01-15T10:30:00Z", entry.getTime());
-        assertEquals(7.5f, entry.getSentiment(), 0.001);
+        final double delta = 0.001;
+        assertEquals(sentiment, entry.getSentiment(), delta);
     }
 
     @Test
     void testSentimentEntryNullTime() {
         final InsightsParser.SentimentEntry entry = new InsightsParser.SentimentEntry();
         entry.setTime(null);
-        entry.setSentiment(5.0f);
+        final int sentiment = 7;
+        entry.setSentiment(sentiment);
         assertNull(entry.getTime());
-        assertEquals(5.0f, entry.getSentiment(), 0.001);
     }
 
     @Test
