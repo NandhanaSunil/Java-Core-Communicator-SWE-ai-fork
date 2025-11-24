@@ -47,9 +47,6 @@ class AiInstanceTest {
         instance.set(null, null);
     }
 
-
-    // ==================== Singleton Pattern Tests ====================
-
     @Test
     void testGetInstance() throws Exception {
         resetSingleton();

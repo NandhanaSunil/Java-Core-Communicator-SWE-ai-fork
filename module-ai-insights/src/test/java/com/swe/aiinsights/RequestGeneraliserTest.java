@@ -165,8 +165,6 @@ class RequestGeneraliserTest {
 
     @Test
     void testAiQnARequestGeneralisation() throws IOException {
-
-        // Arrange
         when(aiQuestionAnswerRequest.getInput()).thenReturn("chat data");
         when(aiQuestionAnswerRequest.getContext()).thenReturn("question");
         when(aiQuestionAnswerRequest.getReqType()).thenReturn("QNA");
@@ -186,7 +184,6 @@ class RequestGeneraliserTest {
 
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
-        // Arrange
         when(aiActionItemsRequest.getInput()).thenReturn(node);
         when(aiActionItemsRequest.getContext()).thenReturn("action items");
         when(aiActionItemsRequest.getReqType()).thenReturn("ACTION");
@@ -203,7 +200,6 @@ class RequestGeneraliserTest {
 
     @Test
     void testAiResponse() throws IOException {
-        // Arrange
         when(aiDescriptionRequest.getInput()).thenReturn("image_base64_data");
         when(aiDescriptionRequest.getContext()).thenReturn("describe");
         when(aiDescriptionRequest.getReqType()).thenReturn("DESC");
@@ -221,7 +217,6 @@ class RequestGeneraliserTest {
 
     @Test
     void testFormatRegularise() throws IOException {
-        // Arrange
         when(regularisationRequest.getInput()).thenReturn("""
                 {
                   "ShapeId": "c585b84a",
@@ -279,7 +274,6 @@ class RequestGeneraliserTest {
 
     @Test
     void testFormatInsights() throws IOException {
-        // Arrange
         final ObjectMapper mapper = new ObjectMapper();
         final JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
         when(aiInsightsRequest.getInput()).thenReturn(node);
@@ -337,7 +331,16 @@ class RequestGeneraliserTest {
         assertNotNull(output);
     }
 
+    @Test
+    void testDefault() throws IOException {
+        when(regularisationRequest.getReqType()).thenReturn("DEFAULT");
+        when(regularisationRequest.getInput()).thenReturn("dummy input");
+        when(regularisationRequest.getContext()).thenReturn("dummy prompt");
 
+        final RequestGeneraliser reg = new RequestGeneraliser(regularisationRequest);
+
+        assertNull(reg.getAiResponse());
+    }
 
 
 

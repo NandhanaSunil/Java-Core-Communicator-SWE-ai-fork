@@ -28,8 +28,7 @@
   *     1. Strategy & Factory Method Patterns (GoF)
  * </p>
  *
- * @author Abhirami R Iyer
- * @editedby Nandhana Sunil
+ * @editedby Nandhana Sunil, Abhirami R Iyer
  */
 
 package com.swe.aiinsights.generaliser;

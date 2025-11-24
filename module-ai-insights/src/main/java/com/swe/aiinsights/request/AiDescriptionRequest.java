@@ -63,22 +63,22 @@ public class AiDescriptionRequest implements AiRequestable {
         type = "DESC";
     }
 
-    /**
-     * Constructs an AIDescriptionRequest.
-     * Initializes the metadata with a prompt given by the user.
-     * @param inputData gets the image data
-     * @param prompt gets the prompt given by the user
-     * @throws IOException in case of any exception
-     */
-    public AiDescriptionRequest(final WhiteBoardData inputData,
-                                final String prompt) throws IOException {
-        // constructor, initialised the metadata,
-        // adding the prompt (if given by the user).
-        LOG.info("Creating Description Request..");
-        metaData = new HashMap<>();
-        metaData.put("InputData", inputData.getContent());
-        metaData.put("RequestPrompt", prompt);
-    }
+//    /**
+//     * Constructs an AIDescriptionRequest.
+//     * Initializes the metadata with a prompt given by the user.
+//     * @param inputData gets the image data
+//     * @param prompt gets the prompt given by the user
+//     * @throws IOException in case of any exception
+//     */
+//    public AiDescriptionRequest(final WhiteBoardData inputData,
+//                                final String prompt) throws IOException {
+//        // constructor, initialised the metadata,
+//        // adding the prompt (if given by the user).
+//        LOG.info("Creating Description Request..");
+//        metaData = new HashMap<>();
+//        metaData.put("InputData", inputData.getContent());
+//        metaData.put("RequestPrompt", prompt);
+//    }
 
 
     /**
