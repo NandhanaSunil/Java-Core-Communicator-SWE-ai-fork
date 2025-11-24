@@ -28,9 +28,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class AsyncConfigTest {
 
+
     @Test
     void testAiExecutorReturnsExecutor() {
+
         final Executor executor = AsyncConfig.aiExecutor();
+
+
         assertTrue(executor instanceof ThreadPoolExecutor);
     }
 
@@ -38,14 +42,19 @@ class AsyncConfigTest {
 
     @Test
     void testAiExecutorCanExecuteTasks() throws InterruptedException {
+
         final Executor executor = AsyncConfig.aiExecutor();
         final CountDownLatch latch = new CountDownLatch(1);
         final AtomicInteger counter = new AtomicInteger(0);
+
+
         executor.execute(() -> {
             counter.incrementAndGet();
             latch.countDown();
         });
+
         final boolean completed = latch.await(5, TimeUnit.SECONDS);
+
         assertTrue(completed);
         assertEquals(1, counter.get());
     }
@@ -56,13 +65,16 @@ class AsyncConfigTest {
         final int taskCount = 10;
         final CountDownLatch latch = new CountDownLatch(taskCount);
         final AtomicInteger counter = new AtomicInteger(0);
+
         for (int i = 0; i < taskCount; i++) {
             executor.execute(() -> {
                 counter.incrementAndGet();
                 latch.countDown();
             });
         }
+
         final boolean completed = latch.await(10, TimeUnit.SECONDS);
+
         assertTrue(completed);
         assertEquals(taskCount, counter.get());
     }

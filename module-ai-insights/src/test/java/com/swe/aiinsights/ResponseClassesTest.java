@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------------------------
- *  File: RequestGeneraliserTest.java
+ *  File: ResponseClassesTest.java
  *  Owner: Berelli Gouthami
  *  Roll Number : 112201003
  *  Module : com.swe.aiinsights
