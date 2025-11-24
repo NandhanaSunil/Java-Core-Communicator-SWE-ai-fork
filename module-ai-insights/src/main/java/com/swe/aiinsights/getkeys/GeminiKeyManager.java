@@ -80,8 +80,8 @@ public final class GeminiKeyManager {
         final int currentIndex = apiKeyIndex.get();
         final String currentKey = apiKeys.get(Math.abs(currentIndex));
         if (currentKey.equals(expiredKey)) {
-            apiKeyIndex.compareAndSet(currentIndex, currentIndex + 1);
-            System.out.println(apiKeyIndex);
+            apiKeyIndex.compareAndSet(currentIndex, (currentIndex + 1%apiKeys.size()));
+            // System.out.println(apiKeyIndex);
         }
     }
 
