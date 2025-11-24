@@ -229,7 +229,7 @@ class OllamaAndOrchestratorServiceTest {
         when(mockLlmService1.runProcess(any())).thenThrow(new RateLimitException("Rate limit hit"));
         when(mockLlmService2.runProcess(any())).thenReturn(mockAiResponse);
 
-        AiResponse result = orchestrator.runProcess(mockRequestGeneraliser);
+        final AiResponse result = orchestrator.runProcess(mockRequestGeneraliser);
 
         assertNotNull(result);
         verify(mockLlmService1).runProcess(mockRequestGeneraliser);
