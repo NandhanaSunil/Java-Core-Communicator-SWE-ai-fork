@@ -13,9 +13,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swe.aiinsights.data.WhiteBoardData;
 import com.swe.aiinsights.generaliser.RequestGeneraliser;
-import com.swe.aiinsights.request.*;
+import com.swe.aiinsights.request.AiDescriptionRequest;
+import com.swe.aiinsights.request.AiRegularisationRequest;
+import com.swe.aiinsights.request.AiSummarisationRequest;
+import com.swe.aiinsights.request.AiInsightsRequest;
+import com.swe.aiinsights.request.AiActionItemsRequest;
+import com.swe.aiinsights.request.AiQuestionAnswerRequest;
 import com.swe.aiinsights.response.AiResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,7 +27,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 /**
@@ -60,25 +66,25 @@ class RequestGeneraliserTest {
      * Mocked action items request.
      */
     @Mock
-    AiActionItemsRequest aiActionItemsRequest;
+    private AiActionItemsRequest aiActionItemsRequest;
 
     /**
      * AiQuestionAnswer test - mocked.
      */
     @Mock
-    AiQuestionAnswerRequest aiQuestionAnswerRequest;
+    private AiQuestionAnswerRequest aiQuestionAnswerRequest;
 
     /**
      * Description request mocked.
      */
     @Mock
-    AiDescriptionRequest aiDescriptionRequest;
+    private AiDescriptionRequest aiDescriptionRequest;
 
     /**
-     * mockedd json node
+     * mockedd json node.
      */
     @Mock
-    JsonNode jsonChat;
+    private JsonNode jsonChat;
 
     /**
      * object mapper to create json.
@@ -98,7 +104,7 @@ class RequestGeneraliserTest {
 
         assertNotNull(req);
         assertEquals("DESC", req.getReqType());
-        assertEquals("image_base64_data",req.getImgData());
+        assertEquals("image_base64_data", req.getImgData());
         assertEquals("describe", req.getPrompt());
         assertNull(req.getTextData());
     }
@@ -117,7 +123,7 @@ class RequestGeneraliserTest {
         assertEquals("REG", req.getReqType());
         assertNull(req.getImgData());
         assertEquals("regularise", req.getPrompt());
-        assertEquals("points list",req.getTextData());
+        assertEquals("points list", req.getTextData());
     }
 
     @Test
@@ -134,7 +140,7 @@ class RequestGeneraliserTest {
         assertEquals("SUM", req.getReqType());
         assertNull(req.getImgData());
         assertEquals("summarise", req.getPrompt());
-        assertEquals("chat data",req.getTextData());
+        assertEquals("chat data", req.getTextData());
     }
 
 
@@ -154,7 +160,7 @@ class RequestGeneraliserTest {
         assertEquals("INS", req.getReqType());
         assertNull(req.getImgData());
         assertEquals("insights", req.getPrompt());
-        assertEquals("{\"chat data\":\"hi\"}",req.getTextData());
+        assertEquals("{\"chat data\":\"hi\"}", req.getTextData());
     }
 
     @Test
@@ -172,7 +178,7 @@ class RequestGeneraliserTest {
         assertEquals("QNA", req.getReqType());
         assertNull(req.getImgData());
         assertEquals("question", req.getPrompt());
-        assertEquals("chat data",req.getTextData());
+        assertEquals("chat data", req.getTextData());
     }
 
     @Test
@@ -192,7 +198,7 @@ class RequestGeneraliserTest {
         assertEquals("ACTION", req.getReqType());
         assertNull(req.getImgData());
         assertEquals("action items", req.getPrompt());
-        assertEquals("{\"chat data\":\"hi\"}",req.getTextData());
+        assertEquals("{\"chat data\":\"hi\"}", req.getTextData());
     }
 
     @Test
@@ -205,7 +211,7 @@ class RequestGeneraliserTest {
 
         final RequestGeneraliser req = new RequestGeneraliser(aiDescriptionRequest);
 
-        AiResponse response = req.getAiResponse();
+        final AiResponse response = req.getAiResponse();
         final String format = req.formatOutput(response);
         assertNotNull(response);
     }
@@ -244,9 +250,9 @@ class RequestGeneraliserTest {
         when(regularisationRequest.getReqType()).thenReturn("REG");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(regularisationRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(regularisationRequest);
 
-        AiResponse response = req.getAiResponse();
+        final AiResponse response = req.getAiResponse();
         response.setResponse("""
                 {
                   "ShapeId": "c585b84a",
@@ -267,23 +273,23 @@ class RequestGeneraliserTest {
                   "LastModifiedBy": "user_default",
                   "IsDeleted": false
                 }""");
-        String output = req.formatOutput(response);
+        final String output = req.formatOutput(response);
         assertNotNull(output);
     }
 
     @Test
     void testFormatInsights() throws IOException {
         // Arrange
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode node = mapper.readTree("{\"chat data\":\"hi\"}");
         when(aiInsightsRequest.getInput()).thenReturn(node);
         when(aiInsightsRequest.getContext()).thenReturn("insights");
         when(aiInsightsRequest.getReqType()).thenReturn("INS");
 
 
-        RequestGeneraliser req = new RequestGeneraliser(aiInsightsRequest);
+        final RequestGeneraliser req = new RequestGeneraliser(aiInsightsRequest);
 
-        AiResponse response = req.getAiResponse();
+        final AiResponse response = req.getAiResponse();
         response.setResponse("""
                 [
                   {
@@ -327,7 +333,7 @@ class RequestGeneraliserTest {
                     "sentiment": 3.0
                   }
                 ]""");
-        String output = req.formatOutput(response);
+        final String output = req.formatOutput(response);
         assertNotNull(output);
     }
 
