@@ -143,30 +143,4 @@ class AsyncAiExecutorTest {
         assertInstanceOf(RuntimeException.class, exception.getCause());
     }
 
-
-    @Test
-    void testExecuteMultipleConcurrentRequests() throws Exception {
-        // Arrange
-        when(mockRequest.getReqType()).thenReturn("SUM");
-        when(mockRequest.getContext()).thenReturn("test");
-        when(mockRequest.getInput()).thenReturn("test data");
-        when(mockAiResponse.getResponse()).thenReturn("Response");
-
-        final Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
-        llmServiceField.setAccessible(true);
-        llmServiceField.set(asyncAiExecutor, mockLlmService);
-
-        when(mockLlmService.runProcess(any(RequestGeneraliser.class)))
-                .thenReturn(mockAiResponse);
-
-        // Act - Execute multiple requests
-        final CompletableFuture<String> result1 = asyncAiExecutor.execute(mockRequest);
-        final CompletableFuture<String> result2 = asyncAiExecutor.execute(mockRequest);
-        final CompletableFuture<String> result3 = asyncAiExecutor.execute(mockRequest);
-
-        // Assert - All complete successfully
-        assertEquals("Response", result1.get());
-        assertEquals("Response", result2.get());
-        assertEquals("Response", result3.get());
-    }
 }

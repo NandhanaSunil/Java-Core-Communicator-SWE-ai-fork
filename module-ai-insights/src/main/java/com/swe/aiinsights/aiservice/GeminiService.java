@@ -161,6 +161,7 @@ public final class GeminiService implements LlmService {
                     continue;  // Skip the rest and restart loop
                 }
                 if (response.code() == permissionDenied) {
+                    // this part wouldn't be reachable in tests
                     LOG.debug("Permission denied for the key\n");
                     keyManager.setKeyIndex(currentKey);
                     attempt++; // Increment attempt and loop again to try next key
