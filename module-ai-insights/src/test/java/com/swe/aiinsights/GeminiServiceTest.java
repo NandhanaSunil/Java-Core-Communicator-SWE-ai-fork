@@ -16,16 +16,27 @@ import com.swe.aiinsights.getkeys.GeminiKeyManager;
 import com.swe.aiinsights.modeladapter.GeminiAdapter;
 import com.swe.aiinsights.response.AiResponse;
 import io.github.cdimascio.dotenv.Dotenv;
-import okhttp3.*;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.Call;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
 
 /**
  * Test class for GeminiService.
@@ -39,85 +50,84 @@ class GeminiServiceTest {
     private OkHttpClient mockHttpClient;
 
     /**
-     * Mock http call
+     * Mock http call.
      */
     @Mock
     private Call mockCall;
 
     /**
-     * Mock response
+     * Mock response.
      */
     @Mock
     private Response mockResponse;
 
     /**
-     * Mock request generaliser
+     * Mock request generaliser.
      */
     @Mock
     private RequestGeneraliser mockRequestGeneraliser;
 
     /**
-     * mocked response
+     * mocked response.
      */
     @Mock
     private AiResponse mockAiResponse;
 
     /**
-     * response body mock
+     * response body mock.
      */
     @Mock
     private ResponseBody mockResponseBody;
 
-@Test
-void testRunProcessSuccessCoversHappyPath() throws Exception {
-    // Mock GeminiKeyManager construction
-    try (MockedConstruction<GeminiKeyManager> keyManagerMock = mockConstruction(
-            GeminiKeyManager.class,
-            (mock, context) -> {
-                when(mock.getNumberOfKeys()).thenReturn(3);
-                when(mock.getCurrentKey()).thenReturn("test-key-1");
-            })) {
-
-        try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
-            final Dotenv localMockDotenv = mock(Dotenv.class);
-            dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
-            lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
-
-            GeminiService service = new GeminiService();
-
-            final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
-            httpClientField.setAccessible(true);
-            httpClientField.set(service, mockHttpClient);
-
-            try (MockedConstruction<GeminiAdapter> adapterMock = mockConstruction(
-                    GeminiAdapter.class,
-                    (mock, context) -> {
-                        when(mock.buildRequest(any())).thenReturn("{\"request\":\"body\"}");
-                        when(mock.getResponse(any())).thenReturn("AI response text");
-                    })) {
-
-                when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
-                when(mockHttpClient.newCall(any())).thenReturn(mockCall);
-                when(mockCall.execute()).thenReturn(mockResponse);
-                when(mockResponse.isSuccessful()).thenReturn(true);
-
-                // Act
-                final AiResponse result = service.runProcess(mockRequestGeneraliser);
-
-                // Assert
-                assertNotNull(result);
-                verify(mockAiResponse).setResponse("AI response text");
-            }
-        }
-    }
-}
-
     @Test
-    void testRunProcessRateLimitHitSwitchesKey() throws Exception {
+    void testRunProcessSuccessCoversHappyPath() throws Exception {
+        final int numKeys = 3;
         try (MockedConstruction<GeminiKeyManager> keyManagerMock = mockConstruction(
                 GeminiKeyManager.class,
                 (mock, context) -> {
-                    when(mock.getNumberOfKeys()).thenReturn(2);
+                    when(mock.getNumberOfKeys()).thenReturn(numKeys);
+                    when(mock.getCurrentKey()).thenReturn("test-key-1");
+                })) {
+
+            try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
+                final Dotenv localMockDotenv = mock(Dotenv.class);
+                dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
+                lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
+
+                final GeminiService service = new GeminiService();
+
+                final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
+                httpClientField.setAccessible(true);
+                httpClientField.set(service, mockHttpClient);
+
+                try (MockedConstruction<GeminiAdapter> adapterMock = mockConstruction(
+                        GeminiAdapter.class,
+                        (mock, context) -> {
+                            when(mock.buildRequest(any())).thenReturn("{\"request\":\"body\"}");
+                            when(mock.getResponse(any())).thenReturn("AI response text");
+                        })) {
+
+                    when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
+                    when(mockHttpClient.newCall(any())).thenReturn(mockCall);
+                    when(mockCall.execute()).thenReturn(mockResponse);
+                    when(mockResponse.isSuccessful()).thenReturn(true);
+
+                    final AiResponse result = service.runProcess(mockRequestGeneraliser);
+
+                    assertNotNull(result);
+                    verify(mockAiResponse).setResponse("AI response text");
+                }
+            }
+        }
+    }
+
+    @Test
+    void testRunProcessRateLimitHitSwitchesKey() throws Exception {
+        final int numKeys = 2;
+        try (MockedConstruction<GeminiKeyManager> keyManagerMock = mockConstruction(
+                GeminiKeyManager.class,
+                (mock, context) -> {
+                    when(mock.getNumberOfKeys()).thenReturn(numKeys);
                     when(mock.getCurrentKey())
                             .thenReturn("key1")
                             .thenReturn("key2");
@@ -144,9 +154,10 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                     when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
                     when(mockHttpClient.newCall(any())).thenReturn(mockCall);
 
+                    final int rateLimitCode = 429;
                     final Response rateLimitResponse = mock(Response.class);
                     when(rateLimitResponse.isSuccessful()).thenReturn(false);
-                    when(rateLimitResponse.code()).thenReturn(429);
+                    when(rateLimitResponse.code()).thenReturn(rateLimitCode);
 
                     when(mockCall.execute())
                             .thenReturn(rateLimitResponse)
@@ -160,7 +171,7 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                     assertNotNull(result);
 
                     // Get the mocked GeminiKeyManager
-                    GeminiKeyManager keyManager = keyManagerMock.constructed().get(0);
+                    final GeminiKeyManager keyManager = keyManagerMock.constructed().get(0);
                     verify(keyManager).setKeyIndex("key1");
                     verify(mockCall, times(2)).execute();
                 }
@@ -180,7 +191,8 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
             try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
                 final Dotenv localMockDotenv = mock(Dotenv.class);
                 dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
-                lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
+                lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn(
+                        "https://api.gemini.com/");
 
                 final GeminiService service = new GeminiService();
 
@@ -191,15 +203,17 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                 try (MockedConstruction<GeminiAdapter> adapterMock = mockConstruction(
                         GeminiAdapter.class,
                         (mock, context) -> {
-                            lenient().when(mock.buildRequest(any())).thenReturn("{\"request\":\"body\"}"); // ADD lenient()
+                            lenient().when(mock.buildRequest(any())).thenReturn(
+                                    "{\"request\":\"body\"}");
                         })) {
 
-                    lenient().when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse); // ADD lenient()
+                    lenient().when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
                     when(mockHttpClient.newCall(any())).thenReturn(mockCall);
 
+                    final int successCode = 500;
                     final Response errorResponse = mock(Response.class);
                     when(errorResponse.isSuccessful()).thenReturn(false);
-                    when(errorResponse.code()).thenReturn(500);
+                    when(errorResponse.code()).thenReturn(successCode);
 
                     when(mockCall.execute()).thenReturn(errorResponse);
 
@@ -224,33 +238,35 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                 })) {
 
             try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
-                Dotenv localMockDotenv = mock(Dotenv.class);
+                final Dotenv localMockDotenv = mock(Dotenv.class);
                 dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
                 lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
 
-                GeminiService service = new GeminiService();
+                final GeminiService service = new GeminiService();
 
-                var httpClientField = GeminiService.class.getDeclaredField("httpClient");
+                final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
                 httpClientField.setAccessible(true);
                 httpClientField.set(service, mockHttpClient);
 
                 try (MockedConstruction<GeminiAdapter> adapterMock = mockConstruction(
                         GeminiAdapter.class,
                         (mock, context) -> {
-                            lenient().when(mock.buildRequest(any())).thenReturn("{\"request\":\"body\"}"); // ADD lenient()
+                            lenient().when(mock.buildRequest(
+                                    any())).thenReturn("{\"request\":\"body\"}");
                         })) {
 
-                    lenient().when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse); // ADD lenient()
+                    lenient().when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
                     when(mockHttpClient.newCall(any())).thenReturn(mockCall);
 
-                    Response rateLimitResponse = mock(Response.class);
+                    final int rateLimitCode = 429;
+                    final Response rateLimitResponse = mock(Response.class);
                     when(rateLimitResponse.isSuccessful()).thenReturn(false);
-                    when(rateLimitResponse.code()).thenReturn(429);
+                    when(rateLimitResponse.code()).thenReturn(rateLimitCode);
 
                     when(mockCall.execute()).thenReturn(rateLimitResponse);
 
                     // Act & Assert
-                    RateLimitException exception = assertThrows(RateLimitException.class, () -> {
+                    final RateLimitException exception = assertThrows(RateLimitException.class, () -> {
                         service.runProcess(mockRequestGeneraliser);
                     });
 
