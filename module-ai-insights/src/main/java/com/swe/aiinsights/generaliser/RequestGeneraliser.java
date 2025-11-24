@@ -98,7 +98,7 @@ public class RequestGeneraliser {
 
         this.reqType = request.getReqType();
         if (Objects.equals(reqType, "DESC")) {
-            setImgData(request.getInput().toString());
+            setImgData((String) request.getInput());
         } else {
             setTextData(request.getInput().toString());
         }

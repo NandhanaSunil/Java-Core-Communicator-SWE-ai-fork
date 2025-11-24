@@ -46,8 +46,7 @@ public class RequestFactory {
         switch (requestType) {
             case "DESC" :
                 LOG.info("Creating description request");
-                final String filePath = (String) args[0];
-                final WhiteBoardData data = new WhiteBoardData(filePath);
+                final WhiteBoardData data = (WhiteBoardData) args[0];
                 request = new AiDescriptionRequest(data);
                 break;
             case "REG" :
