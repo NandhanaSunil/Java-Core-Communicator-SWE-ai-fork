@@ -474,8 +474,6 @@ class AiClientServiceTest {
         assertNotNull(result);
     }
 
-
-
 }
 
 

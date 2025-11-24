@@ -10,6 +10,7 @@
  *          2. https://www.baeldung.com/java-mockito-mockedconstruction
  * -----------------------------------------------------------------------------
  */
+
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiinstance.AiInstance;
@@ -19,15 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ConcurrentHashMap;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockConstruction;
 
@@ -43,11 +36,10 @@ class AiInstanceTest {
     }
 
     /**
-     * Helper method to reset the singleton instance using reflection
-     * This is reused
+     * Helper method to reset the singleton instance using reflection.
      */
     private void resetSingleton() throws Exception {
-        Field instance = AiInstance.class.getDeclaredField("aiClientService");
+        final Field instance = AiInstance.class.getDeclaredField("aiClientService");
         instance.setAccessible(true);
         instance.set(null, null);
     }
@@ -59,8 +51,8 @@ class AiInstanceTest {
     void testGetInstance() throws Exception {
         resetSingleton();
 
-        AiClientService instance1 = AiInstance.getInstance();
-        AiClientService instance2 = AiInstance.getInstance();
+        final AiClientService instance1 = AiInstance.getInstance();
+        final AiClientService instance2 = AiInstance.getInstance();
 
         assertNotNull(instance1);
         assertNotNull(instance2);
@@ -76,7 +68,7 @@ class AiInstanceTest {
                                  throw new RuntimeException("Simulating failure");
                              })) {
 
-            RuntimeException ex = assertThrows(RuntimeException.class, AiInstance::getInstance);
+            final RuntimeException ex = assertThrows(RuntimeException.class, AiInstance::getInstance);
 
             assertEquals("AI Service Initialization Failed", ex.getMessage());
         }

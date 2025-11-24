@@ -109,7 +109,7 @@
                         <!-- Load checkstyle from module-ai-insights/ -->
                         <configLocation>checkstyle.xml</configLocation>
                         <suppressionsLocation></suppressionsLocation>
-
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <encoding>UTF-8</encoding>
                         <consoleOutput>true</consoleOutput>
                         <failsOnError>true</failsOnError>
