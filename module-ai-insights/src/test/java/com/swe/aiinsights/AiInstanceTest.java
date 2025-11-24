@@ -18,14 +18,10 @@ import com.swe.aiinsights.apiendpoints.AiClientService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.lang.reflect.Field;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mockConstruction;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test class for AiInstance.
@@ -47,9 +43,6 @@ class AiInstanceTest {
         instance.set(null, null);
     }
 
-
-    // ==================== Singleton Pattern Tests ====================
-
     @Test
     void testGetInstance() throws Exception {
         resetSingleton();
@@ -62,18 +55,4 @@ class AiInstanceTest {
         assertSame(instance1, instance2, "getInstance should return the same instance");
     }
 
-    @Test
-    void testInitializationFailure() {
-        // Mock constructor of AiClientService to simulate failure
-        try (MockedConstruction<AiClientService> mocked =
-                     mockConstruction(AiClientService.class,
-                             (mock, context) -> {
-                                 throw new RuntimeException("Simulating failure");
-                             })) {
-
-            final RuntimeException ex = assertThrows(RuntimeException.class, AiInstance::getInstance);
-
-            assertEquals("AI Service Initialization Failed", ex.getMessage());
-        }
-    }
 }

@@ -70,15 +70,15 @@ public class AiDescriptionRequest implements AiRequestable {
      * @param prompt gets the prompt given by the user
      * @throws IOException in case of any exception
      */
-    public AiDescriptionRequest(final WhiteBoardData inputData,
-                                final String prompt) throws IOException {
-        // constructor, initialised the metadata,
-        // adding the prompt (if given by the user).
-        LOG.info("Creating Description Request..");
-        metaData = new HashMap<>();
-        metaData.put("InputData", inputData.getContent());
-        metaData.put("RequestPrompt", prompt);
-    }
+//    public AiDescriptionRequest(final WhiteBoardData inputData,
+//                                final String prompt) throws IOException {
+//        // constructor, initialised the metadata,
+//        // adding the prompt (if given by the user).
+//        LOG.info("Creating Description Request..");
+//        metaData = new HashMap<>();
+//        metaData.put("InputData", inputData.getContent());
+//        metaData.put("RequestPrompt", prompt);
+//    }
 
 
     /**
