@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------------------------
- *  File: RequestFactory.java
+ *  File: RequestFactoryTest.java
  *  Owner: Berelli Gouthami
  *  Roll Number : 112201003
  *  Module : com.swe.aiinsights
@@ -23,28 +23,29 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 
 
 /**
  * Test class for RequestFactory.
  */
 class RequestFactoryTest {
-
     /**
-     * RequestFactory object
+     * request factory for testing.
      */
     private RequestFactory requestFactory;
-
     /**
-     * ObjectMapper
+     * object mapper for building json.
      */
     private ObjectMapper objectMapper;
 
+    /**
+     * to create a temporary png.
+     */
     @TempDir
     private Path tempDir;
 
@@ -60,7 +61,7 @@ class RequestFactoryTest {
         final Path testFile = tempDir.resolve("test-image.png");
         Files.write(testFile, "test image data".getBytes());
         final String filePath = testFile.toString();
-        AiRequestable request = requestFactory.getRequest("DESC", filePath);
+        final AiRequestable request = requestFactory.getRequest("DESC", filePath);
         assertNotNull(request);
         assertNotNull(request.getInput());
         assertEquals("DESC", request.getReqType());

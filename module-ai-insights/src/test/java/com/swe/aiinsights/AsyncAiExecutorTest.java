@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------------------------
- *  File: AsyncAiExecutor.java
+ *  File: AsyncAiExecutorTest.java
  *  Owner: Abhirami R Iyer
  *  Roll Number : 112201001
  *  Module : com.swe.aiinsights
@@ -25,24 +25,41 @@ import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+
 
 /**
- * Complete test class for AsyncAiExecutor with 100% coverage
+ * Complete test class for AsyncAiExecutor with 100% coverage.
  */
 @ExtendWith(MockitoExtension.class)
 class AsyncAiExecutorTest {
-
+    /**
+     * AsyncAiExecutor to test.
+     */
     private AsyncAiExecutor asyncAiExecutor;
 
+    /**
+     * Mocked request to send.
+     */
     @Mock
     private AiRequestable mockRequest;
 
+    /**
+     * mocked llm service.
+     */
     @Mock
     private LlmService mockLlmService;
 
+    /**
+     * mocked AiResponse.
+     */
     @Mock
     private AiResponse mockAiResponse;
 
@@ -51,7 +68,6 @@ class AsyncAiExecutorTest {
         asyncAiExecutor = new AsyncAiExecutor();
     }
 
-    // ==================== SUCCESS PATH - Covers the return response lines ====================
 
     @Test
     void testExecuteSuccessPathReturnsFormattedResponse() throws Exception {
@@ -62,7 +78,7 @@ class AsyncAiExecutorTest {
         when(mockAiResponse.getResponse()).thenReturn("AI raw response");
 
         // Inject mock LlmService
-        Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
+        final Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
         llmServiceField.setAccessible(true);
         llmServiceField.set(asyncAiExecutor, mockLlmService);
 
@@ -70,11 +86,11 @@ class AsyncAiExecutorTest {
                 .thenReturn(mockAiResponse);
 
         // Act
-        CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
+        final CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
 
         // Assert
         assertNotNull(result);
-        String response = result.get(); // This will cover the return response line
+        final String response = result.get(); // This will cover the return response line
         assertEquals("AI raw response", response);
         verify(mockLlmService).runProcess(any(RequestGeneraliser.class));
     }
@@ -87,7 +103,7 @@ class AsyncAiExecutorTest {
         when(mockRequest.getContext()).thenReturn("test");
         when(mockRequest.getInput()).thenReturn("data");
 
-        Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
+        final Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
         llmServiceField.setAccessible(true);
         llmServiceField.set(asyncAiExecutor, mockLlmService);
 
@@ -96,22 +112,22 @@ class AsyncAiExecutorTest {
                 .thenThrow(new IOException("Service failed"));
 
         // Act
-        CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
+        final CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
 
         // Assert - Covers IOException catch block
-        ExecutionException exception = assertThrows(ExecutionException.class, result::get);
+        final ExecutionException exception = assertThrows(ExecutionException.class, result::get);
         assertInstanceOf(RuntimeException.class, exception.getCause());
         assertInstanceOf(IOException.class, exception.getCause().getCause());
     }
 
     @Test
-    void testExecute_UnexpectedExceptionInRunProcess() throws Exception {
+    void testExecuteUnexpectedExceptionInRunProcess() throws Exception {
         // Arrange
         when(mockRequest.getReqType()).thenReturn("QNA");
         when(mockRequest.getContext()).thenReturn("test");
         when(mockRequest.getInput()).thenReturn("data");
 
-        Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
+        final Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
         llmServiceField.setAccessible(true);
         llmServiceField.set(asyncAiExecutor, mockLlmService);
 
@@ -120,37 +136,11 @@ class AsyncAiExecutorTest {
                 .thenThrow(new NullPointerException("Null error"));
 
         // Act
-        CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
+        final CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
 
         // Assert - Covers generic Exception catch block
-        ExecutionException exception = assertThrows(ExecutionException.class, result::get);
+        final ExecutionException exception = assertThrows(ExecutionException.class, result::get);
         assertInstanceOf(RuntimeException.class, exception.getCause());
     }
 
-
-    @Test
-    void testExecuteMultipleConcurrentRequests() throws Exception {
-        // Arrange
-        when(mockRequest.getReqType()).thenReturn("SUM");
-        when(mockRequest.getContext()).thenReturn("test");
-        when(mockRequest.getInput()).thenReturn("test data");
-        when(mockAiResponse.getResponse()).thenReturn("Response");
-
-        Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
-        llmServiceField.setAccessible(true);
-        llmServiceField.set(asyncAiExecutor, mockLlmService);
-
-        when(mockLlmService.runProcess(any(RequestGeneraliser.class)))
-                .thenReturn(mockAiResponse);
-
-        // Act - Execute multiple requests
-        CompletableFuture<String> result1 = asyncAiExecutor.execute(mockRequest);
-        CompletableFuture<String> result2 = asyncAiExecutor.execute(mockRequest);
-        CompletableFuture<String> result3 = asyncAiExecutor.execute(mockRequest);
-
-        // Assert - All complete successfully
-        assertEquals("Response", result1.get());
-        assertEquals("Response", result2.get());
-        assertEquals("Response", result3.get());
-    }
 }

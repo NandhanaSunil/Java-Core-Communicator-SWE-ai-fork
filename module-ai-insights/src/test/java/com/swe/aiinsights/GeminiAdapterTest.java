@@ -25,23 +25,43 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.lenient;
+
 
 /**
- * Test class for GeminiAdapter with 100% code coverage.
+ * Test class for GeminiAdapter.
  */
 @ExtendWith(MockitoExtension.class)
 class GeminiAdapterTest {
 
+    /**
+     * adapter to test.
+     */
     private GeminiAdapter adapter;
 
+    /**
+     * mocked request generaliser.
+     */
     @Mock
     private RequestGeneraliser mockRequest;
 
+    /**
+     * mocked http response.
+     */
     @Mock
     private Response mockResponse;
 
+    /**
+     * mocked http response body.
+     */
     @Mock
     private ResponseBody mockResponseBody;
 
@@ -50,15 +70,13 @@ class GeminiAdapterTest {
         adapter = new GeminiAdapter();
     }
 
-    // ==================== buildRequest Tests ====================
-
     @Test
-    void testBuildRequest_WithPromptOnly() throws JsonProcessingException {
+    void testBuildRequestWithPromptOnly() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("Test prompt");
         when(mockRequest.getImgData()).thenReturn(null);
         when(mockRequest.getTextData()).thenReturn(null);
 
-        String result = adapter.buildRequest(mockRequest);
+        final String result = adapter.buildRequest(mockRequest);
 
         assertNotNull(result);
         assertTrue(result.contains("Test prompt"));
@@ -69,16 +87,13 @@ class GeminiAdapterTest {
     }
 
     @Test
-    void testBuildRequest_WithPromptAndImage() throws JsonProcessingException {
-        // Arrange
+    void testBuildRequestWithPromptAndImage() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("Describe this image");
         when(mockRequest.getImgData()).thenReturn("base64ImageData");
-        lenient().when(mockRequest.getTextData()).thenReturn(null); // ADD lenient()
+        lenient().when(mockRequest.getTextData()).thenReturn(null);
 
-        // Act
-        String result = adapter.buildRequest(mockRequest);
+        final String result = adapter.buildRequest(mockRequest);
 
-        // Assert
         assertNotNull(result);
         assertTrue(result.contains("Describe this image"));
         assertTrue(result.contains("base64ImageData"));
@@ -91,27 +106,25 @@ class GeminiAdapterTest {
 
 
     @Test
-    void testBuildRequest_ValidJsonStructure() throws JsonProcessingException {
+    void testBuildRequestValidJsonStructure() throws JsonProcessingException {
         when(mockRequest.getPrompt()).thenReturn("Test");
         when(mockRequest.getImgData()).thenReturn(null);
         when(mockRequest.getTextData()).thenReturn("Data");
 
-        String result = adapter.buildRequest(mockRequest);
+        final String result = adapter.buildRequest(mockRequest);
 
-        // Verify it's valid JSON
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonNode = mapper.readTree(result);
+        final ObjectMapper mapper = new ObjectMapper();
+        final JsonNode jsonNode = mapper.readTree(result);
 
         assertNotNull(jsonNode.get("contents"));
         assertTrue(jsonNode.get("contents").isArray());
         assertTrue(jsonNode.get("contents").get(0).has("parts"));
     }
 
-    // ==================== getResponse Tests ====================
 
     @Test
-    void testGetResponse_Success() throws IOException {
-        String jsonResponse = """
+    void testGetResponseSuccess() throws IOException {
+        final String jsonResponse = """
                 {
                   "candidates": [
                     {
@@ -130,7 +143,7 @@ class GeminiAdapterTest {
         when(mockResponse.body()).thenReturn(mockResponseBody);
         when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
 
-        String result = adapter.getResponse(mockResponse);
+        final String result = adapter.getResponse(mockResponse);
 
         assertEquals("This is the AI response", result);
         verify(mockResponse, times(2)).body();
@@ -138,8 +151,8 @@ class GeminiAdapterTest {
 
 
     @Test
-    void testGetResponse_InvalidJson() throws IOException {
-        String jsonResponse = "{ invalid json }";
+    void testGetResponseInvalidJson() throws IOException {
+        final String jsonResponse = "{ invalid json }";
 
         when(mockResponse.body()).thenReturn(mockResponseBody);
         when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
@@ -152,8 +165,8 @@ class GeminiAdapterTest {
 
 
     @Test
-    void testGetResponse_TextNodeIsNotTextual() throws IOException {
-        String jsonResponse = """
+    void testGetResponseTextNodeIsNotTextual() throws IOException {
+        final String jsonResponse = """
             {
               "candidates": [
                 {
@@ -172,7 +185,7 @@ class GeminiAdapterTest {
         when(mockResponse.body()).thenReturn(mockResponseBody);
         when(mockResponseBody.charStream()).thenReturn(new StringReader(jsonResponse));
 
-        IOException exception = assertThrows(IOException.class, () -> {
+        final IOException exception = assertThrows(IOException.class, () -> {
             adapter.getResponse(mockResponse);
         });
 

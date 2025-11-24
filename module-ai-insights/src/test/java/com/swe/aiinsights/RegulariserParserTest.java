@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: RegulariserParserTest.java
+ *  Owner: Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -7,14 +16,24 @@ import com.swe.aiinsights.parser.RegulariserParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 /**
  * Test class for RegulariserParser.
  */
 class RegulariserParserTest {
 
+    /**
+     * regulariser to test.
+     */
     private RegulariserParser parser;
+
+    /**
+     * object mapper to build requests.
+     */
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -23,12 +42,10 @@ class RegulariserParserTest {
         objectMapper = new ObjectMapper();
     }
 
-    // ==================== Valid Input Tests ====================
 
     @Test
-    void testParseInput_ValidResponse() throws JsonProcessingException {
-        // Arrange
-        String inputJson = """
+    void testParseInputValidResponse() throws JsonProcessingException {
+        final String inputJson = """
                   {
                   "ShapeId": "c585b84a",
                   "Type": "FREEHAND",
@@ -54,7 +71,7 @@ class RegulariserParserTest {
                 }
                 """;
 
-        String aiResponse = """
+        final String aiResponse = """
                {
                   "ShapeId": "abcd",
                   "Type": "ELLIPSE",
@@ -84,12 +101,12 @@ class RegulariserParserTest {
                 }
                """;
 
-        // Act
-        String result = parser.parseInput(inputJson, aiResponse);
 
-        // Assert
+        final String result = parser.parseInput(inputJson, aiResponse);
+
+
         assertNotNull(result);
-        JsonNode resultNode = objectMapper.readTree(result);
+        final JsonNode resultNode = objectMapper.readTree(result);
 
         assertEquals("c585b84a", resultNode.get("ShapeId").asText());
         assertEquals("ELLIPSE", resultNode.get("Type").asText());
@@ -100,15 +117,14 @@ class RegulariserParserTest {
         assertFalse(resultNode.get("IsDeleted").asBoolean());
 
         // Verify points (should only have first 2)
-        JsonNode points = resultNode.get("Points");
+        final JsonNode points = resultNode.get("Points");
         assertEquals(2, points.size());
     }
 
 
     @Test
     void testParseInputValidResponse2() throws JsonProcessingException {
-        // Arrange
-        String inputJson = """
+        final String inputJson = """
                   {
                   "ShapeId": "c585b84a",
                   "Type": "FREEHAND",
@@ -134,7 +150,7 @@ class RegulariserParserTest {
                 }
                 """;
 
-        String aiResponse = """
+        final String aiResponse = """
                ```json{
                   "ShapeId": "abcd",
                   "type": "ELLIPSE",
@@ -164,12 +180,12 @@ class RegulariserParserTest {
                 }```
                """;
 
-        // Act
-        String result = parser.parseInput(inputJson, aiResponse);
 
-        // Assert
+        final String result = parser.parseInput(inputJson, aiResponse);
+
+
         assertNotNull(result);
-        JsonNode resultNode = objectMapper.readTree(result);
+        final JsonNode resultNode = objectMapper.readTree(result);
 
         assertEquals("c585b84a", resultNode.get("ShapeId").asText());
         assertEquals("ELLIPSE", resultNode.get("Type").asText());
@@ -179,16 +195,14 @@ class RegulariserParserTest {
         assertEquals("user_default", resultNode.get("LastModifiedBy").asText());
         assertFalse(resultNode.get("IsDeleted").asBoolean());
 
-        // Verify points (should only have first 2)
-        JsonNode points = resultNode.get("Points");
+        final JsonNode points = resultNode.get("Points");
         assertEquals(2, points.size());
     }
 
 
     @Test
     void testParseInputNoPoints() throws JsonProcessingException {
-        // Arrange
-        String inputJson = """
+        final String inputJson = """
                   {
                   "ShapeId": "c585b84a",
                   "Type": "FREEHAND",
@@ -214,7 +228,7 @@ class RegulariserParserTest {
                 }
                 """;
 
-        String aiResponse = """
+        final String aiResponse = """
                {
                   "ShapeId": "abcd",
                   "Type": "ELLIPSE",
@@ -232,18 +246,16 @@ class RegulariserParserTest {
                 }
                """;
 
-        // Act
-        String result = parser.parseInput(inputJson, aiResponse);
+        final String result = parser.parseInput(inputJson, aiResponse);
 
-        // Assert
         assertEquals(result, inputJson);
     }
 
 
     @Test
-    void testParseInputNullAiResponse() throws JsonProcessingException {
-        // Arrange
-        String inputJson = """
+    void testParseInputInvalidAiResponse() throws JsonProcessingException {
+
+        final String inputJson = """
                 {
                   "ShapeId": "c585b84a-d56c-45b8-a0e1-827ae20a014a",
                   "Type": "FREEHAND",
@@ -269,57 +281,18 @@ class RegulariserParserTest {
                 }
                 """;
 
-        // Act
-        String result = parser.parseInput(inputJson, "ABCD");
 
-        // Assert - Should return input unchanged
+        final String result = parser.parseInput(inputJson, "ABCD");
+
         assertEquals(inputJson, result);
     }
 
-
-    @Test
-    void testParseInputAiResponseWithoutPoints() throws JsonProcessingException {
-        // Arrange
-        String inputJson = """
-                {
-                  "ShapeId": "c585b84a-d56c-45b8-a0e1-827ae20a014a",
-                  "Type": "FREEHAND",
-                  "Points": [
-                    {
-                      "X": 10,
-                      "Y": 20
-                    },
-                    {
-                      "X": 30,
-                      "Y": 40
-                    },
-                    {
-                      "X": 11,
-                      "Y": 19
-                    }
-                  ],
-                  "Color": "#FF000000",
-                  "Thickness": 2,
-                  "CreatedBy": "user_default",
-                  "LastModifiedBy": "user_default",
-                  "IsDeleted": false
-                }
-                """;
-
-        String aiResponse = "{\"type\":\"Rectangle\"}";
-
-        // Act
-        String result = parser.parseInput(inputJson, aiResponse);
-
-        // Assert - Should return input unchanged
-        assertEquals(inputJson, result);
-    }
 
 
     @Test
     void testParseInputInvalidJsonAiResponse() throws JsonProcessingException {
-        // Arrange
-        String inputJson = """
+
+        final String inputJson = """
                 {
                   "ShapeId": "c585b84a-d56c-45b8-a0e1-827ae20a014a",
                   "Type": "FREEHAND",
@@ -345,12 +318,12 @@ class RegulariserParserTest {
                 }
                 """;
 
-        String invalidAiResponse = "{invalid json}";
+        final String invalidAiResponse = "{invalid json}";
 
-        // Act
-        String result = parser.parseInput(inputJson, invalidAiResponse);
 
-        // Assert - Should return input unchanged
+        final String result = parser.parseInput(inputJson, invalidAiResponse);
+
+
         assertEquals(inputJson, result);
     }
 

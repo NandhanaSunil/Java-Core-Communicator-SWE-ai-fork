@@ -142,6 +142,7 @@ public final class GeminiService implements LlmService {
                     .build();
 
             final int keyLimitCode = 429;
+            final int permissionDenied = 403;
 
             try (Response response = httpClient.newCall(request).execute()) {
                 System.out.println("trying to get response");
@@ -154,6 +155,14 @@ public final class GeminiService implements LlmService {
                 }
                 if (response.code() == keyLimitCode) {
                     LOG.debug("Key limit hit\n");
+                    keyManager.setKeyIndex(currentKey);
+                    attempt++; // Increment attempt and loop again to try next key
+//                    System.out.println(attempt);
+                    continue;  // Skip the rest and restart loop
+                }
+                if (response.code() == permissionDenied) {
+                    // this part wouldn't be reachable in tests
+                    LOG.debug("Permission denied for the key\n");
                     keyManager.setKeyIndex(currentKey);
                     attempt++; // Increment attempt and loop again to try next key
 //                    System.out.println(attempt);

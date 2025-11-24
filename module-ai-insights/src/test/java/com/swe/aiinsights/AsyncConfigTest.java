@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: AsyncConfigTest.java
+ *  Owner: Berelli Gouthami
+ *  Roll Number : 112201003
+ *  Module : com.swe.aiinsights
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.configu.AsyncConfig;
@@ -10,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Test class for AsyncConfig with 100% code coverage.
@@ -22,7 +33,7 @@ class AsyncConfigTest {
     @Test
     void testAiExecutorReturnsExecutor() {
         // Act
-        Executor executor = AsyncConfig.aiExecutor();
+        final Executor executor = AsyncConfig.aiExecutor();
 
         // Assert
         assertTrue(executor instanceof ThreadPoolExecutor);
@@ -33,9 +44,9 @@ class AsyncConfigTest {
     @Test
     void testAiExecutorCanExecuteTasks() throws InterruptedException {
         // Arrange
-        Executor executor = AsyncConfig.aiExecutor();
-        CountDownLatch latch = new CountDownLatch(1);
-        AtomicInteger counter = new AtomicInteger(0);
+        final Executor executor = AsyncConfig.aiExecutor();
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicInteger counter = new AtomicInteger(0);
 
         // Act
         executor.execute(() -> {
@@ -44,7 +55,7 @@ class AsyncConfigTest {
         });
 
         // Wait for task to complete
-        boolean completed = latch.await(5, TimeUnit.SECONDS);
+        final boolean completed = latch.await(5, TimeUnit.SECONDS);
 
         // Assert
         assertTrue(completed);
@@ -54,10 +65,10 @@ class AsyncConfigTest {
     @Test
     void testAiExecutorMultipleTasks() throws InterruptedException {
         // Arrange
-        Executor executor = AsyncConfig.aiExecutor();
-        int taskCount = 10;
-        CountDownLatch latch = new CountDownLatch(taskCount);
-        AtomicInteger counter = new AtomicInteger(0);
+        final Executor executor = AsyncConfig.aiExecutor();
+        final int taskCount = 10;
+        final CountDownLatch latch = new CountDownLatch(taskCount);
+        final AtomicInteger counter = new AtomicInteger(0);
 
         // Act
         for (int i = 0; i < taskCount; i++) {
@@ -68,7 +79,7 @@ class AsyncConfigTest {
         }
 
         // Wait for all tasks to complete
-        boolean completed = latch.await(10, TimeUnit.SECONDS);
+        final boolean completed = latch.await(10, TimeUnit.SECONDS);
 
         // Assert
         assertTrue(completed);

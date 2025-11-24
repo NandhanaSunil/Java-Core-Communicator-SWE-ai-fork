@@ -3,7 +3,7 @@
  *  File: GeminiServiceTest.java
  *  Owner: Abhirami R Iyer
  *  Roll Number : 112201001
- *  Module : com.swe.aiinsights.data
+ *  Module : com.swe.aiinsights
  * -----------------------------------------------------------------------------
  */
 
@@ -28,26 +28,43 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test class for GeminiService with maximum code coverage.
+ * Test class for GeminiService.
  */
 @ExtendWith(MockitoExtension.class)
 class GeminiServiceTest {
-
+    /**
+     * Mock http client.
+     */
     @Mock
     private OkHttpClient mockHttpClient;
 
+    /**
+     * Mock http call
+     */
     @Mock
     private Call mockCall;
 
+    /**
+     * Mock response
+     */
     @Mock
     private Response mockResponse;
 
+    /**
+     * Mock request generaliser
+     */
     @Mock
     private RequestGeneraliser mockRequestGeneraliser;
 
+    /**
+     * mocked response
+     */
     @Mock
     private AiResponse mockAiResponse;
 
+    /**
+     * response body mock
+     */
     @Mock
     private ResponseBody mockResponseBody;
 
@@ -62,13 +79,13 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
             })) {
 
         try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
-            Dotenv localMockDotenv = mock(Dotenv.class);
+            final Dotenv localMockDotenv = mock(Dotenv.class);
             dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
             lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
 
             GeminiService service = new GeminiService();
 
-            var httpClientField = GeminiService.class.getDeclaredField("httpClient");
+            final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
             httpClientField.setAccessible(true);
             httpClientField.set(service, mockHttpClient);
 
@@ -85,7 +102,7 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                 when(mockResponse.isSuccessful()).thenReturn(true);
 
                 // Act
-                AiResponse result = service.runProcess(mockRequestGeneraliser);
+                final AiResponse result = service.runProcess(mockRequestGeneraliser);
 
                 // Assert
                 assertNotNull(result);
@@ -107,13 +124,13 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                 })) {
 
             try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
-                Dotenv localMockDotenv = mock(Dotenv.class);
+                final Dotenv localMockDotenv = mock(Dotenv.class);
                 dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
                 lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
 
-                GeminiService service = new GeminiService();
+                final GeminiService service = new GeminiService();
 
-                var httpClientField = GeminiService.class.getDeclaredField("httpClient");
+                final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
                 httpClientField.setAccessible(true);
                 httpClientField.set(service, mockHttpClient);
 
@@ -127,7 +144,7 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                     when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
                     when(mockHttpClient.newCall(any())).thenReturn(mockCall);
 
-                    Response rateLimitResponse = mock(Response.class);
+                    final Response rateLimitResponse = mock(Response.class);
                     when(rateLimitResponse.isSuccessful()).thenReturn(false);
                     when(rateLimitResponse.code()).thenReturn(429);
 
@@ -137,7 +154,7 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                     when(mockResponse.isSuccessful()).thenReturn(true);
 
                     // Act
-                    AiResponse result = service.runProcess(mockRequestGeneraliser);
+                    final AiResponse result = service.runProcess(mockRequestGeneraliser);
 
                     // Assert
                     assertNotNull(result);
@@ -161,13 +178,13 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                 })) {
 
             try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
-                Dotenv localMockDotenv = mock(Dotenv.class);
+                final Dotenv localMockDotenv = mock(Dotenv.class);
                 dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
                 lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
 
-                GeminiService service = new GeminiService();
+                final GeminiService service = new GeminiService();
 
-                var httpClientField = GeminiService.class.getDeclaredField("httpClient");
+                final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
                 httpClientField.setAccessible(true);
                 httpClientField.set(service, mockHttpClient);
 
@@ -180,7 +197,7 @@ void testRunProcessSuccessCoversHappyPath() throws Exception {
                     lenient().when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse); // ADD lenient()
                     when(mockHttpClient.newCall(any())).thenReturn(mockCall);
 
-                    Response errorResponse = mock(Response.class);
+                    final Response errorResponse = mock(Response.class);
                     when(errorResponse.isSuccessful()).thenReturn(false);
                     when(errorResponse.code()).thenReturn(500);
 

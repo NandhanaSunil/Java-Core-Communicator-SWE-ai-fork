@@ -1,8 +1,8 @@
 /*
  * -----------------------------------------------------------------------------
  *  File: RequestGeneraliser.java
- *  Owner: Abhirami R Iyer
- *  Roll Number : 112201001
+ *  Owner: Berelli Gouthami
+ *  Roll Number : 112201003
  *  Module : com.swe.aiinsights.generaliser
  * -----------------------------------------------------------------------------
  */
@@ -98,7 +98,7 @@ public class RequestGeneraliser {
 
         this.reqType = request.getReqType();
         if (Objects.equals(reqType, "DESC")) {
-            setImgData(request.getInput().toString());
+            setImgData((String) request.getInput());
         } else {
             setTextData(request.getInput().toString());
         }

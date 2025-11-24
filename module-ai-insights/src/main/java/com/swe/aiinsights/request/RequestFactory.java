@@ -1,18 +1,12 @@
 /*
  * -----------------------------------------------------------------------------
  *  File: RequestFactory.java
- *  Owner: Abhirami R Iyer
+ *  Owner: Berelli Gouthami
  *  Roll Number : 112201001
  *  Module : com.swe.aiinsights.request
  * -----------------------------------------------------------------------------
  */
 
-/**
- * Factory to generate various kinds of requests.
- *
- * @author Abhirami R Iyer
- *
- */
 
 package com.swe.aiinsights.request;
 
@@ -46,8 +40,7 @@ public class RequestFactory {
         switch (requestType) {
             case "DESC" :
                 LOG.info("Creating description request");
-                final String filePath = (String) args[0];
-                final WhiteBoardData data = new WhiteBoardData(filePath);
+                final WhiteBoardData data = (WhiteBoardData) args[0];
                 request = new AiDescriptionRequest(data);
                 break;
             case "REG" :
