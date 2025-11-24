@@ -331,7 +331,16 @@ class RequestGeneraliserTest {
         assertNotNull(output);
     }
 
+    @Test
+    void testDefault() throws IOException {
+        when(regularisationRequest.getReqType()).thenReturn("DEFAULT");
+        when(regularisationRequest.getInput()).thenReturn("dummy input");
+        when(regularisationRequest.getContext()).thenReturn("dummy prompt");
 
+        final RequestGeneraliser reg = new RequestGeneraliser(regularisationRequest);
+
+        assertNull(reg.getAiResponse());
+    }
 
 
 

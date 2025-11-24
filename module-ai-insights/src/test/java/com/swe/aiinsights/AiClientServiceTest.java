@@ -1,8 +1,8 @@
 /*
  * -----------------------------------------------------------------------------
  *  File: AiClientServiceTest.java
- *  Owner: Abhirami R Iyer
- *  Roll Number : 112201001
+ *  Owner: Abhirami R Iyer, Gouthami Berelli
+ *  Roll Number : 112201001, 112201003
  *  Module : com.swe.aiinsights
  * -----------------------------------------------------------------------------
  */
@@ -29,11 +29,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.spy;
 
 /**
  * Tests covering the AiClientService.
@@ -135,7 +137,7 @@ class AiClientServiceTest {
 
 
     @Test
-    void testSummariseTextInitialSummary() {
+    void testSummariseTextInitialSummary() throws Exception {
         final CompletableFuture<String> result = aiClientService.summariseText("{\"chat\":\"Meeting notes\"}");
         assertNotNull(result);
     }
@@ -149,6 +151,7 @@ class AiClientServiceTest {
 
         final CompletableFuture<String> result = aiClientService.summariseText("{\"chat\":\"New data\"}");
         assertNotNull(result);
+
     }
 
     @Test
@@ -164,11 +167,12 @@ class AiClientServiceTest {
 
         final int timeout = 5;
         assertThrows(ExecutionException.class, () -> result.get(timeout, TimeUnit.SECONDS));
+
     }
 
 
     @Test
-    void testClearSummaryReturnsSuccessMessage() throws Exception {
+    void testClearSummarySuccess() throws Exception {
         final CompletableFuture<String> result = aiClientService.clearSummary();
         assertEquals("Summary cleared successfully", result.get());
     }
@@ -190,6 +194,9 @@ class AiClientServiceTest {
 
         final CompletableFuture<String> result = aiClientService.answerQuestion("What is AI?");
         assertNotNull(result);
+
+        final int timeout = 10;
+        assertNotNull(result.get(timeout, TimeUnit.SECONDS));
     }
 
     @Test
@@ -207,12 +214,34 @@ class AiClientServiceTest {
         assertThrows(ExecutionException.class, () -> result.get(timeout, TimeUnit.SECONDS));
     }
 
+    @Test
+    void testSummariseTextOuterCatchBlock() throws Exception {
+
+        final AiClientService spyService = spy(new AiClientService());
+
+        final var lastSummaryField = AiClientService.class.getDeclaredField("lastSummaryUpdate");
+        lastSummaryField.setAccessible(true);
+
+        final CompletableFuture<Void> brokenFuture = mock(CompletableFuture.class);
+        when(brokenFuture.thenCompose(any())).thenThrow(new NullPointerException("Broken chain"));
+
+        lastSummaryField.set(spyService, brokenFuture);
+
+        final RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            spyService.summariseText("{\"chat\":\"test\"}");
+        });
+
+        assertNotNull(exception);
+        assertTrue(exception.getCause() instanceof NullPointerException);
+    }
+
 
     @Test
     void testActionWithValidChatData() throws Exception {
         final JsonNode chatData = objectMapper.readTree("{\"messages\":[{\"text\":\"Review code\"}]}");
         final CompletableFuture<String> result = aiClientService.action(chatData);
         assertNotNull(result);
+
     }
 
     @Test
@@ -225,5 +254,31 @@ class AiClientServiceTest {
         factoryField.set(aiClientService, mockFactory);
 
         assertThrows(RuntimeException.class, () -> aiClientService.action(null));
+    }
+
+    @Test
+    void testAnswerQuestionOuterCatchBlock() throws Exception {
+
+        final AiClientService spyService = spy(new AiClientService());
+
+        final RequestFactory mockFactory = mock(RequestFactory.class);
+        final var factoryField = AiClientService.class.getDeclaredField("factory");
+        factoryField.setAccessible(true);
+        factoryField.set(spyService, mockFactory);
+
+        final var lastSummaryField = AiClientService.class.getDeclaredField("lastSummaryUpdate");
+        lastSummaryField.setAccessible(true);
+
+        final CompletableFuture<Void> brokenFuture = mock(CompletableFuture.class);
+        when(brokenFuture.thenCompose(any())).thenThrow(new IllegalStateException("Broken future"));
+
+        lastSummaryField.set(spyService, brokenFuture);
+
+        final RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            spyService.answerQuestion("Test question?");
+        });
+
+        assertEquals("Error processing Q&A request", exception.getMessage());
+        assertTrue(exception.getCause() instanceof IllegalStateException);
     }
 }
