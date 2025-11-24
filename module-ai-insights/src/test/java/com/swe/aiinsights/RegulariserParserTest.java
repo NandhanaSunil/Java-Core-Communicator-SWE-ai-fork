@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: RegulariserParserTest.java
+ *  Owner: Abhirami R Iyer
+ *  Roll Number : 112201001
+ *  Module : com.swe.aiinsights
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

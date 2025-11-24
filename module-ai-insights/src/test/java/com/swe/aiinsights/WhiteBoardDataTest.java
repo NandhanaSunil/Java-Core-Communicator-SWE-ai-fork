@@ -1,3 +1,12 @@
+/*
+ * -----------------------------------------------------------------------------
+ *  File: WhiteBoardDataTest.java
+ *  Owner: Berelli Gouthami
+ *  Roll Number : 112201003
+ *  Module : com.swe.aiinsights
+ * -----------------------------------------------------------------------------
+ */
+
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.data.WhiteBoardData;

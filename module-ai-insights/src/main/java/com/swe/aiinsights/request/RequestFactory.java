@@ -1,18 +1,12 @@
 /*
  * -----------------------------------------------------------------------------
  *  File: RequestFactory.java
- *  Owner: Abhirami R Iyer
+ *  Owner: Berelli Gouthami
  *  Roll Number : 112201001
  *  Module : com.swe.aiinsights.request
  * -----------------------------------------------------------------------------
  */
 
-/**
- * Factory to generate various kinds of requests.
- *
- * @author Abhirami R Iyer
- *
- */
 
 package com.swe.aiinsights.request;
 
