@@ -80,7 +80,7 @@ We aim to provide the following features for the Comm-Uni-cator app.
 
 ![ai_gou_nand](https://github.com/user-attachments/assets/d771903e-28ea-4294-b3ec-d374569d4922)
 
-3. Vemula Veneela: Handles the part related to insight generation
+3. Nandhana Sunil: Handles the part related to insight generation
 
 ![ai_veneela](https://github.com/user-attachments/assets/f4b5e210-b55c-4618-a29a-880f905224b2)
 
