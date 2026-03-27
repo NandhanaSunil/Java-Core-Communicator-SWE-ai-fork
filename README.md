@@ -1,5 +1,9 @@
 # AI and Insights
 
+# Team Info
+Team Lead - Nandhana Sunil
+Team Members - Berelli Gouthami, Abhirami R Iyer
+
 ## Overview
 We aim to provide the following features for the Comm-Uni-cator app.
 - Take meeting notes
