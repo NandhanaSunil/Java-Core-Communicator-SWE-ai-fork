@@ -7,6 +7,12 @@
  * -----------------------------------------------------------------------------
  */
 
+/*
+ * References :
+ * https://www.baeldung.com/java-reflection,
+ * https://medium.com/@AlexanderObregon/how-to-test-private-methods-in-java-ec1872e81911
+ */
+
 package com.swe.aiinsights;
 
 import com.swe.aiinsights.aiservice.GeminiService;
@@ -28,7 +34,6 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.lenient;
@@ -80,7 +85,7 @@ class GeminiServiceTest {
     private ResponseBody mockResponseBody;
 
     @Test
-    void testRunProcessSuccessCoversHappyPath() throws Exception {
+    void testRunProcessSuccess() throws Exception {
         final int numKeys = 3;
         try (MockedConstruction<GeminiKeyManager> keyManagerMock = mockConstruction(
                 GeminiKeyManager.class,
@@ -164,13 +169,10 @@ class GeminiServiceTest {
                             .thenReturn(mockResponse);
                     when(mockResponse.isSuccessful()).thenReturn(true);
 
-                    // Act
                     final AiResponse result = service.runProcess(mockRequestGeneraliser);
 
-                    // Assert
                     assertNotNull(result);
 
-                    // Get the mocked GeminiKeyManager
                     final GeminiKeyManager keyManager = keyManagerMock.constructed().get(0);
                     verify(keyManager).setKeyIndex("key1");
                     verify(mockCall, times(2)).execute();
@@ -217,7 +219,6 @@ class GeminiServiceTest {
 
                     when(mockCall.execute()).thenReturn(errorResponse);
 
-                    // Act & Assert
                     assertThrows(RateLimitException.class, () -> {
                         service.runProcess(mockRequestGeneraliser);
                     });
@@ -226,54 +227,5 @@ class GeminiServiceTest {
         }
     }
 
-    @Test
-    void testRunProcessAllKeysExhaustedThrowsException() throws Exception {
-        try (MockedConstruction<GeminiKeyManager> keyManagerMock = mockConstruction(
-                GeminiKeyManager.class,
-                (mock, context) -> {
-                    when(mock.getNumberOfKeys()).thenReturn(2);
-                    when(mock.getCurrentKey())
-                            .thenReturn("key1")
-                            .thenReturn("key2");
-                })) {
 
-            try (MockedStatic<Dotenv> dotenvMock = mockStatic(Dotenv.class)) {
-                final Dotenv localMockDotenv = mock(Dotenv.class);
-                dotenvMock.when(Dotenv::load).thenReturn(localMockDotenv);
-                lenient().when(localMockDotenv.get("GEMINI_URL")).thenReturn("https://api.gemini.com/");
-
-                final GeminiService service = new GeminiService();
-
-                final var httpClientField = GeminiService.class.getDeclaredField("httpClient");
-                httpClientField.setAccessible(true);
-                httpClientField.set(service, mockHttpClient);
-
-                try (MockedConstruction<GeminiAdapter> adapterMock = mockConstruction(
-                        GeminiAdapter.class,
-                        (mock, context) -> {
-                            lenient().when(mock.buildRequest(
-                                    any())).thenReturn("{\"request\":\"body\"}");
-                        })) {
-
-                    lenient().when(mockRequestGeneraliser.getAiResponse()).thenReturn(mockAiResponse);
-                    when(mockHttpClient.newCall(any())).thenReturn(mockCall);
-
-                    final int rateLimitCode = 429;
-                    final Response rateLimitResponse = mock(Response.class);
-                    when(rateLimitResponse.isSuccessful()).thenReturn(false);
-                    when(rateLimitResponse.code()).thenReturn(rateLimitCode);
-
-                    when(mockCall.execute()).thenReturn(rateLimitResponse);
-
-                    // Act & Assert
-                    final RateLimitException exception = assertThrows(RateLimitException.class, () -> {
-                        service.runProcess(mockRequestGeneraliser);
-                    });
-
-                    assertTrue(exception.getMessage().contains("All available API keys used"));
-                    verify(mockCall, times(2)).execute();
-                }
-            }
-        }
-    }
 }

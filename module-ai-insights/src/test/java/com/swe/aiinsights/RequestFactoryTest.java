@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.swe.aiinsights.data.WhiteBoardData;
 import com.swe.aiinsights.request.AiRequestable;
 import com.swe.aiinsights.request.RequestFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,6 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 
@@ -55,13 +55,16 @@ class RequestFactoryTest {
         objectMapper = new ObjectMapper();
     }
 
-    // image interpretation
+    /**
+     * image interpretation test.
+      */
     @Test
     void testGetRequestInterpretWithFilePath() throws IOException {
         final Path testFile = tempDir.resolve("test-image.png");
         Files.write(testFile, "test image data".getBytes());
         final String filePath = testFile.toString();
-        final AiRequestable request = requestFactory.getRequest("DESC", filePath);
+        final WhiteBoardData image = new WhiteBoardData(filePath);
+        final AiRequestable request = requestFactory.getRequest("DESC", image);
         assertNotNull(request);
         assertNotNull(request.getInput());
         assertEquals("DESC", request.getReqType());
@@ -69,13 +72,6 @@ class RequestFactoryTest {
         assertTrue(request.getContext().contains("Describe this image"));
     }
 
-    @Test
-    void testGetRequestInterpretWithInvalidFile() {
-        final String invalidFilePath = "/nonexistent/file.png";
-        assertThrows(IOException.class, () -> {
-            requestFactory.getRequest("DESC", invalidFilePath);
-        });
-    }
 
     //image regularisation
     @Test

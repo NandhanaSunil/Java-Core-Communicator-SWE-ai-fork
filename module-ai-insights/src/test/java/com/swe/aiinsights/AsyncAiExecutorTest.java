@@ -71,13 +71,11 @@ class AsyncAiExecutorTest {
 
     @Test
     void testExecuteSuccessPathReturnsFormattedResponse() throws Exception {
-        // Arrange
         when(mockRequest.getReqType()).thenReturn("SUM");
         when(mockRequest.getContext()).thenReturn("test prompt");
         when(mockRequest.getInput()).thenReturn("test data");
         when(mockAiResponse.getResponse()).thenReturn("AI raw response");
 
-        // Inject mock LlmService
         final Field llmServiceField = AsyncAiExecutor.class.getDeclaredField("llmService");
         llmServiceField.setAccessible(true);
         llmServiceField.set(asyncAiExecutor, mockLlmService);
@@ -85,10 +83,8 @@ class AsyncAiExecutorTest {
         when(mockLlmService.runProcess(any(RequestGeneraliser.class)))
                 .thenReturn(mockAiResponse);
 
-        // Act
         final CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
 
-        // Assert
         assertNotNull(result);
         final String response = result.get(); // This will cover the return response line
         assertEquals("AI raw response", response);
@@ -98,7 +94,6 @@ class AsyncAiExecutorTest {
 
     @Test
     void testExecuteIOExceptionInRunProcess() throws Exception {
-        // Arrange
         when(mockRequest.getReqType()).thenReturn("DESC");
         when(mockRequest.getContext()).thenReturn("test");
         when(mockRequest.getInput()).thenReturn("data");
@@ -107,14 +102,11 @@ class AsyncAiExecutorTest {
         llmServiceField.setAccessible(true);
         llmServiceField.set(asyncAiExecutor, mockLlmService);
 
-        // Make runProcess throw IOException
         when(mockLlmService.runProcess(any(RequestGeneraliser.class)))
                 .thenThrow(new IOException("Service failed"));
 
-        // Act
         final CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
 
-        // Assert - Covers IOException catch block
         final ExecutionException exception = assertThrows(ExecutionException.class, result::get);
         assertInstanceOf(RuntimeException.class, exception.getCause());
         assertInstanceOf(IOException.class, exception.getCause().getCause());
@@ -131,14 +123,12 @@ class AsyncAiExecutorTest {
         llmServiceField.setAccessible(true);
         llmServiceField.set(asyncAiExecutor, mockLlmService);
 
-        // Make runProcess throw generic exception
         when(mockLlmService.runProcess(any(RequestGeneraliser.class)))
                 .thenThrow(new NullPointerException("Null error"));
 
-        // Act
         final CompletableFuture<String> result = asyncAiExecutor.execute(mockRequest);
 
-        // Assert - Covers generic Exception catch block
+
         final ExecutionException exception = assertThrows(ExecutionException.class, result::get);
         assertInstanceOf(RuntimeException.class, exception.getCause());
     }

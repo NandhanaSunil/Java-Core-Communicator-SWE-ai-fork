@@ -251,6 +251,63 @@ class RegulariserParserTest {
         assertEquals(result, inputJson);
     }
 
+    @Test
+    void testParseInputNoType() throws JsonProcessingException {
+        final String inputJson = """
+                  {
+                  "ShapeId": "c585b84a",
+                  "Type": "FREEHAND",
+                  "Points": [
+                    {
+                      "X": 10,
+                      "Y": 20
+                    },
+                    {
+                      "X": 30,
+                      "Y": 40
+                    },
+                    {
+                      "X": 11,
+                      "Y": 19
+                    }
+                  ],
+                  "Color": "#FF000000",
+                  "Thickness": 2,
+                  "CreatedBy": "user_default",
+                  "LastModifiedBy": "user_default",
+                  "IsDeleted": false
+                }
+                """;
+
+        final String aiResponse = """
+               {
+                  "ShapeId": "abcd",
+                  "ShapeType": "ELLIPSE",
+                  "Points": [
+                    {
+                      "X": 10,
+                      "Y": 20
+                    },
+                    {
+                      "X": 11,
+                      "Y": 21
+                    }
+                  ],
+                  "Color": "#FF000000",
+                  "Thickness": 3,
+                  "CreatedBy": "user1",
+                  "LastModifiedBy": "user1",
+                  "IsDeleted": false
+                }
+               """;
+
+        final String result = parser.parseInput(inputJson, aiResponse);
+
+        final JsonNode resultNode = objectMapper.readTree(result);
+
+        assertNotNull(resultNode.get("Type"));
+    }
+
 
     @Test
     void testParseInputInvalidAiResponse() throws JsonProcessingException {
@@ -322,6 +379,8 @@ class RegulariserParserTest {
 
 
         final String result = parser.parseInput(inputJson, invalidAiResponse);
+
+        final String nullString = parser.parseInput(inputJson, null);
 
 
         assertEquals(inputJson, result);
